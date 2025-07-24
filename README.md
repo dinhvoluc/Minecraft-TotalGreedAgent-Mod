@@ -1,2 +1,4 @@
-# Minecraft-TotalGreedAgent-Mod
-IC2 like industrial mod
+# TotalGreedAgent
+一応、工業モッドです。パソコンはスペック高くありませんので、好きな様子を色んなモッドから広い集めます。  
+マイクラのバージョン：1.21.8  
+モッドローダー:fabric-loader-0.16.14
