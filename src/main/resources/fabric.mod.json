@@ -3,32 +3,23 @@
 	"id": "tga",
 	"version": "${version}",
 	"name": "TotalGreedyAgent",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This is a list of blocks and machine I want. The functional is get ideas from of another mods.",
 	"authors": [
-		"Me!"
+		"HinotoNashiryoku"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://hinotosan.com/projects/mc_tga",
+		"sources": "https://github.com/dinhvoluc/Minecraft-TotalGreedAgent-Mod"
 	},
-	"license": "CC0-1.0",
 	"icon": "assets/tga/icon.png",
-	"environment": "*",
 	"entrypoints": {
 		"main": [
 			"tga.TotalGreedyAgent"
-		],
-		"client": [
-			"tga.TotalGreedyAgentClient"
 		]
 	},
 	"depends": {
-		"fabricloader": ">=0.16.14",
-		"minecraft": "~1.21.8",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
+		"fabricloader": ">=0.14.0",
+		"minecraft": "1.21.8",
+		"fabric": "*"
 	}
 }
