@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "tga:rubber"
+  },
+  "result": {
+    "id": "tga:rubber_sheet",
+    "count": 1
+  }
+}

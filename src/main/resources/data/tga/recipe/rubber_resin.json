@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": "tga:resin",
+  "group": "tga:rubber",
+  "result": {
+    "id": "tga:rubber"
+  },
+  "experience": 3.8,
+  "cookingtime": 2000
+}

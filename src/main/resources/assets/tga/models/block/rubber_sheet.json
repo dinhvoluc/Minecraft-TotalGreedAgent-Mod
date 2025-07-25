@@ -1,0 +1,6 @@
+{
+  "parent": "block/carpet",
+  "textures": {
+    "wool": "tga:block/rubber_sheet"
+  }
+}

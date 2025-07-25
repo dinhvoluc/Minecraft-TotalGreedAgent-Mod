@@ -19,6 +19,8 @@ public class CreativeTab {
                 .entries((context, entries) -> {
                     entries.add(TGABlocks.BOX_WOOD);
                     entries.add(TGAItems.RUBBER);
+                    entries.add(TGABlocks.RUBBER_SHEET);
+                    entries.add(TGAItems.REISIN);
                 })
                 .build());
     }

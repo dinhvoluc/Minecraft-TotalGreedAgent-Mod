@@ -1,9 +1,10 @@
 {
-  "type": "minecraft:smoking",
+  "type": "minecraft:blasting",
   "ingredient": "minecraft:slime_block",
+  "group": "tga:rubber",
   "result": {
     "id": "tga:rubber"
   },
-  "experience": 0.1,
+  "experience": 3.8,
   "cookingtime": 2000
 }

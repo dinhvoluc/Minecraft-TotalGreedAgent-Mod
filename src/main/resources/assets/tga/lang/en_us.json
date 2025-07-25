@@ -1,5 +1,7 @@
 {
   "item.tga.rubber": "Rubber",
+  "item.tga.resin": "resin",
   "block.tga.box_wood": "Wooden box",
+  "block.tga.rubber_sheet": "Rubber sheet",
   "itemGroup.tga.main": "Total Greedy Agent"
 }
