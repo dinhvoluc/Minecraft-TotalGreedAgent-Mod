@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "minecraft:honeycomb"
-  },
-  "result": "tga:rubber",
-  "experience": 0.35,
-  "cookingtime": 2000
-}

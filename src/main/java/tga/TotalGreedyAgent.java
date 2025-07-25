@@ -10,8 +10,12 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Server=>Init...");
+		LOGGER.info("Server=>Items");
+		TGAItems.register();
+		LOGGER.info("Server=>Blocks");
 		TGABlocks.register();
+		LOGGER.info("Server=>Creative items list");
+		CreativeTab.register();
 		LOGGER.info("Server=>Init-Ended");
 	}
 	public static Identifier GetID(String name) {

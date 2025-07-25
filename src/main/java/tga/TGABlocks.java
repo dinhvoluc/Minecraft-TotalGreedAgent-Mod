@@ -4,6 +4,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -15,9 +16,11 @@ import java.util.function.Function;
 
 public final class TGABlocks {
     public static Block BOX_WOOD;
+    public static Block BOX_HAVE;
 
     public static void register() {
-        BOX_WOOD = register("box_wood", BoxWood::new, Block.Settings.create().mapColor(MapColor.TERRACOTTA_BROWN).strength(2.0f).sounds(BlockSoundGroup.WOOD));
+         TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxWood::new, Block.Settings.create().mapColor(MapColor.TERRACOTTA_BROWN).strength(2.0f).sounds(BlockSoundGroup.WOOD))).asItem(), 300);
+
     }
     private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         final Identifier identifier = TotalGreedyAgent.GetID(path);

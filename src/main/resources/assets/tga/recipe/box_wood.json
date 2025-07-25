@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "tag": "minecraft:wooden_slabs" },
+    { "item": "minecraft:tripwire_hook" },
+    { "item": "minecraft:barrel" }
+  ],
+  "result": {
+    "item": "tga:box_wood",
+    "count": 1
+  }
+}
