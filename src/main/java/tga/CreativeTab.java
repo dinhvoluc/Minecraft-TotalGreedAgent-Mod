@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 public class CreativeTab {
     public static RegistryKey<ItemGroup> TGA_GROUP;
 
-    public static void register() {
+    public static void Load() {
         TGA_GROUP = RegistryKey.of(Registries.ITEM_GROUP.getKey(), TotalGreedyAgent.GetID("main"));
         Registry.register(Registries.ITEM_GROUP, TGA_GROUP, FabricItemGroup.builder()
                 .displayName(Text.translatable("itemGroup.tga.main"))

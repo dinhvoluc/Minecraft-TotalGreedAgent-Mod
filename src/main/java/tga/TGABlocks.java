@@ -9,18 +9,22 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import tga.Block.BoxWood;
+import tga.Block.BoxStack;
 import tga.Block.RubberSheet;
 
 import java.util.function.Function;
 
 public final class TGABlocks {
     public static Block BOX_WOOD;
-    public static Block BOX_HAVE;
+    public static Block BOX_WOOD_FILLED;
     public static Block RUBBER_SHEET;
 
-    public static void register() {
-        TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxWood::new, Block.Settings.create()
+    public static void Load() {
+        BOX_WOOD_FILLED = register("box_wood_filled", BoxStack::new, Block.Settings.create()
+                .mapColor(MapColor.TERRACOTTA_BROWN)
+                .strength(2.0f)
+                .sounds(BlockSoundGroup.WOOD));
+        TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxStack::new, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(2.0f)
                 .sounds(BlockSoundGroup.WOOD))).asItem(), 300);

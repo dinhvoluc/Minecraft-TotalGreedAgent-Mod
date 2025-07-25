@@ -11,11 +11,13 @@ public class TotalGreedyAgent implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Server=>Items");
-		TGAItems.register();
+		TGAItems.Load();
 		LOGGER.info("Server=>Blocks");
-		TGABlocks.register();
+		TGABlocks.Load();
 		LOGGER.info("Server=>Creative items list");
-		CreativeTab.register();
+		CreativeTab.Load();
+		LOGGER.info("Server=>BLocks inside logics");
+		TGATileEnities.Load();
 		LOGGER.info("Server=>Init-Ended");
 	}
 	public static Identifier GetID(String name) {

@@ -14,7 +14,7 @@ public final class TGAItems {
     public static Item RUBBER;
     public static Item REISIN;
 
-    public static void register() {
+    public static void Load() {
         SetBioBurnTime(RUBBER = register("rubber", Item::new, new Item.Settings()), 0.1f, 200);
         SetBioBurnTime(REISIN = register("resin", Item::new, new Item.Settings()), 0.2f, 100);
     }
