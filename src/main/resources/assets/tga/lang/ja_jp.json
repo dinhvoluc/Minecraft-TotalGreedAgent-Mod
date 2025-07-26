@@ -7,5 +7,8 @@
   "block.tga.box_copper_filled": "アイテム入った銅の箱",
   "block.tga.rubber_sheet": "ゴムのカーペット",
   "itemGroup.tga.main": "全部欲しいモノ",
-  "recipeGroup.tga.craft": "TGAレシピ"
+  "recipeGroup.tga.craft": "TGAレシピ",
+  "gui.tga.box_wood.any": "単種収納箱",
+  "gui.tga.box_wood.title": "木の箱",
+  "gui.tga.box_copper.title": "銅の箱"
 }

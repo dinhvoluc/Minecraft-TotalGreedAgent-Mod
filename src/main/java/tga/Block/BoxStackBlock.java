@@ -43,10 +43,8 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
-            player.sendMessage(Text.literal("（GUIは未実装です）"), false);
             if (!(world.getBlockEntity(pos) instanceof BoxStackTile tile)) return ActionResult.PASS;
-            player.sendMessage(Text.literal(String.format("Tile S0=%s S1=%s, TC=%s (Mx= %s)", tile.getStack(0), tile.getStack(1), tile.GetCountNow(), tile.GetMaxHold())), false);
-
+            player.openHandledScreen(tile);
         }
         return ActionResult.SUCCESS;
     }
@@ -60,12 +58,13 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
     }
 
     private static ItemStack GetFillBox(int maxStack) {
-       return switch (maxStack) {
-           case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD_FILLED);
-           case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER_FILLED);
-           default -> ItemStack.EMPTY;
-       };
+        return switch (maxStack) {
+            case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD_FILLED);
+            case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER_FILLED);
+            default -> ItemStack.EMPTY;
+        };
     }
+
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.onPlaced(world, pos, state, placer, stack);
@@ -81,7 +80,11 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (world.isClient || (player != null && player.isCreative())) return super.onBreak(world, pos, state, player);
+        if (world.isClient) return super.onBreak(world, pos, state, player);
+        if (player != null && player.isCreative()) {
+            world.removeBlockEntity(pos);
+            return super.onBreak(world, pos, state, player);
+        }
         BlockEntity bTile = world.getBlockEntity(pos);
         if (bTile instanceof BoxStackTile info) {
             if (info.isEmpty()) {

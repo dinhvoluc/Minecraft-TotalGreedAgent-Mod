@@ -21,7 +21,7 @@ public class BoxStackData implements TooltipAppender {
 
     public BoxStackData(int maxStack, ItemStack item, int exCount) {
         MaxStack = maxStack;
-        HoldItem = item == null ? ItemStack.EMPTY : item.copy();
+        HoldItem = item.copy();
         ExCount = HoldItem.isEmpty() ? 0 : Math.max(0, exCount);
     }
 

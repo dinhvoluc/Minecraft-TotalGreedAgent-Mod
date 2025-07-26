@@ -22,6 +22,8 @@ public class CreativeTab {
                     entries.add(TGAItems.RUBBER);
                     entries.add(TGABlocks.RUBBER_SHEET);
                     entries.add(TGAItems.REISIN);
+                    entries.add(TGAItems.COPPER_PLATE);
+                    entries.add(TGAItems.NAILS);
                 })
                 .build());
     }

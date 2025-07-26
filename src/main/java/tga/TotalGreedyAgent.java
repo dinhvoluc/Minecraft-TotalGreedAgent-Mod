@@ -14,6 +14,7 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static boolean IsClientSize = false;
 	public static MinecraftServer SERVER;
+
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Server=>Init...");
@@ -27,18 +28,25 @@ public class TotalGreedyAgent implements ModInitializer {
 		CreativeTab.Load();
 		LOGGER.info("Server=>BLocks logics");
 		TGATileEnities.Load(IsClientSize);
-		LOGGER.info("Server=>GUIs");
+		LOGGER.info("Server=>ScreenHandler");
 		TGAScreenHandlers.Load();
 		LOGGER.info("Server=>Custom data");
 		TGADataCom.Load();
 		LOGGER.info("Server=>Init-Ended");
 	}
+
+	public static String GetGuiLang(String name) {
+		return "gui.tga." + name + ".title";
+	}
+
 	public static Identifier GetID(String name) {
 		return Identifier.of(TGARef.Mod_ID, name);
 	}
+
 	public static void broadcastDebugMessage(String message) {
-		broadcastDebugMessage(message,false);
+		broadcastDebugMessage(message, false);
 	}
+
 	public static void broadcastDebugMessage(String message, boolean overlay) {
 		if (SERVER == null) return;
 		for (ServerPlayerEntity player : SERVER.getPlayerManager().getPlayerList()) {

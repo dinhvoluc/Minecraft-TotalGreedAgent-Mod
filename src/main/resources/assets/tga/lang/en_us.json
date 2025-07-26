@@ -6,5 +6,8 @@
   "block.tga.box_copper": "Copper box",
   "block.tga.box_copper_filled": "Copper box (have item)",
   "block.tga.rubber_sheet": "Rubber sheet",
-  "itemGroup.tga.main": "Total Greedy Agent"
+  "itemGroup.tga.main": "Total Greedy Agent",
+  "gui.tga.box_wood.any": "One item storage box",
+  "gui.tga.box_wood.title": "Wooden box",
+  "gui.tga.box_copper.title": "Copper box"
 }

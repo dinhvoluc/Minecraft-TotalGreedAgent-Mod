@@ -14,11 +14,13 @@ public final class TGAItems {
     public static Item RUBBER;
     public static Item REISIN;
     public static Item COPPER_PLATE;
+    public static Item NAILS;
 
     public static void Load(boolean isClientSide) {
         SetBioBurnTime(RUBBER = register("rubber", Item::new, new Item.Settings()), 0.1f, 200);
         SetBioBurnTime(REISIN = register("resin", Item::new, new Item.Settings()), 0.2f, 100);
         COPPER_PLATE = register("plate_copper", Item::new, new Item.Settings());
+        NAILS = register("nails", Item::new, new Item.Settings());
     }
 
     public static void SetBioValue(Item item, float rate){
