@@ -3,7 +3,6 @@ package tga.BlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
@@ -12,32 +11,38 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import tga.ComDat.BoxStackData;
 import tga.TGATileEnities;
-import tga.TotalGreedyAgent;
+
+import java.util.Optional;
 
 public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     protected void writeData(WriteView view) {
-        view.putInt("C", ExHold);
-        view.getListAppender("I", StackWithSlot.CODEC).add(new StackWithSlot(0, HoldItem));
+        view.put("Info", BoxStackData.CODEC, GetDataComponent());
     }
 
     @Override
     protected void readData(ReadView view) {
-        ExHold = view.getInt("C", 0);
-        for(StackWithSlot stackWithSlot : view.getTypedListView("Items", StackWithSlot.CODEC)) {
-            HoldItem = stackWithSlot.stack();
-            break;
-        }
+        Optional<BoxStackData> opt = view.read("Info", BoxStackData.CODEC);
+        if (opt.isEmpty()) return;
+        BoxStackData info = opt.get();
+        MaxHoldStack = info.MaxStack;
+        HoldItem = info.HoldItem;
+        ExCount = info.ExCount;
     }
 
-    private int ExHold;
+    private int ExCount;
     private int MaxHoldStack;
     private ItemStack HoldItem = ItemStack.EMPTY;
 
+    public void SetDataComponent(BoxStackData data){
+        MaxHoldStack = data.MaxStack;
+        HoldItem = data.HoldItem.copy();
+        ExCount = data.ExCount;
+    }
     public BoxStackData GetDataComponent()
     {
-        return new BoxStackData(MaxHoldStack, HoldItem, ExHold);
+        return new BoxStackData(MaxHoldStack, HoldItem, ExCount);
     }
 
     public void SetMaxHoldStack(int max) {
@@ -61,7 +66,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
         if (slot != 1) return false;
         if (HoldItem.isEmpty()) return true;
         //スタック出来るかを確認する
-        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack) && (ExHold + HoldItem.getCount()) < GetMaxHold();
+        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack) && (ExCount + HoldItem.getCount()) < GetMaxHold();
     }
 
     @Override
@@ -85,71 +90,67 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
     }
 
     public int GetCountNow() {
-        return HoldItem.isEmpty() ? 0 : (HoldItem.getCount() + ExHold);
+        return HoldItem.isEmpty() ? 0 : (HoldItem.getCount() + ExCount);
     }
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        TotalGreedyAgent.broadcastDebugMessage(slot +"=>remove=>" + amount);
-        if (HoldItem.isEmpty()) return ItemStack.EMPTY;
-        if (amount > GetCountNow()) {
+        if (amount <= 0 || HoldItem.isEmpty()) return ItemStack.EMPTY;
+        int cNow = GetCountNow();
+        if (amount > cNow) {
             ItemStack rt = HoldItem.copy();
             HoldItem = ItemStack.EMPTY;
-            ExHold = 0;
+            ExCount = 0;
             markDirty();
             return rt;
         }
         ItemStack rt = HoldItem.copy();
-        if (ExHold > 0) {
-            int maxPerStack = HoldItem.getMaxCount();
-            if (ExHold >= maxPerStack) {
-                HoldItem.setCount(maxPerStack);
-                ExHold -= maxPerStack;
-            } else {
-                HoldItem.setCount(ExHold);
-                ExHold = 0;
-            }
-        } else HoldItem = ItemStack.EMPTY;
+        int fastCount = HoldItem.getCount();
+        amount = Math.min(amount, fastCount);
+        rt.setCount(amount);
+        Merging(cNow - amount);
         markDirty();
         return rt;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-        TotalGreedyAgent.broadcastDebugMessage(slot +"=>remove");
         if (HoldItem.isEmpty()) return ItemStack.EMPTY;
         ItemStack rt = HoldItem.copy();
-        if (ExHold > 0) {
+        if (ExCount > 0) {
             int maxPerStack = HoldItem.getMaxCount();
-            if (ExHold >= maxPerStack) {
+            if (ExCount >= maxPerStack) {
                 HoldItem.setCount(maxPerStack);
-                ExHold -= maxPerStack;
+                ExCount -= maxPerStack;
             } else {
-                HoldItem.setCount(ExHold);
-                ExHold = 0;
+                HoldItem.setCount(ExCount);
+                ExCount = 0;
             }
         } else HoldItem = ItemStack.EMPTY;
         markDirty();
         return rt;
     }
 
-    private int Merging(int total) {
+    private void Merging(int total) {
+        if (total <= 0) {
+            HoldItem = ItemStack.EMPTY;
+            ExCount = 0;
+            return;
+        }
         int maxPerStack = HoldItem.getMaxCount();
         int sendBack = total - GetMaxHold();
         if (sendBack > 0) total -= sendBack;
         if (total > maxPerStack) {
-            ExHold = total - maxPerStack;
+            ExCount = total - maxPerStack;
             HoldItem.setCount(maxPerStack);
         } else {
-            ExHold = 0;
+            ExCount = 0;
             HoldItem.setCount(total);
         }
-        return Math.max(0, sendBack);
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        TotalGreedyAgent.broadcastDebugMessage(slot +"=>Set=>" + stack.getCount() + "x" + stack.getName());
         if (slot == 1) {
             //Input slot
             if (stack.isEmpty() || !canInsert(slot, stack, null)) return;
@@ -159,28 +160,28 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
                 stack.setCount(0);
                 return;
             }
-            stack.setCount(Merging(GetCountNow() + stack.getCount()));
+            Merging(GetCountNow() + stack.getCount());
             return;
         }
         markDirty();
         //Extract slot only
         if (stack.isEmpty()) {
             //swap amaru
-            if (ExHold == 0) {
+            if (ExCount == 0) {
                 HoldItem = ItemStack.EMPTY;
                 return;
             }
             int maxPerStack = getMaxCountPerStack();
-            if (ExHold >= maxPerStack) {
+            if (ExCount >= maxPerStack) {
                 HoldItem.setCount(maxPerStack);
-                ExHold -= maxPerStack;
+                ExCount -= maxPerStack;
                 return;
             }
-            HoldItem.setCount(ExHold);
-            ExHold = 0;
+            HoldItem.setCount(ExCount);
+            ExCount = 0;
             return;
         }
-        stack.setCount(Merging(ExHold + stack.getCount()));
+        Merging(ExCount + stack.getCount());
     }
 
     @Override
@@ -190,7 +191,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     public void clear() {
-        ExHold = 0;
+        ExCount = 0;
         HoldItem = ItemStack.EMPTY;
         markDirty();
     }

@@ -18,6 +18,7 @@ public class CreativeTab {
                 .icon(() -> new ItemStack(TGABlocks.BOX_WOOD))
                 .entries((context, entries) -> {
                     entries.add(TGABlocks.BOX_WOOD);
+                    entries.add(TGABlocks.BOX_COPPER);
                     entries.add(TGAItems.RUBBER);
                     entries.add(TGABlocks.RUBBER_SHEET);
                     entries.add(TGAItems.REISIN);

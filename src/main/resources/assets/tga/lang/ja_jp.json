@@ -2,6 +2,9 @@
   "item.tga.rubber": "ゴム",
   "item.tga.resin": "天然樹脂",
   "block.tga.box_wood": "木の箱",
+  "block.tga.box_wood_filled": "アイテム入った木の箱",
+  "block.tga.box_copper": "銅の箱",
+  "block.tga.box_copper_filled": "アイテム入った銅の箱",
   "block.tga.rubber_sheet": "ゴムのカーペット",
   "itemGroup.tga.main": "全部欲しいモノ",
   "recipeGroup.tga.craft": "TGAレシピ"
