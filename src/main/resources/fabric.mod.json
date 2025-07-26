@@ -15,6 +15,9 @@
 	"entrypoints": {
 		"main": [
 			"tga.TotalGreedyAgent"
+		],
+		"client": [
+			"tga.TGAClient"
 		]
 	},
 	"depends": {

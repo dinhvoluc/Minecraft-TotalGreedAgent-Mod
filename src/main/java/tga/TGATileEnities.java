@@ -18,7 +18,7 @@ public class TGATileEnities {
     ) {
         return Registry.register(Registries.BLOCK_ENTITY_TYPE, TotalGreedyAgent.GetID(name), FabricBlockEntityTypeBuilder.<T>create(entityFactory, blocks).build());
     }
-    public static void  Load(){
+    public static void  Load(boolean isClientSide){
         BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new, TGABlocks.BOX_WOOD);
     }
 }

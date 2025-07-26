@@ -9,8 +9,8 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import tga.Block.BoxStack;
-import tga.Block.RubberSheet;
+import tga.Block.BoxStackBlock;
+import tga.Block.RubberSheetBlock;
 
 import java.util.function.Function;
 
@@ -19,16 +19,16 @@ public final class TGABlocks {
     public static Block BOX_WOOD_FILLED;
     public static Block RUBBER_SHEET;
 
-    public static void Load() {
-        BOX_WOOD_FILLED = register("box_wood_filled", BoxStack::new, Block.Settings.create()
+    public static void Load(boolean isClientSide) {
+        BOX_WOOD_FILLED = register("box_wood_filled", BoxStackBlock::new, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(2.0f)
                 .sounds(BlockSoundGroup.WOOD));
-        TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxStack::new, Block.Settings.create()
+        TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxStackBlock::new, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(2.0f)
                 .sounds(BlockSoundGroup.WOOD))).asItem(), 300);
-        TGAItems.SetBurnTime((RUBBER_SHEET = register("rubber_sheet", RubberSheet::new, Block.Settings.create()
+        TGAItems.SetBurnTime((RUBBER_SHEET = register("rubber_sheet", RubberSheetBlock::new, Block.Settings.create()
                 .mapColor(MapColor.BLACK)
                 .strength(0.2f)
                 .sounds(BlockSoundGroup.WOOL)

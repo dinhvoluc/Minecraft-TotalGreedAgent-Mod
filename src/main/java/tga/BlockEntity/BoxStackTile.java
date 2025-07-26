@@ -2,18 +2,17 @@ package tga.BlockEntity;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
+import tga.ComDat.BoxStackData;
 import tga.TGATileEnities;
+import tga.TotalGreedyAgent;
 
 public class BoxStackTile extends BlockEntity implements SidedInventory {
 
@@ -36,6 +35,11 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
     private int MaxHoldStack;
     private ItemStack HoldItem = ItemStack.EMPTY;
 
+    public BoxStackData GetDataComponent()
+    {
+        return new BoxStackData(MaxHoldStack, HoldItem, ExHold);
+    }
+
     public void SetMaxHoldStack(int max) {
         MaxHoldStack = max;
     }
@@ -43,7 +47,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
         super(TGATileEnities.BOX_STACK_TILE, pos, state);
     }
 
-    private int GetMaxHold() {
+    public int GetMaxHold() {
         return MaxHoldStack * HoldItem.getMaxCount();
     }
 
@@ -77,7 +81,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     public ItemStack getStack(int slot) {
-        return HoldItem;
+        return slot == 0 ? HoldItem : ItemStack.EMPTY;
     }
 
     public int GetCountNow() {
@@ -86,6 +90,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
+        TotalGreedyAgent.broadcastDebugMessage(slot +"=>remove=>" + amount);
         if (HoldItem.isEmpty()) return ItemStack.EMPTY;
         if (amount > GetCountNow()) {
             ItemStack rt = HoldItem.copy();
@@ -111,6 +116,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     public ItemStack removeStack(int slot) {
+        TotalGreedyAgent.broadcastDebugMessage(slot +"=>remove");
         if (HoldItem.isEmpty()) return ItemStack.EMPTY;
         ItemStack rt = HoldItem.copy();
         if (ExHold > 0) {
@@ -143,6 +149,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory {
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        TotalGreedyAgent.broadcastDebugMessage(slot +"=>Set=>" + stack.getCount() + "x" + stack.getName());
         if (slot == 1) {
             //Input slot
             if (stack.isEmpty() || !canInsert(slot, stack, null)) return;

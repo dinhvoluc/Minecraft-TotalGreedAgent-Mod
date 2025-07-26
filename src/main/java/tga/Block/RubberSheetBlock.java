@@ -8,10 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
-public class RubberSheet extends Block {
+public class RubberSheetBlock extends Block {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 1.0, 16.0);
 
-    public RubberSheet(Settings settings) {
+    public RubberSheetBlock(Settings settings) {
         super(settings);
     }
 
