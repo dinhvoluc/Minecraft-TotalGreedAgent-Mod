@@ -4,11 +4,9 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import tga.NetEvents.BoxStackGuiSync;
 import tga.TGAScreenHandlers;
-import tga.TotalGreedyAgent;
 
 public class BoxStackScreen extends HandledScreen<BoxStackScreenHandler> {
     public static BoxStackScreenHandler LastHandler;

@@ -8,6 +8,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import tga.BlockEntity.BoxStackTile;
 import tga.ExSlots.CheckInsertSlot;
 import tga.ExSlots.TakeOnlySlot;
@@ -44,13 +45,19 @@ public class BoxStackScreenHandler extends ScreenHandler {
         for (int i = 0; i < 9; ++i) addSlot(new Slot(playerInventory, i, startX + i * 18, startY + 58));
     }
 
-    public static void SendUpdate(BlockPos pos, int exCount, ItemStack holdItem) {
-        BoxStackGuiSync payload = new BoxStackGuiSync(pos, exCount, holdItem);
+    public static void SendUpdate(BoxStackTile tile, int exCount, ItemStack holdItem) {
+        if (UsingPlayer.isEmpty()) return;
+        World wKey = tile.getWorld();
+        if (wKey == null) return;
+        BoxStackGuiSync payload = new BoxStackGuiSync(wKey.getRegistryKey().getValue().toString(), tile.getPos(), exCount, holdItem);
         for (ServerPlayerEntity player : UsingPlayer)
             ServerPlayNetworking.send(player, payload);
     }
-    public static void SendUpdate(BlockPos pos, int exCount, ItemStack holdItem, ServerPlayerEntity player) {
-        BoxStackGuiSync payload = new BoxStackGuiSync(pos, exCount, holdItem);
+
+    public static void SendUpdate(BoxStackTile tile, int exCount, ItemStack holdItem, ServerPlayerEntity player) {
+        World wKey = tile.getWorld();
+        if (wKey == null) return;
+        BoxStackGuiSync payload = new BoxStackGuiSync(wKey.getRegistryKey().getValue().toString(), tile.getPos(), exCount, holdItem);
         ServerPlayNetworking.send(player, payload);
     }
 
@@ -60,29 +67,105 @@ public class BoxStackScreenHandler extends ScreenHandler {
     }
 
     public ItemStack quickMove(PlayerEntity player, int slot) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot2 = slots.get(slot);
-        if (slot2.hasStack()) {
-            ItemStack itemStack2 = slot2.getStack();
-            itemStack = itemStack2.copy();
-            if (slot < SLOT_COUNT) {
-                if (!insertItem(itemStack2, SLOT_COUNT, slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!insertItem(itemStack2, 1, SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;
-            }
+        return switch (slot) {
+            case 0 -> TryExtract();
+            case 1 -> ItemStack.EMPTY;
+            default -> TryImport(slot);
+        };
+    }
 
-            if (itemStack2.isEmpty()) {
-                slot2.setStack(ItemStack.EMPTY);
-            } else {
-                slot2.markDirty();
+    private ItemStack TryExtract() {
+        if (Tile.isEmpty()) return ItemStack.EMPTY;
+        //players slot ni aitemu wo umeru
+        int totalBoxHold = Tile.GetCountNow();
+        ItemStack baseItem = Tile.getStack(0).copy();
+        int maxCount = baseItem.getMaxCount();
+        //１回目は既に配置したアイテムを埋まる
+        int oldMax = totalBoxHold;
+        for (var i = 2; i < slots.size(); i++) {
+            Slot slot_player = getSlot(i);
+            if (!slot_player.hasStack()) continue;
+            ItemStack pStack = slot_player.getStack();
+            if (!ItemStack.areItemsAndComponentsEqual(baseItem, pStack) || pStack.getCount() >= maxCount) continue;
+            int amount = Math.min(totalBoxHold, maxCount - pStack.getCount());
+            ItemStack newStack = pStack.copy();
+            newStack.increment(amount);
+            slot_player.setStack(newStack);
+            totalBoxHold -= amount;
+            if (totalBoxHold <= 0) {
+                Tile.clear();
+                return baseItem;
             }
         }
-
-        return itemStack;
+        //２回目は空いてるスロットに配置
+        for (var i = 2; i < slots.size(); i++) {
+            Slot slot_player = getSlot(i);
+            if (slot_player.hasStack()) continue;
+            ItemStack newStack = baseItem.copy();
+            int amount = Math.min(totalBoxHold, maxCount);
+            newStack.setCount(amount);
+            totalBoxHold -= amount;
+            slot_player.setStack(newStack);
+            if (totalBoxHold <= 0) break;
+        }
+        Tile.SetTotalCount(totalBoxHold);
+        return oldMax > totalBoxHold ? baseItem : ItemStack.EMPTY;
     }
+
+    public ItemStack TryImport(int slot) {
+        Slot original = getSlot(slot);
+        if (!original.hasStack()) return ItemStack.EMPTY;
+        int totalCount = Tile.GetCountNow();
+        int maxInput = Tile.GetMaxHold() - totalCount;
+        if (maxInput <= 0) return ItemStack.EMPTY;
+        ItemStack baseItem = original.getStack().copy();
+        //初期化
+        if (Tile.isEmpty()) maxInput = baseItem.getMaxCount() * Tile.GetMaxHoldStack();
+        //違うアイテムなのでNGを出します。
+        else if (!ItemStack.areItemsAndComponentsEqual(baseItem, Tile.getStack(0))) return ItemStack.EMPTY;
+        //まずはオリジナルか回収
+        int curCount = baseItem.getCount();
+        if (maxInput < curCount) {
+            Tile.SetTotalCount(baseItem, totalCount + maxInput);
+            ItemStack newStack = baseItem.copy();
+            newStack.setCount(curCount - maxInput);
+            original.setStack(newStack);
+            return baseItem;
+        } else {
+            maxInput -= curCount;
+            totalCount += curCount;
+            original.setStack(ItemStack.EMPTY);
+        }
+        if (maxInput <= 0) {
+            Tile.SetTotalCount(baseItem, totalCount);
+            return baseItem;
+        }
+        //２回目は空いてるスロットに配置
+        for (var i = 2; i < slots.size(); i++) {
+            Slot plater_slot = getSlot(i);
+            if (!plater_slot.hasStack()) continue;
+            ItemStack slotNai = plater_slot.getStack();
+            if (!ItemStack.areItemsAndComponentsEqual(baseItem, slotNai)) continue;
+            curCount = slotNai.getCount();
+            if (maxInput < curCount) {
+                Tile.SetTotalCount(baseItem, totalCount + maxInput);
+                ItemStack newStack = slotNai.copy();
+                newStack.setCount(curCount - maxInput);
+                plater_slot.setStack(newStack);
+                return baseItem;
+            } else {
+                maxInput -= curCount;
+                totalCount += curCount;
+                plater_slot.setStack(ItemStack.EMPTY);
+            }
+            if (maxInput <= 0) break;
+        }
+        Tile.SetTotalCount(baseItem, totalCount);
+        return baseItem;
+    }
+
     public static final Set<ServerPlayerEntity> UsingPlayer = new HashSet<>();
+
     public void onClosed(PlayerEntity player) {
         super.onClosed(player);
         Tile.onClose(player);

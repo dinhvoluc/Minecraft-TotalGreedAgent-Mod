@@ -17,6 +17,7 @@ public class BoxStackGuiSync implements CustomPayload {
         PACKET_CODEC = new PacketCodec<>() {
             @Override
             public BoxStackGuiSync decode(RegistryByteBuf buf) {
+                String wrl = buf.readString();
                 BlockPos pos = buf.readBlockPos();
                 int exCount = buf.readInt();
                 ItemStack hold;
@@ -24,11 +25,12 @@ public class BoxStackGuiSync implements CustomPayload {
                     exCount = 0;
                     hold = ItemStack.EMPTY;
                 } else hold = ItemStack.PACKET_CODEC.decode(buf);
-                return new BoxStackGuiSync(pos, exCount, hold);
+                return new BoxStackGuiSync(wrl, pos, exCount, hold);
             }
 
             @Override
             public void encode(RegistryByteBuf buf, BoxStackGuiSync value) {
+                buf.writeString(value.World);
                 buf.writeBlockPos(value.Pos);
                 if (value.HoldItem.isEmpty()) buf.writeInt(-128);
                 else {
@@ -40,12 +42,14 @@ public class BoxStackGuiSync implements CustomPayload {
         PayloadTypeRegistry.playS2C().register(BoxStackGuiSync.PAYLOAD_ID, BoxStackGuiSync.PACKET_CODEC);
     }
 
-    public BoxStackGuiSync(BlockPos pos, int exCount, ItemStack holdItem) {
+    public BoxStackGuiSync(String world, BlockPos pos, int exCount, ItemStack holdItem) {
+        World = world;
         Pos = pos;
         ExCount = exCount;
         HoldItem = holdItem;
     }
 
+    public final String World;
     public final BlockPos Pos;
     public final int ExCount;
     public final ItemStack HoldItem;
