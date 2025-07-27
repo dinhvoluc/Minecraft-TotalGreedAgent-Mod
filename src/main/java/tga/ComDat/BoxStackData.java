@@ -10,6 +10,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BoxStackData implements TooltipAppender {
@@ -18,6 +19,12 @@ public class BoxStackData implements TooltipAppender {
     public final ItemStack HoldItem;
     public final int MaxStack;
     public final int ExCount;
+
+    public BoxStackData(int maxStack, Optional<ItemStack> item, int exCount) {
+        MaxStack = maxStack;
+        HoldItem = item.isEmpty() ? ItemStack.EMPTY : item.get().copy();
+        ExCount = HoldItem.isEmpty() ? 0 : Math.max(0, exCount);
+    }
 
     public BoxStackData(int maxStack, ItemStack item, int exCount) {
         MaxStack = maxStack;

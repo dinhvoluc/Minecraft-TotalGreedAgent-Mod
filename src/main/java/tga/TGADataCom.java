@@ -4,11 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import tga.ComDat.BoxStackData;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class TGADataCom {
@@ -19,9 +19,9 @@ public class TGADataCom {
     public static void Load() {
         BoxStackData.CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.INT.fieldOf("m").forGetter((dat)->dat.MaxStack),
-                        ItemStack.CODEC.fieldOf("i").forGetter((dat)-> dat.HoldItem),
-                        Codec.INT.fieldOf("c").forGetter((dat)->dat.ExCount)
+                        Codec.INT.fieldOf("m").forGetter((dat) -> dat.MaxStack),
+                        ItemStack.CODEC.optionalFieldOf("i").forGetter((dat) -> dat.HoldItem.isEmpty() ? Optional.empty() : Optional.of(dat.HoldItem)),
+                        Codec.INT.fieldOf("c").forGetter((dat) -> dat.ExCount)
                 ).apply(instance, BoxStackData::new));
         BoxStackData.COMPONET_TYPE = register("boxstackdata", builder -> builder.codec(BoxStackData.CODEC));
     }

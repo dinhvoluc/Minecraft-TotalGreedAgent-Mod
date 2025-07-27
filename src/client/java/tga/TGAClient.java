@@ -13,7 +13,9 @@ public class TGAClient extends TotalGreedyAgent implements ClientModInitializer 
 
 	@Override
 	public void onInitializeClient() {
-		LOGGER.info("Client=>LoadScreen");
+		LOGGER.info("Client=>NetEvents");
+		ClientNet.Load();
+		LOGGER.info("Client=>Screens");
 		HandledScreens.register(TGAScreenHandlers.BOX_STACK, BoxStackScreen::new);
 		LOGGER.info("Client=>ToolTips");
 		TGAToolTips.Load();

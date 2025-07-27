@@ -6,13 +6,29 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import tga.NetEvents.BoxStackGuiSync;
 import tga.TGAScreenHandlers;
+import tga.TotalGreedyAgent;
 
 public class BoxStackScreen extends HandledScreen<BoxStackScreenHandler> {
+    public static BoxStackScreenHandler LastHandler;
+
     public BoxStackScreen(BoxStackScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         width = 176;
         height = 166;
+        LastHandler = handler;
+    }
+
+    public static void HandleSync(BoxStackGuiSync payload) {
+        if (LastHandler == null || LastHandler.Tile == null) return;
+        LastHandler.Tile.TGAS2CSync(payload);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        LastHandler = null;
     }
 
     @Override
@@ -22,17 +38,16 @@ public class BoxStackScreen extends HandledScreen<BoxStackScreenHandler> {
     }
 
     @Override
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        super.drawForeground(context, mouseX, mouseY);
+        if (!handler.Tile.isEmpty())
+            context.drawText(textRenderer, handler.Tile.getStack(0).getName(), 50, 24, 0xff404040, false);
+        context.drawText(textRenderer, Text.literal(handler.Tile.GetCountNow() + "/" + handler.Tile.GetMaxHold()), 50, 49, 0xff704040, false);
+    }
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        if (!handler.Tile.isEmpty()) {
-            ItemStack ctn = handler.Tile.getStack(0);
-            Text name = ctn.getCustomName();
-            String asStringName;
-            if (name != null) asStringName = name.getString();
-            else asStringName = ctn.toString();
-            context.drawText(textRenderer, asStringName == null ? ctn.toString() : asStringName, x + 40, y + 22, 0x404040, false);
-            context.drawText(textRenderer, handler.Tile.GetCountNow() + "/" + handler.Tile.GetMaxHold(), x + 40, y + 47, 0x704040, false);
-        }
         drawMouseoverTooltip(context, mouseX, mouseY);
     }
 }

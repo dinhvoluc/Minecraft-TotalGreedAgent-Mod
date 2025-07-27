@@ -10,6 +10,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import tga.BlockEntity.BoxStackTile;
 import tga.ComDat.BoxStackData;
 import tga.TGABlocks;
@@ -76,6 +77,15 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
                 if (data != null) boxTile.SetDataComponent(data);
             }
         }
+    }
+
+    @Override
+    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+        return switch (MaxStack) {
+            case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD);
+            case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER);
+            default -> ItemStack.EMPTY;
+        };
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import tga.Block.BoxStackBlock;
 import tga.ComDat.BoxStackData;
+import tga.NetEvents.BoxStackGuiSync;
 import tga.Screen.BoxStackScreenHandler;
 import tga.TGATileEnities;
 import tga.TotalGreedyAgent;
@@ -34,7 +35,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     protected void readData(ReadView view) {
         MaxHoldStack = view.getInt("M", 1);
         ExCount = view.getInt("E", 0);
-        HoldItem = view.read("T", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        HoldItem = view.read("I", ItemStack.CODEC).orElse(ItemStack.EMPTY);
     }
 
     private int ExCount;
@@ -45,6 +46,17 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         MaxHoldStack = data.MaxStack;
         HoldItem = data.HoldItem.copy();
         ExCount = data.ExCount;
+        markDirty();
+    }
+
+    @Override
+    public int getMaxCount(ItemStack stack) {
+        return Math.min(stack.getCount(), getMaxCountPerStack());
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return HoldItem.isEmpty() ? 64 : Math.min(HoldItem.getMaxCount(), GetMaxHold() - GetCountNow());
     }
 
     public BoxStackData GetDataComponent() {
@@ -60,7 +72,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     }
 
     public int GetMaxHold() {
-        return MaxHoldStack * HoldItem.getMaxCount();
+        return MaxHoldStack * (HoldItem.isEmpty() ? 64 : HoldItem.getMaxCount());
     }
 
     @Override
@@ -73,7 +85,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         if (slot != 1) return false;
         if (HoldItem.isEmpty()) return true;
         //スタック出来るかを確認する
-        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack) && (ExCount + HoldItem.getCount()) < GetMaxHold();
+        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack) && (ExCount + HoldItem.getCount() + stack.getCount()) <= GetMaxHold();
     }
 
     @Override
@@ -102,9 +114,6 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-
-        TotalGreedyAgent.broadcastDebugMessage("removeStack=>" + slot + "/" + amount);
-
         if (amount <= 0 || HoldItem.isEmpty()) return ItemStack.EMPTY;
         int cNow = GetCountNow();
         if (amount > cNow) {
@@ -119,15 +128,11 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         amount = Math.min(amount, fastCount);
         rt.setCount(amount);
         Merging(cNow - amount);
-        markDirty();
         return rt;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-
-        TotalGreedyAgent.broadcastDebugMessage("removeStack=>" + slot);
-
         if (HoldItem.isEmpty()) return ItemStack.EMPTY;
         ItemStack rt = HoldItem.copy();
         if (ExCount > 0) {
@@ -166,15 +171,13 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-
-        TotalGreedyAgent.broadcastDebugMessage("setStack=>" + stack);
-
         if (slot == 1) {
             //Input slot
             if (stack.isEmpty() || !canInsert(slot, stack, null)) return;
             if (HoldItem.isEmpty()) {
                 HoldItem = stack.copy();
                 stack.setCount(0);
+                markDirty();
                 return;
             }
             Merging(GetCountNow() + stack.getCount());
@@ -205,7 +208,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
-        return this.world != null && !this.isRemoved() && player.squaredDistanceTo(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5) <= 100.0;
+        return world != null && !isRemoved() && player.squaredDistanceTo(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 100.0;
     }
 
     @Override
@@ -230,7 +233,34 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     }
 
     @Override
+    public void markDirty() {
+        super.markDirty();
+        if (world == null || world.isClient) return;
+        BoxStackScreenHandler.SendUpdate(pos, ExCount, HoldItem);
+    }
+
+    @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        if (world == null || world.isClient) return null;
+        BoxStackScreenHandler.SendUpdate(pos, ExCount, HoldItem, (ServerPlayerEntity) player);
         return new BoxStackScreenHandler(syncId, playerInventory, this);
+    }
+
+    public void TGAS2CSync(BoxStackGuiSync payload) {
+        if (!pos.equals(payload.Pos)) return;
+        ExCount = payload.ExCount;
+        HoldItem = payload.HoldItem;
+    }
+
+    @Override
+    public void onOpen(PlayerEntity player) {
+        if (world == null || world.isClient) return;
+        BoxStackScreenHandler.UsingPlayer.add((ServerPlayerEntity) player);
+    }
+
+    @Override
+    public void onClose(PlayerEntity player) {
+        if (world == null || world.isClient) return;
+        BoxStackScreenHandler.UsingPlayer.remove((ServerPlayerEntity) player);
     }
 }
