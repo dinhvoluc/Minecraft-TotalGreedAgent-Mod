@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iIi",
+    "IXI",
+    "iIi"
+  ],
+  "key": {
+    "i": "tga:nails",
+    "I": "tga:plate_copper",
+    "X": "tga:box_wood"
+  },
+  "result": {
+    "id": "tga:box_copper",
+    "count": 1
+  }
+}

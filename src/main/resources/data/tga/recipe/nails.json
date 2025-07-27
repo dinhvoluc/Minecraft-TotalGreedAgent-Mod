@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iii",
+    " I ",
+    " I "
+  ],
+  "key": {
+    "i": "minecraft:iron_ingot",
+    "I": "minecraft:iron_nugget"
+  },
+  "result": {
+    "id": "tga:nails",
+    "count": 20
+  }
+}

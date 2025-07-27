@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smithing_trim",
-  "template": "minecraft:iron_ingot",
-  "base": "minecraft:iron_nugget",
-  "addition": "minecraft:iron_nugget",
-  "result": {
-    "id": "tga:nails"
-  }
-}

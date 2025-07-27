@@ -29,7 +29,7 @@ public final class TGABlocks {
         TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxStackBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f)
-                .sounds(BlockSoundGroup.WOOD))).asItem(), 300);
+                .sounds(BlockSoundGroup.WOOD))).asItem(), 800);
         BOX_COPPER = register("box_copper", BoxStackBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 6f)
