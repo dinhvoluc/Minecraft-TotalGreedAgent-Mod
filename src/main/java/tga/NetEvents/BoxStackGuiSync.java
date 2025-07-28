@@ -46,7 +46,7 @@ public class BoxStackGuiSync implements CustomPayload {
         World = world;
         Pos = pos;
         ExCount = exCount;
-        HoldItem = holdItem;
+        HoldItem = holdItem.copy();
     }
 
     public final String World;

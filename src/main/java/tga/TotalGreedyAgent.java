@@ -15,7 +15,15 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static boolean IsClientSize = false;
 	public static MinecraftServer SERVER;
 
-	@Override
+    public static String GetSeedID(String id) {
+		return "seed_" + id;
+    }
+
+	public static String GetCropID(String id){
+		return "crop_" + id;
+	}
+
+    @Override
 	public void onInitialize() {
 		LOGGER.info("Server=>Init...");
 		ServerLifecycleEvents.SERVER_STARTED.register(s -> SERVER = s);
@@ -42,12 +50,8 @@ public class TotalGreedyAgent implements ModInitializer {
 		return Identifier.of(TGARef.Mod_ID, name);
 	}
 
-	public static void writeInfo(String message, Object... ars)
-	{
-		if (ars.length == 0)
-			LOGGER.info(message);
-		else
-			LOGGER.info(String.format(message, ars));
+	public static void writeInfo(String message, Object... ars) {
+		LOGGER.info(ars.length == 0 ? message : String.format(message, ars));
 	}
 
 	public static void broadcastDebugMessage(String message) {

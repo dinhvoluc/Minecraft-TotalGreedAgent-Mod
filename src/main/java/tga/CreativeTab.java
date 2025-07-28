@@ -17,6 +17,7 @@ public class CreativeTab {
                 .displayName(Text.translatable("itemGroup.tga.main"))
                 .icon(() -> new ItemStack(TGABlocks.BOX_WOOD))
                 .entries((context, entries) -> {
+                    entries.add(TGABlocks.MAN_CRACKER);
                     entries.add(TGABlocks.BOX_WOOD);
                     entries.add(TGABlocks.BOX_COPPER);
                     entries.add(TGAItems.RUBBER);

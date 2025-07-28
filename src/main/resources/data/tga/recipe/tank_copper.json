@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iIi",
+    "IXI",
+    "iIi"
+  ],
+  "key": {
+    "i": "tga:nails",
+    "I": "tga:plate_copper",
+    "X": "minecraft:bucket"
+  },
+  "result": {
+    "id": "tga:tank_copper",
+    "count": 1
+  }
+}

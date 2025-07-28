@@ -45,15 +45,6 @@ public class BoxStackScreenHandler extends ScreenHandler {
         for (int i = 0; i < 9; ++i) addSlot(new Slot(playerInventory, i, startX + i * 18, startY + 58));
     }
 
-    public static void SendUpdate(BoxStackTile tile, int exCount, ItemStack holdItem) {
-        if (UsingPlayer.isEmpty()) return;
-        World wKey = tile.getWorld();
-        if (wKey == null) return;
-        BoxStackGuiSync payload = new BoxStackGuiSync(wKey.getRegistryKey().getValue().toString(), tile.getPos(), exCount, holdItem);
-        for (ServerPlayerEntity player : UsingPlayer)
-            ServerPlayNetworking.send(player, payload);
-    }
-
     public static void SendUpdate(BoxStackTile tile, int exCount, ItemStack holdItem, ServerPlayerEntity player) {
         World wKey = tile.getWorld();
         if (wKey == null) return;
@@ -165,6 +156,7 @@ public class BoxStackScreenHandler extends ScreenHandler {
     }
 
     public static final Set<ServerPlayerEntity> UsingPlayer = new HashSet<>();
+    public static int UsingPlayerCount;
 
     public void onClosed(PlayerEntity player) {
         super.onClosed(player);

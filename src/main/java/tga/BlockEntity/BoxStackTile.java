@@ -1,5 +1,6 @@
 package tga.BlockEntity;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,7 @@ import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.Block.BoxStackBlock;
 import tga.ComDat.BoxStackData;
@@ -260,8 +262,10 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     @Override
     public void markDirty() {
         super.markDirty();
-        if (world == null || world.isClient) return;
-        BoxStackScreenHandler.SendUpdate(this, ExCount, HoldItem);
+        if (BoxStackScreenHandler.UsingPlayerCount == 0 || world == null || world.isClient) return;
+        BoxStackGuiSync payload = new BoxStackGuiSync(world.getRegistryKey().getValue().toString(), pos, ExCount, HoldItem);
+        for (ServerPlayerEntity player : BoxStackScreenHandler.UsingPlayer)
+            ServerPlayNetworking.send(player, payload);
     }
 
     @Override
@@ -283,11 +287,13 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     public void onOpen(PlayerEntity player) {
         if (world == null || world.isClient) return;
         BoxStackScreenHandler.UsingPlayer.add((ServerPlayerEntity) player);
+        BoxStackScreenHandler.UsingPlayerCount = BoxStackScreenHandler.UsingPlayer.size();
     }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (world == null || world.isClient) return;
         BoxStackScreenHandler.UsingPlayer.remove((ServerPlayerEntity) player);
+        BoxStackScreenHandler.UsingPlayerCount = BoxStackScreenHandler.UsingPlayer.size();
     }
 }

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "tga:block/bot/stone_dark",
+    "front": "tga:block/front/m_cracker_lv0",
+    "side": "tga:block/copper_plate",
+    "top": "tga:block/top/stone_lever"
+  }
+}
