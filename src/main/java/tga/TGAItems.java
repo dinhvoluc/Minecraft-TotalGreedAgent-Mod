@@ -7,6 +7,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import tga.Crops.CustomCropBlock;
 
 import java.util.function.Function;
 
@@ -16,17 +17,19 @@ public final class TGAItems {
     public static Item COPPER_PLATE;
     public static Item NAILS;
     public static Item CROP_GUAYULE_SEED;
-    public static Item BUCKET_VINEGAR;
+    public static Item CACO3;
+    public static Item BUCKET_PRE_ACETONE;
+    public static Item BUCKET_ACETONE;
 
     public static void Load(boolean isClientSide) {
         SetBioBurnTime(RUBBER = register("rubber", Item::new, new Item.Settings()), 0.1f, 200);
         SetBioBurnTime(REISIN = register("resin", Item::new, new Item.Settings()), 0.2f, 100);
         COPPER_PLATE = register("plate_copper", Item::new, new Item.Settings());
         NAILS = register("nails", Item::new, new Item.Settings());
-        Item.Settings bucket_vinegar = new Item.Settings();
-        bucket_vinegar.maxCount(4);
-        BUCKET_VINEGAR = register("bucket_vinegar", Item::new, bucket_vinegar);
-        //SetBioBurnTime(CROP_GUAYULE_SEED = register(TotalGreedyAgent.GetSeedID(GuayuleCrop.MC_ID), Item::new, new Item.Settings()), 0.1f, 30);
+        SetBioBurnTime(CROP_GUAYULE_SEED = register(TotalGreedyAgent.GetSeedID(CustomCropBlock.MCID_GUAYULE), Item::new, new Item.Settings()), 0.1f, 30);
+        CACO3 = register("c_caco3", Item::new, new Item.Settings());
+        BUCKET_PRE_ACETONE = register("c_caco3_vinegar", Item::new, new Item.Settings().maxCount(1));
+        SetBurnTime(BUCKET_ACETONE = register("bucket_acetone", Item::new, new Item.Settings().maxCount(1).recipeRemainder(Items.BUCKET)), 500);
     }
 
     public static void SetBioValue(Item item, float rate) {

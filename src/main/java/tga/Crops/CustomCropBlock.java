@@ -1,15 +1,9 @@
-//package tga.Crops;
-//
-//import net.minecraft.block.Block;
-//import net.minecraft.block.BlockState;
-//import net.minecraft.block.BlockWithEntity;
-//import net.minecraft.block.entity.*;
-//import net.minecraft.server.world.ServerWorld;
-//import net.minecraft.util.math.BlockPos;
-//import net.minecraft.util.shape.VoxelShape;
-//import net.minecraft.world.World;
-//import org.jetbrains.annotations.Nullable;
-//
+package tga.Crops;
+
+public class CustomCropBlock {
+    public static final String MCID_GUAYULE = "guayule";
+}
+
 //public class CustomCropBlock extends BlockWithEntity {
 //    public static final VoxelShape[] SHAPES;
 //    static {

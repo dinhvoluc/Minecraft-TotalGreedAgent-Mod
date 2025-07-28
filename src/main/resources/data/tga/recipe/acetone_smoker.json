@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": "tga:c_caco3_vinegar",
+  "result": {
+    "id": "tga:bucket_acetone"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}

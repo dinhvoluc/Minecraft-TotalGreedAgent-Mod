@@ -16,7 +16,7 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static MinecraftServer SERVER;
 
     public static String GetSeedID(String id) {
-		return "seed_" + id;
+		return "sd_" + id;
     }
 
 	public static String GetCropID(String id){

@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
+    "tga:c_caco3",
     "minecraft:apple",
     "minecraft:water_bucket",
     "minecraft:sugar"
   ],
   "result": {
-    "id": "tga:bucket_vinegar",
+    "id": "tga:c_caco3_vinegar",
     "count": 1
   }
 }

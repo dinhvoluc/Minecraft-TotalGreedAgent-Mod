@@ -25,6 +25,10 @@ public class CreativeTab {
                     entries.add(TGAItems.REISIN);
                     entries.add(TGAItems.COPPER_PLATE);
                     entries.add(TGAItems.NAILS);
+                    entries.add(TGAItems.CROP_GUAYULE_SEED);
+                    entries.add(TGAItems.CACO3);
+                    entries.add(TGAItems.BUCKET_PRE_ACETONE);
+                    entries.add(TGAItems.BUCKET_ACETONE);
                 })
                 .build());
     }
