@@ -4,7 +4,8 @@
     "tga:c_caco3",
     "minecraft:apple",
     "minecraft:water_bucket",
-    "minecraft:sugar"
+    "minecraft:sugar",
+    "minecraft:bowl"
   ],
   "result": {
     "id": "tga:c_caco3_vinegar",

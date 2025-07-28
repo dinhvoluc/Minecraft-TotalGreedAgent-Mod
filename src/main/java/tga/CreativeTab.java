@@ -27,8 +27,8 @@ public class CreativeTab {
                     entries.add(TGAItems.NAILS);
                     entries.add(TGAItems.CROP_GUAYULE_SEED);
                     entries.add(TGAItems.CACO3);
-                    entries.add(TGAItems.BUCKET_PRE_ACETONE);
-                    entries.add(TGAItems.BUCKET_ACETONE);
+                    entries.add(TGAItems.BOW_PRE_ACETONE);
+                    entries.add(TGAItems.BOW_ACETONE);
                 })
                 .build());
     }

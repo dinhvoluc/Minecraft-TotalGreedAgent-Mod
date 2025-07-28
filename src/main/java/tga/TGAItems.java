@@ -18,8 +18,8 @@ public final class TGAItems {
     public static Item NAILS;
     public static Item CROP_GUAYULE_SEED;
     public static Item CACO3;
-    public static Item BUCKET_PRE_ACETONE;
-    public static Item BUCKET_ACETONE;
+    public static Item BOW_PRE_ACETONE;
+    public static Item BOW_ACETONE;
 
     public static void Load(boolean isClientSide) {
         SetBioBurnTime(RUBBER = register("rubber", Item::new, new Item.Settings()), 0.1f, 200);
@@ -28,8 +28,8 @@ public final class TGAItems {
         NAILS = register("nails", Item::new, new Item.Settings());
         SetBioBurnTime(CROP_GUAYULE_SEED = register(TotalGreedyAgent.GetSeedID(CustomCropBlock.MCID_GUAYULE), Item::new, new Item.Settings()), 0.1f, 30);
         CACO3 = register("c_caco3", Item::new, new Item.Settings());
-        BUCKET_PRE_ACETONE = register("c_caco3_vinegar", Item::new, new Item.Settings().maxCount(1));
-        SetBurnTime(BUCKET_ACETONE = register("bucket_acetone", Item::new, new Item.Settings().maxCount(1).recipeRemainder(Items.BUCKET)), 500);
+        BOW_PRE_ACETONE = register("c_caco3_vinegar", Item::new, new Item.Settings());
+        SetBurnTime(BOW_ACETONE = register("bow_acetone", Item::new, new Item.Settings()), 800);
     }
 
     public static void SetBioValue(Item item, float rate) {
