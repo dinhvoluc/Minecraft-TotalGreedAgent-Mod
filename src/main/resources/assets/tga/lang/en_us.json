@@ -1,9 +1,12 @@
 {
   "item.tga.rubber": "Rubber",
-  "item.tga.resin": "Resin",
+  "item.tga.resin": "Sticky resin",
   "item.tga.plate_copper": "Copper plate",
   "item.tga.nails": "Nails",
-  "item.tga.c_caco3_vinegar": "Water mixed acetone",
+  "item.tga.c_caco3": "Canci carbonate",
+  "item.tga.guayule_grass": "Guayule grass",
+  "block.tga.sd_guayule": "Guayule seeds",
+  "item.tga.c_caco3_vinegar": "Vinegar with canci carbonate",
   "item.tga.bow_acetone": "Acetone",
   "block.tga.box_wood": "Wooden box",
   "block.tga.box_wood_filled": "Wooden box (have item)",
@@ -12,6 +15,7 @@
   "block.tga.rubber_sheet": "Rubber sheet",
   "block.tga.m_cracker_lv0": "Manpower cracker",
   "itemGroup.tga.main": "Total Greedy Agent",
+  "recipeGroup.tga.craft": "TGA recipes",
   "gui.tga.box_wood.any": "One item storage box",
   "gui.tga.box_wood.title": "Wooden box",
   "gui.tga.box_copper.title": "Copper box"

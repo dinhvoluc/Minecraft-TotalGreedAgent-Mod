@@ -1,45 +1,130 @@
 package tga.Crops;
 
-public class CustomCropBlock {
-    public static final String MCID_GUAYULE = "guayule";
-}
+import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.IntProperty;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
+import tga.TGABlocks;
+import tga.TotalGreedyAgent;
 
-//public class CustomCropBlock extends BlockWithEntity {
-//    public static final VoxelShape[] SHAPES;
-//    static {
-//        SHAPES = Block.createShapeArray(7, (age) -> Block.createColumnShape((double)16.0F, (double)0.0F, (double)(2 + age * 2)));
-//    }
-//    public CustomCropBlock() {
-//
-//    }
-//
-//    @Override
-//    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-//        return null;
-//    }
-//
-//    @Override
-//    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-//       if (world.isClient) return null;
-//       BlockEntity be = world.getBlockEntity()
-//       return new   new BlockEntityTicker<CustomCropBlock>() {
-//           @Override
-//           public void tick(World world, BlockPos pos, BlockState state, T blockEntity) {
-//
-//           }
-//       }
-//        return world.isClient ? null : validateTicker(givenType, expectedType, (worldx, pos, state, blockEntity) -> AbstractFurnaceBlockEntity.tick(serverWorld, pos, state, blockEntity)) super.getTicker(world, state, type);
-//    }
-//
-//    @Nullable
-//    protected static <T extends BlockEntity> BlockEntityTicker<T> validateTicker(World world, BlockEntityType<T> givenType, BlockEntityType<? extends AbstractFurnaceBlockEntity> expectedType) {
-//        BlockEntityTicker var10000;
-//        if (world instanceof ServerWorld serverWorld) {
-//            var10000 = validateTicker(givenType, expectedType, (worldx, pos, state, blockEntity) -> AbstractFurnaceBlockEntity.tick(serverWorld, pos, state, blockEntity));
-//        } else {
-//            var10000 = null;
-//        }
-//
-//        return var10000;
-//    }
-//}
+public class CustomCropBlock extends Block implements Fertilizable {
+    public static final IntProperty AGE = IntProperty.of("age", 0, 6);
+
+    public CustomCropBlock(Block.Settings settings, Block matureAs){
+        super(settings);
+        GrownUpStage = matureAs;
+        setDefaultState(getStateManager().getDefaultState().with(AGE, 0));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(AGE);
+    }
+
+    @Override
+    public boolean hasRandomTicks(BlockState state) {
+        return true;
+    }
+
+    public final Block GrownUpStage;
+    public static VoxelShape[] SHAPES_BY_AGE;
+    private int GrowTicker;
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPES_BY_AGE[state.get(AGE)];
+    }
+
+    private void OKMatured(ServerWorld world, BlockPos pos) {
+        world.setBlockState(pos, GrownUpStage.getDefaultState(), NOTIFY_LISTENERS);
+    }
+
+    protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        GrowMul(state, world, pos, 1);
+    }
+    private void GrowMul(BlockState state, ServerWorld world, BlockPos pos, int bonus) {
+        if (world.getBaseLightLevel(pos, 0) >= 9) {
+            int i = state.get(AGE);
+            if (i > 6) {
+                //matured
+                OKMatured(world, pos);
+                return;
+            }
+            GrowTicker += bonus;
+            BlockState blockState = world.getBlockState(pos.down());
+            if (blockState.isOf(Blocks.FARMLAND)) {
+                GrowTicker += 2 + bonus;
+                if ((Integer) blockState.get(FarmlandBlock.MOISTURE) > 0) {
+                    GrowTicker += 5 + bonus;
+                }
+            }
+            if (GrowTicker > 30) {
+                if (i > 5) {
+                    //matured
+                    OKMatured(world, pos);
+                    return;
+                }
+                world.setBlockState(pos, getDefaultState().with(AGE, i + 1), NOTIFY_LISTENERS);
+                GrowTicker -= 30;
+            }
+        }
+    }
+
+    @Override
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
+
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+        return !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        BlockState blockBelow = world.getBlockState(pos.down());
+        return blockBelow.isOf(Blocks.FARMLAND);
+    }
+
+    @Override
+    protected boolean isTransparent(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) { return true; }
+
+    @Override
+    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+        GrowMul(state, world, pos, 3);
+    }
+
+    @Override
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (world.isClient) return super.onBreak(world, pos, state, player);
+        if (player != null && player.isCreative()) return super.onBreak(world, pos, state, player);
+        //drop seed
+        if (world.getRandom().nextFloat() < 0.3f + 0.1f * state.get(AGE))
+            Block.dropStack(world, pos, new ItemStack(this, 1));
+        return super.onBreak(world, pos, state, player);
+    }
+
+    public static CustomCropBlock CropGuayule(Settings settings) {
+        //range 3~6min per stage
+        return new CustomCropBlock(settings, TGABlocks.CROP_GUAYULE);
+    }
+}

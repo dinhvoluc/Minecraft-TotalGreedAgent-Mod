@@ -20,15 +20,16 @@ public class CreativeTab {
                     entries.add(TGABlocks.MAN_CRACKER);
                     entries.add(TGABlocks.BOX_WOOD);
                     entries.add(TGABlocks.BOX_COPPER);
-                    entries.add(TGAItems.RUBBER);
                     entries.add(TGABlocks.RUBBER_SHEET);
+                    entries.add(TGAItems.RUBBER);
                     entries.add(TGAItems.REISIN);
                     entries.add(TGAItems.COPPER_PLATE);
                     entries.add(TGAItems.NAILS);
-                    entries.add(TGAItems.CROP_GUAYULE_SEED);
                     entries.add(TGAItems.CACO3);
                     entries.add(TGAItems.BOW_PRE_ACETONE);
                     entries.add(TGAItems.BOW_ACETONE);
+                    entries.add(TGAItems.CROP_GUAYULE_GRASS);
+                    entries.add(TGABlocks.CROP_GUAYULE_YONG);
                 })
                 .build());
     }

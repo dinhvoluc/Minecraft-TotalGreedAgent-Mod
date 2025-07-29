@@ -1,6 +1,6 @@
 {
   "parent": "block/crop",
   "textures": {
-    "crop": "mymod:block/crop/guayule1"
+    "crop": "tga:block/crop/guayule1"
   }
 }

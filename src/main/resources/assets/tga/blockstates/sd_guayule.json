@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "age=0": { "model": "tga:block/crop/guayule0" },
+    "age=1": { "model": "tga:block/crop/guayule1" },
+    "age=2": { "model": "tga:block/crop/guayule2" },
+    "age=3": { "model": "tga:block/crop/guayule3" },
+    "age=4": { "model": "tga:block/crop/guayule4" },
+    "age=5": { "model": "tga:block/crop/guayule5" },
+    "age=6": { "model": "tga:block/crop/guayule6" }
+  }
+}
