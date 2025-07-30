@@ -15,6 +15,7 @@ import tga.Block.BoxStackBlock;
 import tga.Block.RubberSheetBlock;
 import tga.Crops.CropGuayule;
 import tga.Crops.CustomCropBlock;
+import tga.Machines.ManCracker;
 
 import java.util.function.Function;
 
@@ -51,7 +52,7 @@ public final class TGABlocks {
                 .strength(0.2f, 0.2f)
                 .sounds(BlockSoundGroup.WOOL)
                 .nonOpaque())).asItem(), 600);
-        MAN_CRACKER = register("m_cracker_lv0", Block::new, AbstractBlock.Settings.create()
+        MAN_CRACKER = register("m_cracker_lv0", ManCracker::new, AbstractBlock.Settings.create()
                 .mapColor(MapColor.DEEPSLATE_GRAY)
                 .strength(4f, 6f)
                 .sounds(BlockSoundGroup.STONE));

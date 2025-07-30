@@ -20,6 +20,8 @@ public final class TGAItems {
     public static Item BOW_PRE_ACETONE;
     public static Item BOW_ACETONE;
     public static Item CROP_GUAYULE_GRASS;
+    public static Item GUAYULE_DUST;
+    public static Item TREE_WASTE;
 
     public static void Load(boolean isClientSide) {
         SetBurnTime(RUBBER = register("rubber", Item::new, new Item.Settings()), 2000);
@@ -30,6 +32,8 @@ public final class TGAItems {
         BOW_PRE_ACETONE = register("c_caco3_vinegar", Item::new, new Item.Settings());
         SetBurnTime(BOW_ACETONE = register("bow_acetone", Item::new, new Item.Settings()), 800);
         SetBioBurnTime(CROP_GUAYULE_GRASS = register("guayule_grass", Item::new, new Item.Settings()), 0.1f, 50);
+        SetBioBurnTime(GUAYULE_DUST = register("guayule_dust", Item::new, new Item.Settings()), 0.8f, 400);
+        SetBioBurnTime(TREE_WASTE = register("treewaste", Item::new, new Item.Settings()), 0.1f, 45);
     }
 
     public static void SetBioValue(Item item, float rate) {

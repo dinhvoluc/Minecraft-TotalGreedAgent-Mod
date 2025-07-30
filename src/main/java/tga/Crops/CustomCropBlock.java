@@ -118,8 +118,9 @@ public class CustomCropBlock extends Block implements Fertilizable {
         if (world.isClient) return super.onBreak(world, pos, state, player);
         if (player != null && player.isCreative()) return super.onBreak(world, pos, state, player);
         //drop seed
-        if (world.getRandom().nextFloat() < 0.3f + 0.1f * state.get(AGE))
-            Block.dropStack(world, pos, new ItemStack(this, 1));
+        int age = state.get(AGE);
+        if (world.getRandom().nextFloat() < 0.3f + 0.1f * age)
+            Block.dropStack(world, pos, new ItemStack(this, age < 5 ? 1 : world.getRandom().nextBetween(1, age - 3)));
         return super.onBreak(world, pos, state, player);
     }
 

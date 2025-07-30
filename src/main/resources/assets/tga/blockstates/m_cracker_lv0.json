@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "tga:block/m_cracker_lv0" }
+    "facing=north": { "model": "tga:block/m_cracker_lv0" },
+    "facing=south": { "model": "tga:block/m_cracker_lv0", "y": 180 },
+    "facing=west":  { "model": "tga:block/m_cracker_lv0", "y": 270 },
+    "facing=east":  { "model": "tga:block/m_cracker_lv0", "y": 90 }
   }
 }

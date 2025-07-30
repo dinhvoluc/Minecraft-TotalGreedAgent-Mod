@@ -30,6 +30,7 @@ public class CreativeTab {
                     entries.add(TGAItems.BOW_ACETONE);
                     entries.add(TGAItems.CROP_GUAYULE_GRASS);
                     entries.add(TGABlocks.CROP_GUAYULE_YONG);
+                    entries.add(TGAItems.GUAYULE_DUST);
                 })
                 .build());
     }

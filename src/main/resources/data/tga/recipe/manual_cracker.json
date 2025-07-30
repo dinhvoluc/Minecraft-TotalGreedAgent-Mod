@@ -1,15 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "#L#",
     "#P#",
-    "#C#"
+    "#S#",
+    "bCb"
   ],
   "key": {
     "#": "tga:plate_copper",
-    "L": "minecraft:lever",
+    "S": "minecraft:copper_grate",
     "P": "minecraft:piston",
-    "C": "minecraft:cauldron"
+    "C": "minecraft:cauldron",
+    "b": "minecraft:copper_block"
   },
   "result": {
     "id": "tga:m_cracker_lv0",
