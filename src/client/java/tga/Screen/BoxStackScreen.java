@@ -31,7 +31,7 @@ public class BoxStackScreen extends HandledScreen<BoxStackScreenHandler> {
 
     @Override
     protected void drawBackground(DrawContext context, float deltaTicks, int mouseX, int mouseY) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x, y, 0,0, 176, 166, 512, 512);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x, y, 132,0, 176, 166, 512, 512);
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x + 19, y + 20, 0,167, 18, 43, 512, 512);
     }
 

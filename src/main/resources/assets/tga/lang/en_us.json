@@ -8,15 +8,16 @@
   "block.tga.sd_guayule": "Guayule seeds",
   "item.tga.c_caco3_vinegar": "Vinegar with canci carbonate",
   "item.tga.bow_acetone": "Acetone",
-  "block.tga.box_wood": "Wooden box",
-  "block.tga.box_wood_filled": "Wooden box (have item)",
-  "block.tga.box_copper": "Copper box",
-  "block.tga.box_copper_filled": "Copper box (have item)",
+  "block.tga.box_wood": "Empty wooden box",
+  "block.tga.box_wood_filled": "Wooden box",
+  "block.tga.box_copper": "Empty copper box",
+  "block.tga.box_copper_filled": "Copper box",
   "block.tga.rubber_sheet": "Rubber sheet",
   "block.tga.m_cracker_lv0": "Manpower cracker",
   "itemGroup.tga.main": "Total Greedy Agent",
   "recipeGroup.tga.craft": "TGA recipes",
   "gui.tga.box_wood.any": "One item storage box",
   "gui.tga.box_wood.title": "Wooden box",
-  "gui.tga.box_copper.title": "Copper box"
+  "gui.tga.box_copper.title": "Copper box",
+  "gui.tga.mancracker.title": "Manpower cracker"
 }

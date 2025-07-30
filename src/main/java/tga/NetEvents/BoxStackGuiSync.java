@@ -39,7 +39,7 @@ public class BoxStackGuiSync implements CustomPayload {
                 }
             }
         };
-        PayloadTypeRegistry.playS2C().register(BoxStackGuiSync.PAYLOAD_ID, BoxStackGuiSync.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(PAYLOAD_ID, PACKET_CODEC);
     }
 
     public BoxStackGuiSync(String world, BlockPos pos, int exCount, ItemStack holdItem) {

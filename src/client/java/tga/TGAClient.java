@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import tga.Screen.BoxStackScreen;
+import tga.Screen.MachineCrackerScreen;
 
 public class TGAClient extends TotalGreedyAgent implements ClientModInitializer {
 	@Override
@@ -20,6 +21,7 @@ public class TGAClient extends TotalGreedyAgent implements ClientModInitializer 
 		ClientNet.Load();
 		LOGGER.info("Client=>Screens");
 		HandledScreens.register(TGAScreenHandlers.BOX_STACK, BoxStackScreen::new);
+		HandledScreens.register(TGAScreenHandlers.M_CRACKER_0, MachineCrackerScreen::new);
 		LOGGER.info("Client=>ToolTips");
 		TGAToolTips.Load();
 		LOGGER.info("Client=>RenderFix");

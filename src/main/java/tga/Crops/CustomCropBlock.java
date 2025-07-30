@@ -68,14 +68,14 @@ public class CustomCropBlock extends Block implements Fertilizable {
                     GrowTicker += 5 + bonus;
                 }
             }
-            if (GrowTicker > 30) {
+            if (GrowTicker > 100) {
                 if (i > 5) {
                     //matured
                     OKMatured(world, pos);
                     return;
                 }
                 world.setBlockState(pos, getDefaultState().with(AGE, i + 1), NOTIFY_LISTENERS);
-                GrowTicker -= 30;
+                GrowTicker -= 100;
             }
         }
     }
@@ -110,7 +110,7 @@ public class CustomCropBlock extends Block implements Fertilizable {
 
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        GrowMul(state, world, pos, 3);
+        GrowMul(state, world, pos, 20);
     }
 
     @Override

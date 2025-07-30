@@ -14,7 +14,6 @@ import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.Block.BoxStackBlock;
 import tga.ComDat.BoxStackData;
@@ -96,7 +95,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return slot == 0 && !HoldItem.isEmpty();
+        return slot == 0;
     }
 
     @Override
