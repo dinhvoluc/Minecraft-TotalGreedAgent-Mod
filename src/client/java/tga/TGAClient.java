@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
+import tga.Machines.ManCracker;
 import tga.Screen.BoxStackScreen;
 import tga.Screen.MachineCrackerScreen;
 
@@ -17,6 +18,8 @@ public class TGAClient extends TotalGreedyAgent implements ClientModInitializer 
 
 	@Override
 	public void onInitializeClient() {
+		LOGGER.info("Client=>LocalTicker");
+		ManCracker.TICKER_CLIENT = (a,b,c,d) -> TGAClientTickers.ManCrakerTick(d);
 		LOGGER.info("Client=>NetEvents");
 		ClientNet.Load();
 		LOGGER.info("Client=>Screens");

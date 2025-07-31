@@ -19,6 +19,7 @@ import tga.Block.BoxStackBlock;
 import tga.ComDat.BoxStackData;
 import tga.NetEvents.BoxStackGuiSync;
 import tga.Screen.BoxStackScreenHandler;
+import tga.TGAHelper;
 import tga.TGATileEnities;
 import tga.TotalGreedyAgent;
 
@@ -28,15 +29,14 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     protected void writeData(WriteView view) {
         view.putInt("M", MaxHoldStack);
         view.putInt("E", ExCount);
-        if (HoldItem == null || HoldItem.isEmpty()) return;
-        view.put("I", ItemStack.CODEC, HoldItem);
+        TGAHelper.WriteItem(view, "I", HoldItem);
     }
 
     @Override
     protected void readData(ReadView view) {
         MaxHoldStack = view.getInt("M", 1);
         ExCount = view.getInt("E", 0);
-        HoldItem = view.read("I", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        HoldItem = TGAHelper.ReadItem(view,"I");
     }
 
     private int ExCount;
@@ -90,7 +90,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         if (slot != 1) return false;
         if (HoldItem.isEmpty()) return true;
         //スタック出来るかを確認する
-        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack) && (ExCount + HoldItem.getCount() + stack.getCount()) <= GetMaxHold();
+        return ItemStack.areItemsAndComponentsEqual(HoldItem, stack);
     }
 
     @Override

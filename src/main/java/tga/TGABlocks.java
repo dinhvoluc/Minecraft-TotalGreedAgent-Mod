@@ -1,21 +1,23 @@
 package tga;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.MapColor;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.World;
 import tga.Block.BoxStackBlock;
 import tga.Block.RubberSheetBlock;
 import tga.Crops.CropGuayule;
 import tga.Crops.CustomCropBlock;
 import tga.Machines.ManCracker;
+import tga.Machines.ManCrackerTile;
 
 import java.util.function.Function;
 
@@ -70,6 +72,9 @@ public final class TGABlocks {
                 .sounds(BlockSoundGroup.GRASS)
                 .nonOpaque()
                 .pistonBehavior(PistonBehavior.DESTROY))).asItem(), 0.3f);
+        //Load server side ticker
+        if (isClientSide) return;
+        ManCracker.TICKER_SERVER = (a, b, c, d) -> d.TickS();
     }
 
     private static Block noDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {

@@ -7,6 +7,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import tga.NetEvents.BoxStackGuiSync;
+import tga.NetEvents.JinrikiGogo;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.BoxStackScreenHandler;
 import tga.Screen.MachineCrackerHandler;
@@ -24,6 +25,7 @@ public class TGAScreenHandlers {
         TotalGreedyAgent.LOGGER.info("Server=>ScreenHandler:NetEvents");
         BoxStackGuiSync.Load();
         ManCrackerGuiSync.Load();
+        JinrikiGogo.Load();
         //GUI reg
         TotalGreedyAgent.LOGGER.info("Server=>ScreenHandler:GUIHandler");
         BOX_STACK = Registry.register(Registries.SCREEN_HANDLER, TotalGreedyAgent.GetID("gui_boxstack"),

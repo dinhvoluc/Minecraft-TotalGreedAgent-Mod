@@ -1,0 +1,11 @@
+{
+  "grinder": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "tga_ic2:grinder",
+        "stream": false
+      }
+    ]
+  }
+}

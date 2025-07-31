@@ -10,31 +10,122 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import tga.TGARecipes;
+import tga.MachineRecipes.OneInRecipe;
+import tga.Mechanic.ITGAManpoweredBlock;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.MachineCrackerHandler;
+import tga.TGAHelper;
+import tga.TGASounds;
 import tga.TGATileEnities;
 import tga.TotalGreedyAgent;
 
 import java.util.Arrays;
 
-public class ManCrackerTile extends BlockEntity implements SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     private final ItemStack[] ItemBuffer = new ItemStack[BUFFER_SIZE];
     private static final int BUFFER_ID_SLOT_INPUT = 0;
     private static final int BUFFER_ID_SLOT_OUTPUT = 1;
     private static final int BUFFER_SIZE = 2;
 
     private ItemStack SubOutput = ItemStack.EMPTY;
-    private int Worked;
-    private int WorkTotal;
-    private int Jinriki;
+    private ItemStack CraftMain = ItemStack.EMPTY;
+    private ItemStack CraftSub = ItemStack.EMPTY;
+    public int Worked;
+    public int WorkTotal = 1;
+    public int Jinriki;
+
+    public static final int JINRIKI_INPUT_OFF = 300_00;
+    public static final int MAX_JINRIKI_CAP = 600_00;
+
+    @Override
+    public boolean IsFullCharge() {
+        return Jinriki >= JINRIKI_INPUT_OFF;
+    }
+
+    @Override
+    public void JinrikiGo(int power, ServerPlayerEntity player, World world) {
+        Jinriki += power;
+        if (Jinriki > MAX_JINRIKI_CAP) Jinriki = MAX_JINRIKI_CAP;
+        world.playSound(null, pos, TGASounds.GRINDER, SoundCategory.BLOCKS, 1f ,1f);
+    }
+
+    @Override
+    protected void writeData(WriteView view) {
+        view.putInt("W", Worked);
+        view.putInt("J", Jinriki);
+        view.putInt("T", WorkTotal);
+        TGAHelper.WriteItem(view, "SI", ItemBuffer[0]);
+        TGAHelper.WriteItem(view, "SO", ItemBuffer[1]);
+        TGAHelper.WriteItem(view, "Ss", SubOutput);
+        TGAHelper.WriteItem(view, "Cr", CraftMain);
+        TGAHelper.WriteItem(view, "Lk", CraftSub);
+    }
+
+    @Override
+    protected void readData(ReadView view) {
+        Worked = view.getInt("W", 0);
+        Jinriki = view.getInt("J", 0);
+        WorkTotal = view.getInt("T", 1_000_000);
+        ItemBuffer[0] = TGAHelper.ReadItem(view, "SI");
+        ItemBuffer[1] = TGAHelper.ReadItem(view, "SO");
+        SubOutput = TGAHelper.ReadItem(view, "Ss");
+        CraftMain = TGAHelper.ReadItem(view, "Cr");
+        CraftSub = TGAHelper.ReadItem(view, "Lk");
+    }
 
     public ManCrackerTile(BlockPos pos, BlockState state) {
         super(TGATileEnities.M_CRACKER_LV0, pos, state);
         Arrays.fill(ItemBuffer, ItemStack.EMPTY);
+    }
+
+    private void TryCraft() {
+        if (!CraftMain.isEmpty()) return;
+        //Locking for next craft
+        OneInRecipe next_recipe = TGARecipes.Cracker_LV0.CraftWith(ItemBuffer[0]);
+        if (next_recipe != null) {
+            ItemStack[] getCrafted = new ItemStack[2];
+            ItemBuffer[0] = next_recipe.RealCraft(ItemBuffer[0], getCrafted);
+            WorkTotal = next_recipe.NeedPower;
+            //Get only 2
+            CraftMain = getCrafted[0];
+            CraftSub = getCrafted[1];
+        }
+        else {
+            //reset craft
+            CraftMain = ItemStack.EMPTY;
+            CraftSub = ItemStack.EMPTY;
+            WorkTotal = 1;
+        }
+    }
+
+    public void TickS() {
+        //No power or no crafting require
+        if (!ItemBuffer[1].isEmpty()) return;
+        if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
+        //Max 50 human power/t
+        int amount = Math.min(Jinriki / 10, 50_00);
+        Worked += amount;
+        Jinriki -= amount;
+        //Crafted
+        if (Worked >= WorkTotal) {
+            ItemBuffer[1] = CraftMain;
+            SubOutput = CraftSub;
+            Worked = 0;
+            WorkTotal = 1;
+            CraftMain = ItemStack.EMPTY;
+            CraftSub = ItemStack.EMPTY;
+            TryCraft();
+        }
+        markDirty();
     }
 
     @Override
@@ -47,15 +138,52 @@ public class ManCrackerTile extends BlockEntity implements SidedInventory, Exten
         return new int[]{0, 1};
     }
 
+    public ItemStack PushItem(ItemStack stack) {
+        if (stack.isEmpty()) return ItemStack.EMPTY;
+        ItemStack oldStack = ItemBuffer[0];
+        if (oldStack.isEmpty()) {
+            ItemBuffer[0] = stack.copy();
+            TryCraft();
+            markDirty();
+            return ItemStack.EMPTY;
+        }
+        if (!ItemStack.areItemsAndComponentsEqual(stack, oldStack)) return stack.copy();
+        int totalCount = oldStack.getCount();
+        int maxCount = oldStack.getMaxCount();
+        if (totalCount >= maxCount) return stack.copy();
+        totalCount += stack.getCount();
+        oldStack = oldStack.copy();
+        if (totalCount <= maxCount) {
+            oldStack.setCount(totalCount);
+            ItemBuffer[0] = oldStack;
+            TryCraft();
+            markDirty();
+            return ItemStack.EMPTY;
+        }
+        oldStack.setCount(maxCount);
+        ItemBuffer[0] = oldStack;
+        TryCraft();
+        markDirty();
+        stack = stack.copy();
+        stack.setCount(totalCount - maxCount);
+        return stack;
+    }
+
+    public int CanPush(ItemStack stack) {
+        if (stack.isEmpty()) return 0;
+        ItemStack oldStack = ItemBuffer[0];
+        if (oldStack.isEmpty()) {
+            //check if is recipe
+            return TGARecipes.Cracker_LV0.CanAccept(stack)  ? Math.min(stack.getCount(), stack.getMaxCount()) : 0;
+        }
+        //Check add to old stack
+        return ItemStack.areItemsAndComponentsEqual(stack, oldStack) ? Math.min(oldStack.getMaxCount(), stack.getCount()) : 0;
+    }
+
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
         if (slot != BUFFER_ID_SLOT_INPUT) return false;
-        ItemStack slotIN = ItemBuffer[BUFFER_ID_SLOT_INPUT];
-        if (slotIN.isEmpty()) return false;
-
-
-        //tempory
-        return false;
+        return TGARecipes.Cracker_LV0.CanAccept(stack);
     }
 
     @Override
@@ -70,7 +198,7 @@ public class ManCrackerTile extends BlockEntity implements SidedInventory, Exten
 
     @Override
     public boolean isEmpty() {
-        return true;
+        return ItemBuffer[0].isEmpty() && ItemBuffer[1].isEmpty();
     }
 
     @Override
@@ -80,7 +208,16 @@ public class ManCrackerTile extends BlockEntity implements SidedInventory, Exten
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        return null;
+        ItemStack stack = ItemBuffer[slot];
+        if (stack.isEmpty()) return ItemStack.EMPTY;
+        ItemStack rt = stack.copy();
+        if (amount >= stack.getCount()) ItemBuffer[slot] = ItemStack.EMPTY;
+        else {
+            stack.decrement(amount);
+            rt.setCount(amount);
+        }
+        markDirty();
+        return rt;
     }
 
     @Override
@@ -91,12 +228,15 @@ public class ManCrackerTile extends BlockEntity implements SidedInventory, Exten
             SubOutput = ItemStack.EMPTY;
         }
         else ItemBuffer[slot] = ItemStack.EMPTY;
+        markDirty();
         return rtStack;
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-
+        ItemBuffer[slot] = stack;
+        TryCraft();
+        markDirty();
     }
 
     @Override
@@ -111,6 +251,7 @@ public class ManCrackerTile extends BlockEntity implements SidedInventory, Exten
 
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        TotalGreedyAgent.broadcastDebugMessageF("J %s/%s W %s C %s S %s", Jinriki, WorkTotal, Worked, CraftMain, SubOutput);
         if (world == null || world.isClient) return null;
         MachineCrackerHandler.SendUpdate(this, (ServerPlayerEntity) player);
         return new MachineCrackerHandler(syncId, playerInventory, this);

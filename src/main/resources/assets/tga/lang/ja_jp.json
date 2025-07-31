@@ -5,9 +5,11 @@
   "item.tga.nails": "釘",
   "item.tga.c_caco3": "炭酸カルシウム",
   "item.tga.guayule_grass": "グアユールの草",
+  "item.tga.guayule_dust": "グアユールの粉末",
   "block.tga.sd_guayule": "グアユールの種",
   "item.tga.c_caco3_vinegar": "炭酸カルシウム酸",
   "item.tga.bow_acetone": "アセトン",
+  "item.tga.treewaste": "植物のあまり",
   "block.tga.box_wood": "空木箱",
   "block.tga.box_wood_filled": "木箱",
   "block.tga.box_copper": "空銅箱",
@@ -19,5 +21,7 @@
   "gui.tga.box_wood.any": "単種収納箱",
   "gui.tga.box_wood.title": "木の箱",
   "gui.tga.box_copper.title": "銅の箱",
-  "gui.tga.mancracker.title": "人力粉砕機"
+  "gui.tga.mancracker.title": "人力粉砕機",
+  "gui.tga.recipebook.togle": "レシピ本を表示／非表示",
+  "gui.tga.machine.noslotforout": "納品の空きスロットがありません。"
 }

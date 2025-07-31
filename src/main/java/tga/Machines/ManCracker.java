@@ -2,14 +2,18 @@ package tga.Machines;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import tga.BlockEntity.BoxStackTile;
+import tga.TGABlocks;
 import tga.TGATileEnities;
 
 public class ManCracker extends MachineBasic {
@@ -31,5 +35,15 @@ public class ManCracker extends MachineBasic {
             player.openHandledScreen(tile);
         }
         return ActionResult.SUCCESS;
+    }
+
+    public static BlockEntityTicker<ManCrackerTile> TICKER_SERVER;
+    public static BlockEntityTicker<ManCrackerTile> TICKER_CLIENT;
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (type != TGATileEnities.M_CRACKER_LV0) return null;
+        return (BlockEntityTicker)(world.isClient ? TICKER_CLIENT : TICKER_SERVER);
     }
 }

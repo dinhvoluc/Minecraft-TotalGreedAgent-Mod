@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "tga:guayule_dust",
+    "tga:bow_acetone"
+  ],
+  "result": {
+    "id": "tga:resin",
+    "count": 1
+  }
+}

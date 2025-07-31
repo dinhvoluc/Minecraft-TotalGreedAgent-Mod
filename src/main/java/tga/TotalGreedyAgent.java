@@ -28,9 +28,14 @@ public class TotalGreedyAgent implements ModInitializer {
 		CreativeTab.Load();
 		LOGGER.info("Server=>BLocks logics");
 		TGATileEnities.Load(IsClientSize);
+		LOGGER.info("Server=>Sounds");
+		TGASounds.Load();
+		LOGGER.info("Server=>GuiHandler");
 		TGAScreenHandlers.Load();
 		LOGGER.info("Server=>Custom data");
 		TGADataCom.Load();
+		LOGGER.info("Server=>WorkBook");
+		TGARecipes.Load();
 		LOGGER.info("Server=>Init-Ended");
 	}
 
@@ -46,8 +51,8 @@ public class TotalGreedyAgent implements ModInitializer {
 		LOGGER.info(ars.length == 0 ? message : String.format(message, ars));
 	}
 
-	public static void broadcastDebugMessage(String message) {
-		broadcastDebugMessage(message, false);
+	public static void broadcastDebugMessageF(String message, Object... ars) {
+		broadcastDebugMessage(ars.length == 0 ? message : String.format(message, ars), false);
 	}
 
 	public static void broadcastDebugMessage(String message, boolean overlay) {

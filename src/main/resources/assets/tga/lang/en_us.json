@@ -5,9 +5,11 @@
   "item.tga.nails": "Nails",
   "item.tga.c_caco3": "Canci carbonate",
   "item.tga.guayule_grass": "Guayule grass",
+  "item.tga.guayule_dust": "Guayule dust",
   "block.tga.sd_guayule": "Guayule seeds",
   "item.tga.c_caco3_vinegar": "Vinegar with canci carbonate",
   "item.tga.bow_acetone": "Acetone",
+  "item.tga.treewaste": "Tree waste",
   "block.tga.box_wood": "Empty wooden box",
   "block.tga.box_wood_filled": "Wooden box",
   "block.tga.box_copper": "Empty copper box",
@@ -19,5 +21,7 @@
   "gui.tga.box_wood.any": "One item storage box",
   "gui.tga.box_wood.title": "Wooden box",
   "gui.tga.box_copper.title": "Copper box",
-  "gui.tga.mancracker.title": "Manpower cracker"
+  "gui.tga.mancracker.title": "Manpower cracker",
+  "gui.tga.recipebook.togle": "Show/hide recipes book.",
+  "gui.tga.machine.noslotforout": "Not enough space for out put."
 }
