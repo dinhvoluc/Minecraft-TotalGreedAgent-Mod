@@ -1,9 +1,9 @@
 {
   "grinder": {
-    "category": "block",
+    "subtitle":"sound.tga.machine_noise.sub",
     "sounds": [
       {
-        "name": "tga_ic2:grinder",
+        "name": "tga:grinder",
         "stream": false
       }
     ]

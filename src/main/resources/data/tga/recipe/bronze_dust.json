@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "tga:d_tin",
+    "tga:d_copper",
+    "tga:d_copper",
+    "tga:d_copper"
+  ],
+  "result": {
+    "id": "tga:d_bronze",
+    "count": 4
+  }
+}

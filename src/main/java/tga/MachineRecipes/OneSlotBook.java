@@ -3,7 +3,7 @@ package tga.MachineRecipes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import tga.Items.ItemInt;
+import tga.Items.ItemFloat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,9 +19,13 @@ public class OneSlotBook {
 
     public void Register(OneInRecipe recipe){
         RECIPE_MAP.put(recipe.Ingredient.getItem(), recipe);
-        List<ItemInt> canGet = recipe.CraftChanceList();
-        for(ItemInt i : canGet)
+        List<ItemFloat> canGet = recipe.CraftChanceList();
+        for(ItemFloat i : canGet)
             CAN_PRODUCE_LIST.computeIfAbsent(i.Item.getItem(), k -> new ArrayList<>()).add(recipe);
+    }
+
+    public void Registers(OneInRecipe... recipes) {
+        for(OneInRecipe i : recipes) Register(i);
     }
 
     public @Nullable OneInRecipe CraftWith(ItemStack stack) {

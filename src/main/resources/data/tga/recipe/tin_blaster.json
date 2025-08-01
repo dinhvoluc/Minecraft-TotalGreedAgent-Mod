@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": "tga:d_tin",
+  "result": {
+    "id": "tga:ingot_tin"
+  },
+  "experience": 0.7,
+  "cookingtime": 150
+}

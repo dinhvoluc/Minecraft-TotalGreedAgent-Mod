@@ -125,7 +125,6 @@ public class CustomCropBlock extends Block implements Fertilizable {
     }
 
     public static CustomCropBlock CropGuayule(Settings settings) {
-        //range 3~6min per stage
-        return new CustomCropBlock(settings, TGABlocks.CROP_GUAYULE);
+        return new CustomCropBlock(settings, TGABlocks.X_CROP_GUAYULE);
     }
 }

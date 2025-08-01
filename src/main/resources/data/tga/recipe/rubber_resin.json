@@ -1,7 +1,6 @@
 {
   "type": "minecraft:blasting",
   "ingredient": "tga:resin",
-  "group": "tga:rubber",
   "result": {
     "id": "tga:rubber"
   },

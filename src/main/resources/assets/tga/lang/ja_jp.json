@@ -1,4 +1,9 @@
 {
+  "item.tga.ingot_bronze": "青銅インゴット",
+  "item.tga.ingot_tin": "錫インゴット",
+  "item.tga.d_bronze": "青銅粉末",
+  "item.tga.d_copper": "銅粉末",
+  "item.tga.d_tin": "錫粉末",
   "item.tga.rubber": "ゴム",
   "item.tga.resin": "天然樹脂",
   "item.tga.plate_copper": "銅の板",
@@ -23,5 +28,6 @@
   "gui.tga.box_copper.title": "銅の箱",
   "gui.tga.mancracker.title": "人力粉砕機",
   "gui.tga.recipebook.togle": "レシピ本を表示／非表示",
-  "gui.tga.machine.noslotforout": "納品の空きスロットがありません。"
+  "gui.tga.machine.noslotforout": "納品の空きスロットがありません。",
+  "sound.tga.machine_noise.sub": "機械の騒音"
 }

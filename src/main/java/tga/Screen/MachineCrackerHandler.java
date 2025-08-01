@@ -62,62 +62,27 @@ public class MachineCrackerHandler extends ScreenHandler {
     public static int UsingPlayerCount;
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot){
-        return  slot > 1 ? TryPlayerInput(slot) : TryExtract(slot);
-    }
-    private ItemStack TryExtract(int slot) {
-        ItemStack baseItem = Machine.getStack(slot);
-        if (baseItem.isEmpty()) return ItemStack.EMPTY;
-        //players slot ni aitemu wo umeru
-        int leftOver = baseItem.getCount();
-        baseItem = baseItem.copy();
-        int maxCount = baseItem.getMaxCount();
-        //１回目は既に配置したアイテムを埋まる
-        int oldValue = leftOver;
-        for (var i = 2; i < slots.size(); i++) {
-            Slot slot_player = getSlot(i);
-            if (!slot_player.hasStack()) continue;
-            ItemStack pStack = slot_player.getStack();
-            if (!ItemStack.areItemsAndComponentsEqual(baseItem, pStack) || pStack.getCount() >= maxCount) continue;
-            int amount = Math.min(leftOver, maxCount - pStack.getCount());
-            ItemStack newStack = pStack.copy();
-            newStack.increment(amount);
-            slot_player.setStack(newStack);
-            leftOver -= amount;
-            if (leftOver <= 0) {
-                Machine.setStack(slot, ItemStack.EMPTY);
-                return baseItem;
+    public ItemStack quickMove(PlayerEntity player, int invSlot) {
+        ItemStack newStack = ItemStack.EMPTY;
+        Slot slot = slots.get(invSlot);
+        if (slot.hasStack()) {
+            ItemStack originalStack = slot.getStack();
+            newStack = originalStack.copy();
+            if (invSlot < SLOT_COUNT) {
+                if (!insertItem(originalStack, SLOT_COUNT, slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!insertItem(originalStack, 0, SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (originalStack.isEmpty()) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
             }
         }
-        //２回目は空いてるスロットに配置
-        for (var i = 2; i < slots.size(); i++) {
-            Slot slot_player = getSlot(i);
-            if (slot_player.hasStack()) continue;
-            ItemStack newStack = baseItem.copy();
-            int amount = Math.min(leftOver, maxCount);
-            newStack.setCount(amount);
-            leftOver -= amount;
-            slot_player.setStack(newStack);
-            if (leftOver <= 0) {
-                Machine.setStack(slot, ItemStack.EMPTY);
-                return baseItem;
-            }
-        }
-        if (leftOver != oldValue) {
-            ItemStack setNew = baseItem.copy();
-            baseItem.setCount(leftOver);
-            Machine.setStack(slot, setNew);
-            return baseItem;
-        }
-        return ItemStack.EMPTY;
-    }
-    private ItemStack TryPlayerInput(int slot) {
-        Slot original = getSlot(slot);
-        if (!original.hasStack()) return ItemStack.EMPTY;
-        ItemStack baseItem = original.getStack();
-        if (Machine.CanPush(baseItem) <= 0) return ItemStack.EMPTY;
-        original.setStack(Machine.PushItem(baseItem));
-        return  baseItem;
+        return newStack;
     }
 
     public void onClosed(PlayerEntity player) {

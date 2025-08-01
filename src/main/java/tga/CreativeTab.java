@@ -32,6 +32,11 @@ public class CreativeTab {
                     entries.add(TGABlocks.CROP_GUAYULE_YONG);
                     entries.add(TGAItems.GUAYULE_DUST);
                     entries.add(TGAItems.TREE_WASTE);
+                    entries.add(TGAItems.DUST_COPPER);
+                    entries.add(TGAItems.DUST_TIN);
+                    entries.add(TGAItems.DUST_BRONZE);
+                    entries.add(TGAItems.INGOT_TIN);
+                    entries.add(TGAItems.INGOT_BRONZE);
                 })
                 .build());
     }

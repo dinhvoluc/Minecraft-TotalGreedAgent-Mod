@@ -1,17 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "iIi",
+    "iWi",
     "IXI",
-    "iIi"
+    "iWi"
   ],
   "key": {
     "i": "tga:nails",
-    "I": "tga:plate_copper",
-    "X": "tga:tank_wood"
+    "I": "tga:rubber",
+    "X": "minecraft:bucket",
+    "W": "#minecraft:planks"
   },
   "result": {
-    "id": "tga:tank_copper",
+    "id": "tga:tank_wood",
     "count": 1
   }
 }

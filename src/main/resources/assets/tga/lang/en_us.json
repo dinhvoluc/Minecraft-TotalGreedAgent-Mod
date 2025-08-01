@@ -1,4 +1,9 @@
 {
+  "item.tga.ingot_bronze": "Bronze ingot",
+  "item.tga.ingot_tin": "Tin ingot",
+  "item.tga.d_bronze": "Bronze dust",
+  "item.tga.d_copper": "Copper dust",
+  "item.tga.d_tin": "Tin dust",
   "item.tga.rubber": "Rubber",
   "item.tga.resin": "Sticky resin",
   "item.tga.plate_copper": "Copper plate",
@@ -23,5 +28,6 @@
   "gui.tga.box_copper.title": "Copper box",
   "gui.tga.mancracker.title": "Manpower cracker",
   "gui.tga.recipebook.togle": "Show/hide recipes book.",
-  "gui.tga.machine.noslotforout": "Not enough space for out put."
+  "gui.tga.machine.noslotforout": "Not enough space for out put.",
+  "sound.tga.machine_noise.sub": "Machine noise"
 }

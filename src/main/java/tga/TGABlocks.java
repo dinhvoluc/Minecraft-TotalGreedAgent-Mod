@@ -28,7 +28,7 @@ public final class TGABlocks {
     public static Block BOX_COPPER_FILLED;
     public static Block RUBBER_SHEET;
     public static Block MAN_CRACKER;
-    public static Block CROP_GUAYULE;
+    public static Block X_CROP_GUAYULE;
     public static Block CROP_GUAYULE_YONG;
 
     public static void Load(boolean isClientSide) {
@@ -58,7 +58,7 @@ public final class TGABlocks {
                 .mapColor(MapColor.DEEPSLATE_GRAY)
                 .strength(4f, 6f)
                 .sounds(BlockSoundGroup.STONE));
-        CROP_GUAYULE = noDirectItem("crop_guayule", CropGuayule::new, AbstractBlock.Settings.create()
+        X_CROP_GUAYULE = noDirectItem("crop_guayule", CropGuayule::new, AbstractBlock.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .noCollision()
                 .breakInstantly()

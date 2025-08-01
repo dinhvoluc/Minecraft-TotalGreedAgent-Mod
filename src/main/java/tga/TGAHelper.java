@@ -5,10 +5,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 
-import java.util.Random;
-
 public class TGAHelper {
-    public static Random Rnd = new Random(System.nanoTime());
     public static void WriteItem(WriteView view, String name, ItemStack stack) {
         if (stack == null || stack.isEmpty()) return;
         view.put(name, ItemStack.CODEC, stack);
@@ -38,5 +35,18 @@ public class TGAHelper {
             rt = true;
         }
         return rt;
+    }
+    public static int Num_MinMul(int a, int b) {
+        return a * b / Num_MaxSub(a, b);
+    }
+    public static int Num_MaxSub(int a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 }
