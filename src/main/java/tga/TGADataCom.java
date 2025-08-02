@@ -22,8 +22,8 @@ public class TGADataCom {
         BoxStackData.CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
                         Codec.INT.fieldOf("m").forGetter((dat) -> dat.MaxStack),
-                        ItemStack.CODEC.optionalFieldOf("i").forGetter((dat) -> dat.HoldItem.isEmpty() ? Optional.empty() : Optional.of(dat.HoldItem)),
-                        Codec.INT.fieldOf("c").forGetter((dat) -> dat.ExCount)
+                        ItemStack.CODEC.optionalFieldOf("i").forGetter((dat) -> dat.LockedType.isEmpty() ? Optional.empty() : Optional.of(dat.LockedType)),
+                        Codec.INT.fieldOf("c").forGetter((dat) -> dat.Count)
                 ).apply(instance, BoxStackData::new));
         BoxStackData.COMPONET_TYPE = register("boxstackdata", builder -> builder.codec(BoxStackData.CODEC));
         ServerPlayNetworking.registerGlobalReceiver(

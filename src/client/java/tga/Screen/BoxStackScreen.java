@@ -40,7 +40,7 @@ public class BoxStackScreen extends HandledScreen<BoxStackScreenHandler> {
         super.drawForeground(context, mouseX, mouseY);
         if (!handler.Tile.isEmpty())
             context.drawText(textRenderer, handler.Tile.getStack(0).getName(), 50, 24, 0xff404040, false);
-        context.drawText(textRenderer, Text.literal(handler.Tile.GetCountNow() + "/" + handler.Tile.GetMaxHold()), 50, 49, 0xff704040, false);
+        context.drawText(textRenderer, Text.literal(handler.Tile.GetTotalCount() + "/" + handler.Tile.GetMaxSpace()), 50, 49, 0xff704040, false);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package tga;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
@@ -10,8 +11,19 @@ public class TGAHelper {
         if (stack == null || stack.isEmpty()) return;
         view.put(name, ItemStack.CODEC, stack);
     }
+    public static ItemStack DecodeItem(RegistryByteBuf buf){
+        return buf.readBoolean() ? ItemStack.PACKET_CODEC.decode(buf) : ItemStack.EMPTY;
+    }
+    public static void EncodeItem(RegistryByteBuf buf, ItemStack stack) {
+        if (stack.isEmpty()) {
+            buf.writeBoolean(false);
+            return;
+        }
+        buf.writeBoolean(true);
+        ItemStack.PACKET_CODEC.encode(buf, stack);
+    }
     public static ItemStack ReadItem(ReadView view, String name){
-        return   view.read(name, ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        return view.read(name, ItemStack.CODEC).orElse(ItemStack.EMPTY);
     }
     public static boolean drainExperience(ServerPlayerEntity player) {
         float exp = player.experienceProgress;

@@ -1,6 +1,5 @@
 package tga;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import tga.MachineRecipes.OneInRecipe;
@@ -22,7 +21,7 @@ public class TGARecipes {
         AddCrackerRecipes(1, new OneToOne(new ItemStack(TGABlocks.CROP_GUAYULE_YONG, 5), 800_00, new ItemStack(TGAItems.GUAYULE_DUST)));
 
         //ORE crush
-        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.RAW_COPPER_BLOCK), 20_000_00, new ItemStack(TGAItems.DUST_COPPER, 10), new ItemStack(TGAItems.DUST_TIN), 0.1f));
+        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.RAW_COPPER_BLOCK), 20_000_00, new ItemStack(TGAItems.DUST_COPPER, 10), new ItemStack(TGAItems.DUST_TIN), 10f));
 
         //INGOT CRUSH
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_TIN, 90, 1_500_00, 12_00,

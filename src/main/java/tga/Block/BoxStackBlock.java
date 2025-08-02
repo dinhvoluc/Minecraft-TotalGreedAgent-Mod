@@ -5,7 +5,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -18,8 +17,10 @@ import tga.TGATileEnities;
 
 public class BoxStackBlock extends Block implements BlockEntityProvider {
     public final int MaxStack;
-    public static final int SIZE_WOOD = 8;
-    public static final int SIZE_COPPER = 16;
+    public static final int SIZE_WOOD = 16;
+    public static final int SIZE_COPPER = SIZE_WOOD * 2;
+    public static final int SIZE_BRONZE = SIZE_COPPER * 2;
+    public static final int SIZE_IRON = SIZE_BRONZE * 2;
 
     public BoxStackBlock(AbstractBlock.Settings settings, int maxStack, Block insideNo, Block insideYes) {
         super(settings);
@@ -37,7 +38,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         BoxStackTile rt = TGATileEnities.BOX_STACK_TILE.instantiate(pos, state);
-        rt.SetMaxHoldStack(MaxStack);
+        rt.InfoMaxStack = MaxStack;
         return rt;
     }
 
@@ -74,7 +75,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
             BlockEntity be = world.getBlockEntity(pos);
             if (be instanceof BoxStackTile boxTile) {
                 BoxStackData data = stack.get(BoxStackData.COMPONET_TYPE);
-                if (data != null) boxTile.SetDataComponent(data);
+                if (data != null) boxTile.OnPlacedRebuild(data);
             }
         }
     }

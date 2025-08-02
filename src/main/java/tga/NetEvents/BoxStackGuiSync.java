@@ -6,6 +6,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.BlockPos;
+import tga.TGAHelper;
 import tga.TotalGreedyAgent;
 
 public class BoxStackGuiSync implements CustomPayload {
@@ -19,40 +20,33 @@ public class BoxStackGuiSync implements CustomPayload {
             public BoxStackGuiSync decode(RegistryByteBuf buf) {
                 String wrl = buf.readString();
                 BlockPos pos = buf.readBlockPos();
-                int exCount = buf.readInt();
-                ItemStack hold;
-                if (exCount == -128) {
-                    exCount = 0;
-                    hold = ItemStack.EMPTY;
-                } else hold = ItemStack.PACKET_CODEC.decode(buf);
-                return new BoxStackGuiSync(wrl, pos, exCount, hold);
+                ItemStack lockedType = TGAHelper.DecodeItem(buf);
+                int count = buf.readInt();
+                return new BoxStackGuiSync(wrl, pos, lockedType, count);
             }
 
             @Override
             public void encode(RegistryByteBuf buf, BoxStackGuiSync value) {
                 buf.writeString(value.World);
                 buf.writeBlockPos(value.Pos);
-                if (value.HoldItem.isEmpty()) buf.writeInt(-128);
-                else {
-                    buf.writeInt(value.ExCount);
-                    ItemStack.PACKET_CODEC.encode(buf, value.HoldItem);
-                }
+                TGAHelper.EncodeItem(buf, value.LockedType);
+                buf.writeInt(value.Count);
             }
         };
         PayloadTypeRegistry.playS2C().register(PAYLOAD_ID, PACKET_CODEC);
     }
 
-    public BoxStackGuiSync(String world, BlockPos pos, int exCount, ItemStack holdItem) {
+    public BoxStackGuiSync(String world, BlockPos pos, ItemStack lockedType, int count) {
         World = world;
         Pos = pos;
-        ExCount = exCount;
-        HoldItem = holdItem.copy();
+        LockedType = lockedType;
+        Count = count;
     }
 
     public final String World;
     public final BlockPos Pos;
-    public final int ExCount;
-    public final ItemStack HoldItem;
+    public final ItemStack LockedType;
+    public final int Count;
 
     @Override
     public Id<BoxStackGuiSync> getId() {

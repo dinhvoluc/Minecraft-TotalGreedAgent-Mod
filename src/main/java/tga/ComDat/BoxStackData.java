@@ -16,31 +16,31 @@ import java.util.function.Consumer;
 public class BoxStackData implements TooltipAppender {
     public static ComponentType<BoxStackData> COMPONET_TYPE;
     public static Codec<BoxStackData> CODEC;
-    public final ItemStack HoldItem;
+    public final ItemStack LockedType;
     public final int MaxStack;
-    public final int ExCount;
+    public final int Count;
 
     public BoxStackData(int maxStack, Optional<ItemStack> item, int exCount) {
         MaxStack = maxStack;
-        HoldItem = item.isEmpty() ? ItemStack.EMPTY : item.get().copy();
-        ExCount = HoldItem.isEmpty() ? 0 : Math.max(0, exCount);
+        LockedType = item.isEmpty() ? ItemStack.EMPTY : item.get().copy();
+        Count = LockedType.isEmpty() ? 0 : Math.max(0, exCount);
     }
 
-    public BoxStackData(int maxStack, ItemStack item, int exCount) {
+    public BoxStackData(int maxStack, ItemStack item, int count) {
         MaxStack = maxStack;
-        HoldItem = item.copy();
-        ExCount = HoldItem.isEmpty() ? 0 : Math.max(0, exCount);
+        LockedType = item.copy();
+        Count = count;
     }
 
     public int GetTotal() {
-        return HoldItem.isEmpty() ? 0 : (HoldItem.getCount() + ExCount);
+        return LockedType.isEmpty() ? 0 : Count;
     }
 
     @Override
     public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
         int gTotal = GetTotal();
         if (gTotal > 0) {
-            textConsumer.accept(Text.literal(gTotal + "×" + HoldItem.getName().getString()).formatted(Formatting.GOLD));
+            textConsumer.accept(Text.literal(gTotal + "×" + LockedType.getName().getString()).formatted(Formatting.GOLD));
         }
     }
 }
