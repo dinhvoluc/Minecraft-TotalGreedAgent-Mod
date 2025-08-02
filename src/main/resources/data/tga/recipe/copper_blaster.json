@@ -1,5 +1,6 @@
 {
   "type": "minecraft:blasting",
+  "group": "copper_ingot",
   "ingredient": "tga:d_copper",
   "result": {
     "id": "minecraft:copper_ingot"

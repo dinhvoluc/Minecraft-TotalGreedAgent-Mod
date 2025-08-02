@@ -7,7 +7,6 @@ import tga.Items.ItemFloat;
 import tga.TGAHelper;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class OneToOne extends OneInRecipe {
     public static OneToOne[] CreateAutoBlanced(Item result, int baseValue, int power, int additionpower, Object... tags) {
@@ -46,6 +45,7 @@ public class OneToOne extends OneInRecipe {
     public OneToOne(ItemStack ingredient, int power, ItemStack result) {
         super(ingredient, power);
         Result = result;
+        CraftChanceList = new ItemFloat[] {new ItemFloat(FIXED_CRAFT, Result.copy())};
     }
 
     @Override
@@ -57,10 +57,5 @@ public class OneToOne extends OneInRecipe {
         craftedItems[0] = Result.copy();
         craftedItems[1] = ItemStack.EMPTY;
         return rt;
-    }
-
-    @Override
-    public List<ItemFloat> CraftChanceList() {
-        return List.of(new ItemFloat(FIXED_CRAFT, Result.copy()));
     }
 }

@@ -1,31 +1,33 @@
 package tga;
 
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
 import tga.Block.BoxStackBlock;
 import tga.Block.RubberSheetBlock;
+import tga.Block.TankBlock;
 import tga.Crops.CropGuayule;
 import tga.Crops.CustomCropBlock;
 import tga.Machines.ManCracker;
-import tga.Machines.ManCrackerTile;
 
 import java.util.function.Function;
 
 public final class TGABlocks {
+
     public static Block BOX_WOOD;
     public static Block BOX_WOOD_FILLED;
     public static Block BOX_COPPER;
     public static Block BOX_COPPER_FILLED;
+
+    public static Block TANK_WOOD;
+    public static Block TANK_WOOD_FILLED;
+    public static Block TANK_COPPER;
+    public static Block TANK_COPPER_FILLED;
+
     public static Block RUBBER_SHEET;
     public static Block MAN_CRACKER;
     public static Block X_CROP_GUAYULE;
@@ -33,6 +35,7 @@ public final class TGABlocks {
 
     public static void Load(boolean isClientSide) {
         CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0F, 0.0F, 2 + age * 2));
+        //BOX
         BOX_WOOD_FILLED = register("box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
@@ -49,6 +52,24 @@ public final class TGABlocks {
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
+        //TANK
+        TANK_WOOD_FILLED = register("tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
+                .mapColor(MapColor.TERRACOTTA_BROWN)
+                .strength(0.2f, 3.5f)
+                .sounds(BlockSoundGroup.WOOD));
+        TGAItems.SetBurnTime((TANK_WOOD = register("tank_wood", TankBlock::Create_Wooden, Block.Settings.create()
+                .mapColor(MapColor.TERRACOTTA_BROWN)
+                .strength(0.2f, 3.5f)
+                .sounds(BlockSoundGroup.WOOD))).asItem(), 400);
+        TANK_COPPER = register("tank_copper", TankBlock::Create_Copper, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
+        TANK_COPPER_FILLED = register("tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
+        //OTHER
         TGAItems.SetBurnTime((RUBBER_SHEET = register("rubber_sheet", RubberSheetBlock::new, Block.Settings.create()
                 .mapColor(MapColor.BLACK)
                 .strength(0.2f, 0.2f)

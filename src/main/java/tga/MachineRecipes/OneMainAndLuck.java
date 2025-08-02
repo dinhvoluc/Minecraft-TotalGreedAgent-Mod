@@ -14,13 +14,9 @@ public class OneMainAndLuck extends OneInRecipe {
         return rt;
     }
 
-    public final ItemStack MainItem;
-    public final ItemFloat LuckItem;
-
     public OneMainAndLuck(ItemStack ingredient, int power, ItemStack main, ItemStack luck, float luckBase) {
         super(ingredient, power);
-        MainItem = main;
-        LuckItem = new ItemFloat(luckBase, luck);
+        CraftChanceList = new ItemFloat[]{new ItemFloat(10f, main.copy()), new ItemFloat(luckBase, luck)};
     }
 
     @Override
@@ -29,13 +25,8 @@ public class OneMainAndLuck extends OneInRecipe {
             return stack;
         ItemStack rt = stack.copy();
         rt.decrement(Ingredient.getCount());
-        craftedItems[0] = MainItem.copy();
-        craftedItems[1] = random.nextFloat() < LuckItem.Number ? LuckItem.Item.copy() : ItemStack.EMPTY;
+        craftedItems[0] = CraftChanceList[0].Item;
+        craftedItems[1] = random.nextFloat() < CraftChanceList[1].Number ? CraftChanceList[1].Item.copy() : ItemStack.EMPTY;
         return rt;
-    }
-
-    @Override
-    public List<ItemFloat> CraftChanceList() {
-        return List.of(new ItemFloat(10f, MainItem.copy()), LuckItem.Copy());
     }
 }

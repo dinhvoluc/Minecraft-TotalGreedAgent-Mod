@@ -13,11 +13,13 @@ public class TGARecipes {
     public static OneSlotBook Cracker_LV2 = new OneSlotBook();
     public static void Load(){
         //CaCO3
-        AddCrackerRecipes(0, OneToOne.CreateWithTagsIngredient(5_000_00, new ItemStack(TGAItems.CACO3), new ItemStack(Items.NAUTILUS_SHELL, 2), new ItemStack(Items.TURTLE_SCUTE), new ItemStack(Items.BONE_BLOCK), new ItemStack(Items.BONE, 3)));
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00, 5_00, 90, Items.NAUTILUS_SHELL, Items.BONE,
+                180, Items.TURTLE_SCUTE,
+                270, Items.BONE_BLOCK));
 
         //Guayule seed/dust
         AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(TGAItems.CROP_GUAYULE_GRASS), 500_00, new ItemStack(TGAItems.GUAYULE_DUST), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.15f));
-        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.SHORT_GRASS), 200_00, new ItemStack(TGAItems.TREE_WASTE), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.05f));
+        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.SHORT_GRASS), 400_00, new ItemStack(TGAItems.TREE_WASTE), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.05f));
         AddCrackerRecipes(1, new OneToOne(new ItemStack(TGABlocks.CROP_GUAYULE_YONG, 5), 800_00, new ItemStack(TGAItems.GUAYULE_DUST)));
 
         //ORE crush

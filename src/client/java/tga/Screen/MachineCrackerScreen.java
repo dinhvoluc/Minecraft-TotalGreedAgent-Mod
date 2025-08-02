@@ -4,21 +4,27 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import tga.Machines.ManCrackerTile;
+import tga.Mechanic.IItemChecker;
 import tga.NetEvents.ManCrackerGuiSync;
+import tga.RecipeViewer.OneIn5RowRender;
 import tga.TGAClientText;
+import tga.TGARecipes;
 import tga.TGAScreenHandlers;
 import tga.TotalGreedyAgent;
 
-public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerHandler> {
+public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerHandler> implements IItemChecker {
     public static boolean IsShowRecipes = false;
+    public static OneIn5RowRender Viewer = new OneIn5RowRender();
 
     @Override
     protected boolean IsRecipeOn() { return IsShowRecipes; }
 
     public MachineCrackerScreen(MachineCrackerHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title);
+        super(handler, inventory, title, Viewer);
+        Viewer.SetTarget(TGARecipes.Cracker_LV0, this);
         MachineCrackerHandler.LastWorkBlock = handler.Machine;
     }
 
@@ -66,20 +72,19 @@ public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerH
     }
 
     @Override
-    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-        super.drawForeground(context, mouseX, mouseY);
-
-
-
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        if (DrawBasicToolTip(context, mouseX, mouseY, delta)) return;
+        drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        switch (PointID){
-            case POINT_RECIPE_BOOK_TOGLE: context.drawTooltip(TGAClientText.TOGLE_RECIPE_BOOK, mouseX, mouseY);
-            case POINT_ERROR_FULL_INVENTORY: context.drawTooltip(TGAClientText.TOGLE_NO_SLOT_FOR_OUTPUT, mouseX, mouseY);
-            default:drawMouseoverTooltip(context, mouseX, mouseY);
-        }
+    public boolean HaveEnough(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean HaveAll(ItemStack[] stacks) {
+        return false;
     }
 }

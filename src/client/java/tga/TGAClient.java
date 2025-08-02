@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import tga.Machines.ManCracker;
+import tga.RecipeViewer.OneIn5RowRender;
 import tga.Screen.BoxStackScreen;
+import tga.Screen.MachineCrackerHandler;
 import tga.Screen.MachineCrackerScreen;
 
 public class TGAClient extends TotalGreedyAgent implements ClientModInitializer {

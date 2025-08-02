@@ -2,8 +2,10 @@ package tga.MachineRecipes;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.Nullable;
 import tga.Items.ItemFloat;
+import tga.Mechanic.IItemChecker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +21,7 @@ public class OneSlotBook {
 
     public void Register(OneInRecipe recipe){
         RECIPE_MAP.put(recipe.Ingredient.getItem(), recipe);
-        List<ItemFloat> canGet = recipe.CraftChanceList();
+        ItemFloat[] canGet = recipe.CraftChanceList;
         for(ItemFloat i : canGet)
             CAN_PRODUCE_LIST.computeIfAbsent(i.Item.getItem(), k -> new ArrayList<>()).add(recipe);
     }
@@ -32,5 +34,27 @@ public class OneSlotBook {
         if (stack.isEmpty()) return null;
         OneInRecipe recipe = RECIPE_MAP.get(stack.getItem());
         return recipe != null && recipe.CanCraft(stack) ? recipe : null;
+    }
+
+    public void SearchAppend(List<List<OneInRecipe>> showingResult, String name, boolean listMode, boolean canCraft, IItemChecker checker) {
+
+
+        //dummy
+        if (listMode) {
+            for(Map.Entry<Item, List<OneInRecipe>> rep : CAN_PRODUCE_LIST.entrySet())
+            {
+                showingResult.add(rep.getValue());
+            }
+
+        }
+        else {
+            for (Map.Entry<Item, List<OneInRecipe>> rep : CAN_PRODUCE_LIST.entrySet())
+                for (OneInRecipe i : rep.getValue())
+                {
+                    List<OneInRecipe> a = new ArrayList<>();
+                    a.add(i);
+                    showingResult.add(a);
+                }
+        }
     }
 }

@@ -47,10 +47,10 @@ public class JinrikiGogo implements CustomPayload {
         if (!(tile instanceof ITGAManpoweredBlock man)) return;
         if (man.IsFullCharge()) return;
         //Man power code
-        int jinriki = 25 + player.getHungerManager().getFoodLevel() + player.experienceLevel;
-        player.addExhaustion(1f);
-        if (TGAHelper.drainExperience(player)) jinriki += 5;
-        man.JinrikiGo(jinriki * 20, player, world);
+        int jinriki = 30 + player.getHungerManager().getFoodLevel() + player.experienceLevel * 3;
+        player.addExhaustion(15f);
+        if (TGAHelper.drainExperience(player)) jinriki += 15;
+        man.JinrikiGo(jinriki * 100, player, world);
     }
 
     @Override

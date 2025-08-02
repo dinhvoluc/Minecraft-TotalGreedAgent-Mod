@@ -89,8 +89,6 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         return new int[]{0, 1};
     }
 
-    public static int Ticker = 0;
-
     @Override
     public void setStack(int slot, ItemStack stack) {
         //no action

@@ -26,7 +26,7 @@ public abstract class OneInRecipe {
     /** レシピ本を登録用です。
      * @return 可能性のクラフト結果、10.0f。メインとなる結果。ランダムで何が追加がある場合は1.0f以下で対応
      */
-    public abstract List<ItemFloat> CraftChanceList();
+    public ItemFloat[] CraftChanceList;
 
     /** RealCraft()を実行出来るかのチェック段階です。
      * @param stack チェック素材のインプット

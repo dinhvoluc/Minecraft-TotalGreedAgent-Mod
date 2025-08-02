@@ -3,6 +3,7 @@ package tga;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -26,6 +27,7 @@ public class TGADataCom {
                         Codec.INT.fieldOf("c").forGetter((dat) -> dat.Count)
                 ).apply(instance, BoxStackData::new));
         BoxStackData.COMPONET_TYPE = register("boxstackdata", builder -> builder.codec(BoxStackData.CODEC));
+
         ServerPlayNetworking.registerGlobalReceiver(
                 JinrikiGogo.PAYLOAD_ID,
                 (payload, context) -> {

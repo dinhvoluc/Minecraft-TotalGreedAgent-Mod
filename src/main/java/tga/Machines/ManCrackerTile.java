@@ -43,8 +43,8 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     public int WorkTotal = 1;
     public int Jinriki;
 
-    public static final int JINRIKI_INPUT_OFF = 300_00;
-    public static final int MAX_JINRIKI_CAP = 600_00;
+    public static final int JINRIKI_INPUT_OFF = 20_000_00;
+    public static final int MAX_JINRIKI_CAP = 60_000_00;
 
     @Override
     public boolean IsFullCharge() {
@@ -112,7 +112,7 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
         if (!ItemBuffer[1].isEmpty()) return;
         if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
         //Max 50 human power/t
-        int amount = Math.min(Jinriki / 10, 50_00);
+        int amount = Math.min(Jinriki / 10, 10_00);
         Worked += amount;
         Jinriki -= amount;
         //Crafted

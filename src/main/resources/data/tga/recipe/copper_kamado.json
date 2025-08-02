@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": "tga:d_copper",
-  "result": {
-    "id": "minecraft:copper_ingot"
-  },
-  "experience": 0.5,
-  "cookingtime": 200
-}

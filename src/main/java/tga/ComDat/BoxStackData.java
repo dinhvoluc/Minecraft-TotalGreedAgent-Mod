@@ -32,15 +32,9 @@ public class BoxStackData implements TooltipAppender {
         Count = count;
     }
 
-    public int GetTotal() {
-        return LockedType.isEmpty() ? 0 : Count;
-    }
-
     @Override
     public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
-        int gTotal = GetTotal();
-        if (gTotal > 0) {
-            textConsumer.accept(Text.literal(gTotal + "×" + LockedType.getName().getString()).formatted(Formatting.GOLD));
-        }
+        if (Count <= 0 || LockedType.isEmpty()) return;
+        textConsumer.accept(Text.literal(Count + "×" + LockedType.getName().getString()).formatted(Formatting.GOLD));
     }
 }

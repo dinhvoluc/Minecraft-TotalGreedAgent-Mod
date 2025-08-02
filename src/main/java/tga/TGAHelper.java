@@ -1,10 +1,13 @@
 package tga;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.text.Text;
 
 public class TGAHelper {
     public static void WriteItem(WriteView view, String name, ItemStack stack) {
@@ -60,5 +63,12 @@ public class TGAHelper {
             a = temp;
         }
         return a;
+    }
+
+    public static Text GetFluidName(FluidVariant obj) {
+        if (obj.isOf(Fluids.EMPTY)) return Text.translatable("fluid.tga.none");
+        if (obj.isOf(Fluids.WATER)) return Text.translatable("fluid.tga.water");
+        if (obj.isOf(Fluids.LAVA)) return Text.translatable("fluid.tga.lava");
+        return Text.literal(obj.toString());
     }
 }

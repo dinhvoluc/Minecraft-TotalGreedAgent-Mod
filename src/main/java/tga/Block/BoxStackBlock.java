@@ -22,17 +22,17 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
     public static final int SIZE_BRONZE = SIZE_COPPER * 2;
     public static final int SIZE_IRON = SIZE_BRONZE * 2;
 
-    public BoxStackBlock(AbstractBlock.Settings settings, int maxStack, Block insideNo, Block insideYes) {
+    public BoxStackBlock(AbstractBlock.Settings settings, int maxStack) {
         super(settings);
         MaxStack = maxStack;
     }
 
     public static BoxStackBlock Create_Wooden(AbstractBlock.Settings settings) {
-        return new BoxStackBlock(settings, SIZE_WOOD, TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED);
+        return new BoxStackBlock(settings, SIZE_WOOD);
     }
 
     public static BoxStackBlock Create_Copper(AbstractBlock.Settings settings) {
-        return new BoxStackBlock(settings, SIZE_COPPER, TGABlocks.BOX_COPPER, TGABlocks.BOX_COPPER_FILLED);
+        return new BoxStackBlock(settings, SIZE_COPPER);
     }
 
     @Override
@@ -82,11 +82,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
 
     @Override
     protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-        return switch (MaxStack) {
-            case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD);
-            case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER);
-            default -> ItemStack.EMPTY;
-        };
+        return GetEmptyBox(MaxStack);
     }
 
     @Override
