@@ -29,5 +29,13 @@
   "gui.tga.mancracker.title": "人力粉砕機",
   "gui.tga.recipebook.togle": "レシピ本を表示／非表示",
   "gui.tga.machine.noslotforout": "納品の空きスロットがありません。",
+  "gui.tga.have_x_recipe" : "%sつのレシピがあります",
+  "gui.tga.recipebook.toallview" : "検索ページに戻る",
+  "gui.tga.recipebook.tocaftable" : "クラフト可能を表示",
+  "gui.tga.recipebook.toall" : "全部を表示",
+  "gui.tga.recipebook.search" : "検索",
+  "gui.tga.recipebook.searchinput" : "検索…",
+  "gui.tga.power_need" : "%s人力が必要です",
+  "gui.tga.craft_chance" : "%sの確率",
   "sound.tga.machine_noise.sub": "機械の騒音"
 }

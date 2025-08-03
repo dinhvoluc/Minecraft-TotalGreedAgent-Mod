@@ -29,5 +29,13 @@
   "gui.tga.mancracker.title": "Manpower cracker",
   "gui.tga.recipebook.togle": "Show/hide recipes book.",
   "gui.tga.machine.noslotforout": "Not enough space for out put.",
+  "gui.tga.have_x_recipe" : "Have %s recipe",
+  "gui.tga.recipebook.toallview" : "Return to search page",
+  "gui.tga.recipebook.tocaftable" : "Show craftable",
+  "gui.tga.recipebook.toall" : "Show all",
+  "gui.tga.recipebook.search" : "Search",
+  "gui.tga.recipebook.searchinput" : "Search...",
+  "gui.tga.power_need" : "Need %sJrk",
+  "gui.tga.craft_chance" : "Have %s chance",
   "sound.tga.machine_noise.sub": "Machine noise"
 }

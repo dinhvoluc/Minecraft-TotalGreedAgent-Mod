@@ -8,6 +8,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
+import tga.Items.CraftOutputPatch;
+import tga.MachineRecipes.OneInRecipe;
+
+import java.util.List;
 
 public class TGAHelper {
     public static void WriteItem(WriteView view, String name, ItemStack stack) {
@@ -70,5 +74,48 @@ public class TGAHelper {
         if (obj.isOf(Fluids.WATER)) return Text.translatable("fluid.tga.water");
         if (obj.isOf(Fluids.LAVA)) return Text.translatable("fluid.tga.lava");
         return Text.literal(obj.toString());
+    }
+
+    public static <T> T GetOrNull(List<T> list, int index) {
+        if (list == null || index < 0 || index >= list.size()) return null;
+        return list.get(index);
+    }
+    public static <T> T GetOrNull(T[] array, int index) {
+        if (array == null || index < 0 || index >= array.length) return null;
+        return array[index];
+    }
+
+    public static boolean GUI_ButtonInrange(int bx, int by, int mouseX, int mouseY) {
+        return  mouseX > bx && mouseY > by && mouseX < bx + 16 && mouseY < by + 16;
+    }
+
+    public static boolean InRangeXY(int posX, int posY, int x, int y, int w, int h) {
+        return posX >= x && posY >= y && posX < x + w && posY < y + h;
+    }
+    public static String ToPercent(float v) {
+        long fmt = (long) (v * 10000);
+        long lefOver = fmt % 100;
+        return lefOver < 10 ? ((fmt / 100) + ".0" + lefOver + "%") : ((fmt / 100) + "." + lefOver + "%");
+    }
+    public static String JinrikiToPower10String(long val) {
+        if (val < 1_000_00) return String.valueOf(val / 100);
+        if (val < 1_000_000_00) {
+            val /= 1_000;
+            long lefOver = val % 100;
+            return lefOver < 10 ? ((val / 100) + ".0" + lefOver + "K") : ((val / 100) + "." + lefOver + "K");
+        }
+        if (val < 1_000_000_000_00L) {
+            val /= 1_000_000;
+            long lefOver = val % 100;
+            return lefOver < 10 ? ((val / 100) + ".0" + lefOver + "M") : ((val / 100) + "." + lefOver + "M");
+        }
+        if (val < 1_000_000_000_000_00L) {
+            val /= 1_000_000_000;
+            long lefOver = val % 100;
+            return lefOver < 10 ? ((val / 100) + ".0" + lefOver + "G") : ((val / 100) + "." + lefOver + "G");
+        }
+        val /= 1_000_000_000_000L;
+        long lefOver = val % 100;
+        return lefOver < 10 ? ((val / 100) + ".0" + lefOver + "T") : ((val / 100) + "." + lefOver + "T");
     }
 }

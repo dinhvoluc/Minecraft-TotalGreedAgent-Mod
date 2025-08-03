@@ -5,22 +5,16 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import tga.*;
 import tga.Machines.ManCrackerTile;
 import tga.Mechanic.IItemChecker;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.RecipeViewer.OneIn5RowRender;
-import tga.TGAClientText;
-import tga.TGARecipes;
-import tga.TGAScreenHandlers;
-import tga.TotalGreedyAgent;
 
 public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerHandler> implements IItemChecker {
-    public static boolean IsShowRecipes = false;
     public static OneIn5RowRender Viewer = new OneIn5RowRender();
-
-    @Override
-    protected boolean IsRecipeOn() { return IsShowRecipes; }
 
     public MachineCrackerScreen(MachineCrackerHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, Viewer);
@@ -52,23 +46,9 @@ public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerH
         else {
             //draw stuck warnings
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x + 79, y + 37, 38, 242, 18, 14, 512, 512);
-            if (MouseInrange(mouseX - x, mouseY - y, 82, 38, 94, 50))
+            if (TGAHelper.InRangeXY(mouseX - x, mouseY - y, 82, 38, 94, 50))
                 PointID = POINT_ERROR_FULL_INVENTORY;
         }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        int cvtX = (int)mouseX - x;
-        int cvtY = (int)mouseY - y;
-        //inrage of recipe
-        if (IsMouseRecipeBook(cvtX, cvtY)) {
-            IsShowRecipes = !IsShowRecipes;
-            init();
-            return true;
-        }
-
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -80,11 +60,22 @@ public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerH
 
     @Override
     public boolean HaveEnough(ItemStack stack) {
+        int totalAmount = 0;
+        for (Slot sl : handler.slots) {
+            if (!sl.hasStack()) continue;
+            ItemStack getStack = sl.getStack();
+            if (ItemStack.areItemsEqual(stack, getStack)) {
+                totalAmount += getStack.getCount();
+                if (totalAmount >= stack.getCount()) return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean HaveAll(ItemStack[] stacks) {
-        return false;
+        for(ItemStack stack : stacks)
+            if (!HaveEnough(stack)) return false;
+        return true;
     }
 }
