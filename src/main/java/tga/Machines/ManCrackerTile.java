@@ -14,19 +14,16 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import tga.TGARecipes;
 import tga.MachineRecipes.OneInRecipe;
 import tga.Mechanic.ITGAManpoweredBlock;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.MachineCrackerHandler;
-import tga.TGAHelper;
-import tga.TGASounds;
-import tga.TGATileEnities;
-import tga.TotalGreedyAgent;
+import tga.*;
 
 import java.util.Arrays;
 
@@ -95,7 +92,7 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
         if (next_recipe != null) {
             ItemStack[] getCrafted = new ItemStack[2];
             ItemBuffer[0] = next_recipe.RealCraft(ItemBuffer[0], getCrafted, world.getRandom());
-            WorkTotal = next_recipe.NeedPower;
+            WorkTotal = (int)next_recipe.NeedPower;
             //Get only 2
             CraftMain = getCrafted[0];
             CraftSub = getCrafted[1];
@@ -262,5 +259,14 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
         ItemBuffer[0] = ItemStack.EMPTY;
         ItemBuffer[1] = ItemStack.EMPTY;
         markDirty();
+    }
+
+    public DefaultedList<ItemStack> GetDrops() {
+        DefaultedList<ItemStack> drop = DefaultedList.of();
+        drop.add(new ItemStack(TGABlocks.MAN_CRACKER));
+        if (!ItemBuffer[0].isEmpty()) drop.add(ItemBuffer[0].copy());
+        if (!ItemBuffer[1].isEmpty()) drop.add(ItemBuffer[1].copy());
+        if (!SubOutput.isEmpty()) drop.add(SubOutput.copy());
+        return drop;
     }
 }

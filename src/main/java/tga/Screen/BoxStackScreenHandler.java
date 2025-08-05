@@ -57,6 +57,7 @@ public class BoxStackScreenHandler extends ScreenHandler {
         return Tile.canPlayerUse(player);
     }
 
+    @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
         return switch (slot) {
             case 0 -> TryExtract();

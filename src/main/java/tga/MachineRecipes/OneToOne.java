@@ -9,7 +9,7 @@ import tga.TGAHelper;
 import java.util.Arrays;
 
 public class OneToOne extends OneInRecipe {
-    public static OneToOne[] CreateAutoBlanced(Item result, int baseValue, int power, int additionpower, Object... tags) {
+    public static OneToOne[] CreateAutoBlanced(Item result, int baseValue, int power, Object... tags) {
         OneToOne[] rt = new OneToOne[tags.length];
         int mapped = 0;
         int value = baseValue;
@@ -28,7 +28,6 @@ public class OneToOne extends OneInRecipe {
             rsCount = minMul / baseValue;
             idCount = minMul / value;
             powerCost = power * rsCount;
-            if (additionpower > 0 && rsCount > 0) powerCost += additionpower * rsCount * (rsCount - 1) / 32;
         }
         return mapped == rt.length ? rt : Arrays.copyOfRange(rt, 0, mapped);
     }
@@ -40,12 +39,9 @@ public class OneToOne extends OneInRecipe {
         return rt;
     }
 
-    public final ItemStack Result;
-
     public OneToOne(ItemStack ingredient, int power, ItemStack result) {
         super(ingredient, power);
-        Result = result;
-        CraftChanceList = new ItemFloat[] {new ItemFloat(FIXED_CRAFT, Result.copy())};
+        CraftChanceList = new ItemFloat[] {ItemFloat.of(result)};
     }
 
     @Override
@@ -54,7 +50,7 @@ public class OneToOne extends OneInRecipe {
             return stack;
         ItemStack rt = stack.copy();
         rt.decrement(Ingredient.getCount());
-        craftedItems[0] = Result.copy();
+        craftedItems[0] = CraftChanceList[0].Item.copy();
         craftedItems[1] = ItemStack.EMPTY;
         return rt;
     }

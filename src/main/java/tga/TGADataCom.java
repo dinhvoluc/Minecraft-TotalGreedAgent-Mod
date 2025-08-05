@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import tga.ComDat.BoxStackData;
+import tga.ComDat.TankComData;
 import tga.NetEvents.JinrikiGogo;
 
 import java.util.Optional;
@@ -26,7 +27,14 @@ public class TGADataCom {
                         ItemStack.CODEC.optionalFieldOf("i").forGetter((dat) -> dat.LockedType.isEmpty() ? Optional.empty() : Optional.of(dat.LockedType)),
                         Codec.INT.fieldOf("c").forGetter((dat) -> dat.Count)
                 ).apply(instance, BoxStackData::new));
+        TankComData.CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        Codec.INT.fieldOf("m").forGetter((dat) -> dat.MaxStack),
+                        FluidVariant.CODEC.optionalFieldOf("f").forGetter((dat) -> dat.FType == null || dat.FType.isBlank() ? Optional.empty() : Optional.of(dat.FType)),
+                        Codec.LONG.fieldOf("c").forGetter((dat) -> dat.Count)
+                ).apply(instance, TankComData::new));
         BoxStackData.COMPONET_TYPE = register("boxstackdata", builder -> builder.codec(BoxStackData.CODEC));
+        TankComData.COMPONET_TYPE = register("tankcomdata", builder -> builder.codec(TankComData.CODEC));
 
         ServerPlayNetworking.registerGlobalReceiver(
                 JinrikiGogo.PAYLOAD_ID,

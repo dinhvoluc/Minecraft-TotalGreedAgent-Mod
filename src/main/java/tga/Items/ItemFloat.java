@@ -1,7 +1,7 @@
 package tga.Items;
 
 import net.minecraft.item.ItemStack;
-import tga.TotalGreedyAgent;
+import tga.TGARecipes;
 
 public class ItemFloat {
     public final float Number;
@@ -10,6 +10,14 @@ public class ItemFloat {
     public ItemFloat(float number, ItemStack item) {
         Number = number;
         Item = item.copy();
+    }
+
+    public static ItemFloat of(float number, ItemStack item) {
+        return new ItemFloat(number, item);
+    }
+
+    public static ItemFloat of(ItemStack item) {
+        return new ItemFloat(TGARecipes.FIXED_CRAFT_CHANCE, item);
     }
 
     public ItemFloat Copy() {

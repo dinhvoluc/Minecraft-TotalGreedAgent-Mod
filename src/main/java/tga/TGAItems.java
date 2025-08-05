@@ -7,7 +7,6 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
-import tga.Crops.CustomCropBlock;
 
 import java.util.function.Function;
 

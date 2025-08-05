@@ -1,12 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "#",
-    "B"
+    "iWi",
+    "IXI",
+    "iWi"
   ],
   "key": {
-    "#": "tga:rubber_sheet",
-    "B": "minecraft:barrel"
+    "i": "tga:nails",
+    "I": "tga:rubber_sheet",
+    "X": "minecraft:barrel",
+    "W": "#minecraft:planks"
   },
   "result": {
     "id": "tga:box_wood",

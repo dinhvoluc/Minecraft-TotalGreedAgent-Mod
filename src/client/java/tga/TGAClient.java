@@ -5,10 +5,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import tga.Machines.ManCracker;
-import tga.RecipeViewer.OneIn5RowRender;
 import tga.Screen.BoxStackScreen;
-import tga.Screen.MachineCrackerHandler;
 import tga.Screen.MachineCrackerScreen;
+import tga.Screen.TankScreen;
 
 public class TGAClient extends TotalGreedyAgent implements ClientModInitializer {
 	@Override
@@ -26,6 +25,7 @@ public class TGAClient extends TotalGreedyAgent implements ClientModInitializer 
 		LOGGER.info("Client=>Screens");
 		HandledScreens.register(TGAScreenHandlers.BOX_STACK, BoxStackScreen::new);
 		HandledScreens.register(TGAScreenHandlers.M_CRACKER_0, MachineCrackerScreen::new);
+		HandledScreens.register(TGAScreenHandlers.TANK_GUI, TankScreen::new);
 		LOGGER.info("Client=>ToolTips");
 		TGAToolTips.Load();
 		LOGGER.info("Client=>RenderFix");

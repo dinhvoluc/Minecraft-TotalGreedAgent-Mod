@@ -22,13 +22,13 @@ public class BoxStackData implements TooltipAppender {
 
     public BoxStackData(int maxStack, Optional<ItemStack> item, int exCount) {
         MaxStack = maxStack;
-        LockedType = item.isEmpty() ? ItemStack.EMPTY : item.get().copy();
+        LockedType = item.orElse(ItemStack.EMPTY);
         Count = LockedType.isEmpty() ? 0 : Math.max(0, exCount);
     }
 
     public BoxStackData(int maxStack, ItemStack item, int count) {
         MaxStack = maxStack;
-        LockedType = item.copy();
+        LockedType = item;
         Count = count;
     }
 

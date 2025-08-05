@@ -2,7 +2,6 @@ package tga.MachineRecipes;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.Nullable;
 import tga.Items.CraftOutputPatch;
 import tga.Items.ItemFloat;

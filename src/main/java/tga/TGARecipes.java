@@ -2,18 +2,18 @@ package tga;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import tga.MachineRecipes.OneInRecipe;
-import tga.MachineRecipes.OneMainAndLuck;
-import tga.MachineRecipes.OneSlotBook;
-import tga.MachineRecipes.OneToOne;
+import tga.MachineRecipes.*;
 
 public class TGARecipes {
+    public static final float FIXED_CRAFT_CHANCE = 10f;
     public static OneSlotBook Cracker_LV0 = new OneSlotBook();
     public static OneSlotBook Cracker_LV1 = new OneSlotBook();
     public static OneSlotBook Cracker_LV2 = new OneSlotBook();
+
     public static void Load(){
         //CaCO3
-        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00, 5_00, 90, Items.NAUTILUS_SHELL, Items.BONE,
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00,
+                Items.NAUTILUS_SHELL, Items.BONE,
                 180, Items.TURTLE_SCUTE,
                 270, Items.BONE_BLOCK));
 
@@ -23,14 +23,14 @@ public class TGARecipes {
         AddCrackerRecipes(1, new OneToOne(new ItemStack(TGABlocks.CROP_GUAYULE_YONG, 5), 800_00, new ItemStack(TGAItems.GUAYULE_DUST)));
 
         //ORE crush
-        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.RAW_COPPER_BLOCK), 25_000_00, new ItemStack(TGAItems.DUST_COPPER, 10), new ItemStack(TGAItems.DUST_TIN), 10f));
+        AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.RAW_COPPER_BLOCK), 25_000_00, new ItemStack(TGAItems.DUST_COPPER, 10), new ItemStack(TGAItems.DUST_TIN)));
 
         //INGOT CRUSH
-        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_TIN, 90, 1_500_00, 12_00,
-                90, TGAItems.INGOT_TIN));
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_TIN, 90, 1_500_00,
+                TGAItems.INGOT_TIN));
 
-        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_COPPER, 90, 2_000_00, 30_00,
-                90, Items.COPPER_INGOT, TGAItems.COPPER_PLATE,
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_COPPER, 90, 2_000_00,
+                Items.COPPER_INGOT, TGAItems.COPPER_PLATE,
                 810,
                 Items.COPPER_BLOCK,
                 Items.CHISELED_COPPER, Items.COPPER_GRATE, Items.CUT_COPPER,
@@ -59,9 +59,10 @@ public class TGARecipes {
                 Items.COPPER_DOOR, Items.EXPOSED_COPPER_DOOR, Items.OXIDIZED_COPPER_DOOR,
                 Items.WAXED_COPPER_DOOR, Items.WAXED_EXPOSED_COPPER_DOOR, Items.WAXED_OXIDIZED_COPPER_DOOR));
 
-        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00, 40_00,
-                90, TGAItems.INGOT_BRONZE));
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00,
+                TGAItems.INGOT_BRONZE));
     }
+    
     public static void AddCrackerRecipes(int minlv, OneInRecipe... recipe) {
         if (minlv <= 0) Cracker_LV0.Registers(recipe);
         if (minlv <= 1) Cracker_LV1.Registers(recipe);

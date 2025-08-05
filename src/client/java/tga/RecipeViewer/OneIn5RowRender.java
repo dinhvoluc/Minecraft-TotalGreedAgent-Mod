@@ -17,6 +17,7 @@ import tga.MachineRecipes.OneSlotBook;
 import tga.Mechanic.IItemChecker;
 import tga.Screen.IMousePointerSeeter;
 import tga.Screen.BasicGUISizeWithRecipe;
+import tga.TGAClientHelper;
 import tga.TGAClientText;
 import tga.TGAHelper;
 import tga.TGAScreenHandlers;
@@ -198,7 +199,7 @@ public class OneIn5RowRender extends IRecipeViewer {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, rbx2, rbyItem, 79, 168, 16, 16, 512, 512);
         }
         if (TGAHelper.InRangeXY(mouseX, mouseY, RBX + 20, rby + 4, 18, 12)) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX + 22, rby + 3, 435, 0, 14, 14, 512, 512);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX + 23, rby + 4, 435, 0, 12, 12, 512, 512);
             mpset.SetPointID(BasicGUISizeWithRecipe.POINT_RECIPE_ROW);
             SubPointID = index * 16 + 1;
         }
@@ -224,7 +225,7 @@ public class OneIn5RowRender extends IRecipeViewer {
     }
 
     protected void DrawButToggleCheckCanCraft(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
-        boolean isPointing = TGAHelper.GUI_ButtonInrange(BT0X, BT0Y, mouseX, mouseY);
+        boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT0X, BT0Y, mouseX, mouseY);
         if (isPointing) {
             if (ShowOnlyCanCraft) {
                 context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT0X, BT0Y, 19, 205, 18, 18, 512, 512);
@@ -242,7 +243,7 @@ public class OneIn5RowRender extends IRecipeViewer {
     }
 
     protected void DrawButtonSearch(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset, float deltaTicks) {
-        boolean isPointing = TGAHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
+        boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT1X, BT1Y, 19, 186, 18, 18, 512, 512);
             mpset.SetPointID(BasicGUISizeWithRecipe.POINT_RECIPE_SEARCH_BUTTON);
@@ -253,7 +254,7 @@ public class OneIn5RowRender extends IRecipeViewer {
     }
 
     protected void DrawReturnButton(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
-        boolean isPointing = TGAHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
+        boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT1X, BT1Y, 19, 186, 18, 18, 512, 512);
             mpset.SetPointID(BasicGUISizeWithRecipe.POINT_RECIPE_RETURN_TO_ALL_BUTTON);
@@ -263,7 +264,7 @@ public class OneIn5RowRender extends IRecipeViewer {
     }
 
     protected void DrawButonPagePrev(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
-        boolean isPointing = TGAHelper.GUI_ButtonInrange(BT2X, BT2Y, mouseX, mouseY);
+        boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT2X, BT2Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT2X, BT2Y, 19, 186, 18, 18, 512, 512);
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT2X + 3, BT2Y + 5, 500, 22, 12, 8, 512, 512);
@@ -275,7 +276,7 @@ public class OneIn5RowRender extends IRecipeViewer {
     }
 
     protected void DrawButtonPageNext(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
-        boolean isPointing = TGAHelper.GUI_ButtonInrange(BT3X, BT3Y, mouseX, mouseY);
+        boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT3X, BT3Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT3X, BT3Y, 19, 186, 18, 18, 512, 512);
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT3X + 3, BT3Y + 5, 500, 13, 12, 8, 512, 512);

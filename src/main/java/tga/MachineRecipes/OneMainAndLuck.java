@@ -4,8 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.random.Random;
 import tga.Items.ItemFloat;
 
-import java.util.List;
-
 public class OneMainAndLuck extends OneInRecipe {
     public static OneMainAndLuck[] CreateWithTagsIngredient(int power, ItemStack main, ItemStack luck, float luckBase, ItemStack... tags) {
         OneMainAndLuck[] rt = new OneMainAndLuck[tags.length];
@@ -16,7 +14,7 @@ public class OneMainAndLuck extends OneInRecipe {
 
     public OneMainAndLuck(ItemStack ingredient, int power, ItemStack main, ItemStack luck, float luckBase) {
         super(ingredient, power);
-        CraftChanceList = new ItemFloat[]{new ItemFloat(10f, main.copy()), new ItemFloat(luckBase, luck)};
+        CraftChanceList = new ItemFloat[]{ItemFloat.of(main), ItemFloat.of(luckBase, luck)};
     }
 
     @Override
@@ -25,7 +23,7 @@ public class OneMainAndLuck extends OneInRecipe {
             return stack;
         ItemStack rt = stack.copy();
         rt.decrement(Ingredient.getCount());
-        craftedItems[0] = CraftChanceList[0].Item;
+        craftedItems[0] = CraftChanceList[0].Item.copy();
         craftedItems[1] = random.nextFloat() < CraftChanceList[1].Number ? CraftChanceList[1].Item.copy() : ItemStack.EMPTY;
         return rt;
     }

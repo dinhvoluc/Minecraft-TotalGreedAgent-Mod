@@ -15,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.tick.ScheduledTickView;
 import tga.TGABlocks;
-import tga.TotalGreedyAgent;
 
 public class CustomCropBlock extends Block implements Fertilizable {
     public static final IntProperty AGE = IntProperty.of("age", 0, 6);

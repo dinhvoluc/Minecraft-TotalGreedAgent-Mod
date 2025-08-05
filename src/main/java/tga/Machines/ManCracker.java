@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,6 +33,21 @@ public class ManCracker extends MachineBasic {
             player.openHandledScreen(tile);
         }
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (world.isClient) return super.onBreak(world, pos, state, player);
+        if (player != null && player.isCreative()) {
+            world.removeBlockEntity(pos);
+            return super.onBreak(world, pos, state, player);
+        }
+        BlockEntity bTile = world.getBlockEntity(pos);
+        if (bTile instanceof ManCrackerTile info) {
+            ItemScatterer.spawn(world, pos, info.GetDrops());
+            world.removeBlockEntity(pos);
+        }
+        return super.onBreak(world, pos, state, player);
     }
 
     public static BlockEntityTicker<ManCrackerTile> TICKER_SERVER;
