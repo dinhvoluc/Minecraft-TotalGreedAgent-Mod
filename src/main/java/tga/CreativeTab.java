@@ -19,18 +19,17 @@ public class CreativeTab {
                 .entries((context, entries) -> {
                     //Machine
                     entries.add(TGABlocks.MAN_CRACKER);
+                    entries.add(TGAElectricBlocks.GEN_JINRIKI);
                     //BOX
                     entries.add(TGABlocks.BOX_WOOD);
                     entries.add(TGABlocks.BOX_COPPER);
                     //TANK
                     entries.add(TGABlocks.TANK_WOOD);
                     entries.add(TGABlocks.TANK_COPPER);
-                    //Sozai
+                    //Rubber
                     entries.add(TGABlocks.RUBBER_SHEET);
                     entries.add(TGAItems.RUBBER);
                     entries.add(TGAItems.REISIN);
-                    entries.add(TGAItems.COPPER_PLATE);
-                    entries.add(TGAItems.NAILS);
                     entries.add(TGAItems.CACO3);
                     entries.add(TGAItems.BOW_PRE_ACETONE);
                     entries.add(TGAItems.BOW_ACETONE);
@@ -38,11 +37,24 @@ public class CreativeTab {
                     entries.add(TGABlocks.CROP_GUAYULE_YONG);
                     entries.add(TGAItems.GUAYULE_DUST);
                     entries.add(TGAItems.TREE_WASTE);
+                    //Food
+                    entries.add(TGAItems.WHEAT_FLOUR);
+                    entries.add(TGAItems.BREAD_DOUGH);
+                    //Sozai
+                    entries.add(TGAItems.NAILS);
+                    //Copper
                     entries.add(TGAItems.DUST_COPPER);
+                    entries.add(TGAItems.COPPER_PLATE);
+                    //Tin
                     entries.add(TGAItems.DUST_TIN);
-                    entries.add(TGAItems.DUST_BRONZE);
                     entries.add(TGAItems.INGOT_TIN);
+                    //BRONZE
+                    entries.add(TGAItems.DUST_BRONZE);
                     entries.add(TGAItems.INGOT_BRONZE);
+                    entries.add(TGAItems.PART_BRONZE_TANK);
+                    entries.add(TGAItems.PART_BRONZE_BOX);
+                    entries.add(TGAItems.PART_BRONZE_TURBIN);
+                    entries.add(TGAItems.PART_BRONZE_BOIL);
                 })
                 .build());
     }

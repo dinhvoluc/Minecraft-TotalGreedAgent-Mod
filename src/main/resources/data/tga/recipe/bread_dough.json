@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": "tga:dough",
+  "result": {
+    "id": "minecraft:bread"
+  },
+  "experience": 0.2,
+  "cookingtime": 250
+}

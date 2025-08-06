@@ -22,6 +22,11 @@ public class TGARecipes {
         AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.SHORT_GRASS), 400_00, new ItemStack(TGAItems.TREE_WASTE), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.05f));
         AddCrackerRecipes(1, new OneToOne(new ItemStack(TGABlocks.CROP_GUAYULE_YONG, 5), 800_00, new ItemStack(TGAItems.GUAYULE_DUST)));
 
+        //Food
+        AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.WHEAT), 350_00, new ItemStack(TGAItems.WHEAT_FLOUR), new ItemStack(TGAItems.TREE_WASTE)));
+        AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.HAY_BLOCK), 3150_00, new ItemStack(TGAItems.WHEAT_FLOUR, 9), new ItemStack(TGAItems.TREE_WASTE, 9)));
+        AddCrackerRecipes(0, new OneToOne(new ItemStack(Items.WHEAT_SEEDS, 4), 300_00, new ItemStack(TGAItems.WHEAT_FLOUR)));
+
         //ORE crush
         AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.RAW_COPPER_BLOCK), 25_000_00, new ItemStack(TGAItems.DUST_COPPER, 10), new ItemStack(TGAItems.DUST_TIN)));
 

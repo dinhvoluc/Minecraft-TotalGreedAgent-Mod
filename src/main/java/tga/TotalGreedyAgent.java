@@ -24,6 +24,8 @@ public class TotalGreedyAgent implements ModInitializer {
 		TGAItems.Load(IsClientSize);
 		LOGGER.info("Server=>Blocks");
 		TGABlocks.Load(IsClientSize);
+		LOGGER.info("Server=>ElectricBlocks");
+		TGAElectricBlocks.Load(IsClientSize);
 		LOGGER.info("Server=>Creative list");
 		CreativeTab.Load();
 		LOGGER.info("Server=>BLocks logics");

@@ -39,57 +39,57 @@ public final class TGABlocks {
     public static void Load(boolean isClientSide) {
         CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0F, 0.0F, 2 + age * 2));
         //BOX
-        BOX_WOOD_FILLED = register("box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
+        BOX_WOOD_FILLED = Register("box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD));
-        TGAItems.SetBurnTime((BOX_WOOD = register("box_wood", BoxStackBlock::Create_Wooden, Block.Settings.create()
+        TGAItems.SetBurnTime((BOX_WOOD = Register("box_wood", BoxStackBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD))).asItem(), 800);
-        BOX_COPPER = register("box_copper", BoxStackBlock::Create_Copper, Block.Settings.create()
+        BOX_COPPER = Register("box_copper", BoxStackBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
-        BOX_COPPER_FILLED = register("box_copper_filled", BoxStackBlock::Create_Copper, Block.Settings.create()
+        BOX_COPPER_FILLED = Register("box_copper_filled", BoxStackBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
         //TANK
-        TANK_WOOD_FILLED = register("tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
+        TANK_WOOD_FILLED = Register("tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD));
-        TGAItems.SetBurnTime((TANK_WOOD = register("tank_wood", TankBlock::Create_Wooden, Block.Settings.create()
+        TGAItems.SetBurnTime((TANK_WOOD = Register("tank_wood", TankBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD))).asItem(), 400);
-        TANK_COPPER = register("tank_copper", TankBlock::Create_Copper, Block.Settings.create()
+        TANK_COPPER = Register("tank_copper", TankBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
-        TANK_COPPER_FILLED = register("tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
+        TANK_COPPER_FILLED = Register("tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
         //OTHER
-        TGAItems.SetBurnTime((RUBBER_SHEET = register("rubber_sheet", RubberSheetBlock::new, Block.Settings.create()
+        TGAItems.SetBurnTime((RUBBER_SHEET = Register("rubber_sheet", RubberSheetBlock::new, Block.Settings.create()
                 .mapColor(MapColor.BLACK)
                 .strength(0.2f, 0.2f)
                 .sounds(BlockSoundGroup.WOOL)
                 .nonOpaque())).asItem(), 600);
-        MAN_CRACKER = register("m_cracker_lv0", ManCracker::new, AbstractBlock.Settings.create()
+        MAN_CRACKER = Register("m_cracker_lv0", ManCracker::new, AbstractBlock.Settings.create()
                 .mapColor(MapColor.DEEPSLATE_GRAY)
                 .strength(4f, 6f)
                 .sounds(BlockSoundGroup.STONE));
-        X_CROP_GUAYULE = noDirectItem("crop_guayule", CropGuayule::new, AbstractBlock.Settings.create()
+        X_CROP_GUAYULE = NoDirectItem("crop_guayule", CropGuayule::new, AbstractBlock.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .noCollision()
                 .breakInstantly()
                 .sounds(BlockSoundGroup.GRASS)
                 .nonOpaque()
                 .pistonBehavior(PistonBehavior.DESTROY));
-        TGAItems.SetBioValue((CROP_GUAYULE_YONG = register("sd_guayule", CustomCropBlock::CropGuayule, AbstractBlock.Settings.create()
+        TGAItems.SetBioValue((CROP_GUAYULE_YONG = Register("sd_guayule", CustomCropBlock::CropGuayule, AbstractBlock.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .noCollision()
                 .breakInstantly()
@@ -101,14 +101,14 @@ public final class TGABlocks {
         ManCracker.TICKER_SERVER = (a, b, c, d) -> d.TickS();
     }
 
-    private static Block noDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+    public static Block NoDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         final Identifier identifier = TotalGreedyAgent.GetID(path);
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
         return Blocks.register(registryKey, factory, settings);
     }
 
-    private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        Block block = noDirectItem(path, factory, settings);
+    public static Block Register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+        Block block = NoDirectItem(path, factory, settings);
         Items.register(block);
         return block;
     }

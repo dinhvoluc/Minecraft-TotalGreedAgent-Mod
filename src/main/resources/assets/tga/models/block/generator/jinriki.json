@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "side": "tga:block/side/wood_wire",
+    "bottom": "tga:block/bot/wood_wire",
+    "top": "tga:block/denki/jinriki"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "tga:wheatflour",
+    "minecraft:water_bucket"
+  ],
+  "result": {
+    "id": "tga:dough",
+    "count": 2
+  }
+}
