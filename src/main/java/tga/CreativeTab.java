@@ -19,6 +19,7 @@ public class CreativeTab {
                 .entries((context, entries) -> {
                     //Machine
                     entries.add(TGABlocks.MAN_CRACKER);
+                    entries.add(TGABlocks.METAL_WORKBENCH);
                     entries.add(TGAElectricBlocks.GEN_JINRIKI);
                     //BOX
                     entries.add(TGABlocks.BOX_WOOD);

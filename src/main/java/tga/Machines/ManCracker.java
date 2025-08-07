@@ -54,8 +54,7 @@ public class ManCracker extends MachineBasic {
     public static BlockEntityTicker<ManCrackerTile> TICKER_CLIENT;
 
     @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (type != TGATileEnities.M_CRACKER_LV0) return null;
         return (BlockEntityTicker)(world.isClient ? TICKER_CLIENT : TICKER_SERVER);
     }

@@ -18,8 +18,8 @@ public class TGARecipes {
                 270, Items.BONE_BLOCK));
 
         //Guayule seed/dust
-        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(TGAItems.CROP_GUAYULE_GRASS), 500_00, new ItemStack(TGAItems.GUAYULE_DUST), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.15f));
-        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.SHORT_GRASS), 400_00, new ItemStack(TGAItems.TREE_WASTE), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.05f));
+        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(TGAItems.CROP_GUAYULE_GRASS), 400_00, new ItemStack(TGAItems.GUAYULE_DUST), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.15f));
+        AddCrackerRecipes(0, new OneMainAndLuck(new ItemStack(Items.SHORT_GRASS), 320_00, new ItemStack(TGAItems.TREE_WASTE), new ItemStack(TGABlocks.CROP_GUAYULE_YONG), 0.05f));
         AddCrackerRecipes(1, new OneToOne(new ItemStack(TGABlocks.CROP_GUAYULE_YONG, 5), 800_00, new ItemStack(TGAItems.GUAYULE_DUST)));
 
         //Food

@@ -1,0 +1,6 @@
+{
+	"parent": "tga:block/metalworkbench2",
+	"textures": {
+		"2": "tga:block/front/burngate_on"
+	}
+}
