@@ -30,11 +30,15 @@ public final class TGABlocks {
     public static Block BOX_WOOD_FILLED;
     public static Block BOX_COPPER;
     public static Block BOX_COPPER_FILLED;
+    public static Block BOX_BRONZE;
+    public static Block BOX_BRONZE_FILLED;
 
     public static Block TANK_WOOD;
     public static Block TANK_WOOD_FILLED;
     public static Block TANK_COPPER;
     public static Block TANK_COPPER_FILLED;
+    public static Block TANK_BRONZE;
+    public static Block TANK_BRONZE_FILLED;
 
     public static Block RUBBER_SHEET;
     public static Block X_CROP_GUAYULE;
@@ -72,6 +76,14 @@ public final class TGABlocks {
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
+        BOX_BRONZE = Register("box_bronze", BoxStackBlock::Create_Bronze, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
+        BOX_BRONZE_FILLED = Register(1, "box_bronze_filled", BoxStackBlock::Create_Bronze, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
         //TANK
         TANK_WOOD_FILLED = Register(1, "tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
@@ -86,6 +98,14 @@ public final class TGABlocks {
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
         TANK_COPPER_FILLED = Register(1, "tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
+        TANK_BRONZE = Register("tank_bronze", TankBlock::Create_Bronze, Block.Settings.create()
+                .mapColor(MapColor.BROWN)
+                .strength(0.2f, 2.5f)
+                .sounds(BlockSoundGroup.METAL));
+        TANK_BRONZE_FILLED = Register(1, "tank_bronze_filled", TankBlock::Create_Bronze, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));

@@ -38,6 +38,10 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
         return new BoxStackBlock(settings, SIZE_COPPER);
     }
 
+    public static BoxStackBlock Create_Bronze(AbstractBlock.Settings settings) {
+        return new BoxStackBlock(settings, SIZE_BRONZE);
+    }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         BoxStackTile rt = TGATileEnities.BOX_STACK_TILE.instantiate(pos, state);
@@ -58,6 +62,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
         return switch (maxStack) {
             case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD);
             case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER);
+            case SIZE_BRONZE -> new ItemStack(TGABlocks.BOX_BRONZE);
             default -> ItemStack.EMPTY;
         };
     }
@@ -66,6 +71,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
         return switch (maxStack) {
             case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD_FILLED);
             case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER_FILLED);
+            case SIZE_BRONZE -> new ItemStack(TGABlocks.BOX_BRONZE_FILLED);
             default -> ItemStack.EMPTY;
         };
     }

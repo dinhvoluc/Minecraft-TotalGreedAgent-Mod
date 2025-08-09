@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iIi",
+    "IXI",
+    "iIi"
+  ],
+  "key": {
+    "i": "tga:screw",
+    "I": "tga:plate_bronze",
+    "X": "tga:tank_copper"
+  },
+  "result": {
+    "id": "tga:tank_bronze",
+    "count": 1
+  }
+}

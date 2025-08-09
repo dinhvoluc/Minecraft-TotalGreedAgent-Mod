@@ -47,8 +47,9 @@ public class CreativeTab {
                     entries.add(TGAItems.DUST_TIN);
                     entries.add(TGAItems.DUST_COPPER);
                     entries.add(TGAItems.DUST_BRONZE);
-                    entries.add(TGAItems.DUST_ALUMIUM);
+                    entries.add(TGAItems.DUST_ALUMINUM);
                     entries.add(TGAItems.DUST_GOLD);
+                    entries.add(TGAItems.DUST_SILVER);
                     entries.add(TGAItems.DUST_IRON);
                     entries.add(TGAItems.DUST_STEEL);
                     entries.add(TGAItems.DUST_TITAN);
@@ -56,12 +57,13 @@ public class CreativeTab {
                     entries.add(TGAItems.INGOT_TIN);
                     entries.add(TGAItems.INGOT_BRONZE);
                     entries.add(TGAItems.INGOT_ALUMIUM);
+                    entries.add(TGAItems.INGOT_SILVER);
                     entries.add(TGAItems.INGOT_STEEL);
                     entries.add(TGAItems.INGOT_TITAN);
                     //Plate
                     entries.add(TGAItems.PLATE_COPPER);
                     entries.add(TGAItems.PLATE_BRONZE);
-                    entries.add(TGAItems.PLATE_ALUMIUM);
+                    entries.add(TGAItems.PLATE_ALUMINUM);
                     entries.add(TGAItems.PLATE_GOLD);
                     entries.add(TGAItems.PLATE_IRON);
                     entries.add(TGAItems.PLATE_STEEL);

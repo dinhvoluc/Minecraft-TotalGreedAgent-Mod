@@ -38,7 +38,6 @@ import tga.TotalGreedyAgent;
 public class TankTile extends BlockEntity implements SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     // <editor-fold desc="Fluids">
     public long VolSize;
-    private final static long FLUID_STACK_MUL = 4 * FluidConstants.BUCKET;
 
     public final SimpleInventory BufferBox = new SimpleInventory(2);
 
@@ -69,7 +68,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     };
 
     public void SetTankSize(int stackSize) {
-        VolSize = stackSize * FLUID_STACK_MUL;
+        VolSize = stackSize * FluidConstants.BUCKET;
     }
 
     public void SetFluidLevel(FluidVariant variant, long vol) {
@@ -224,7 +223,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     // <editor-fold desc="Data">
     @Override
     protected void writeData(WriteView view) {
-        view.putInt("S", (int)(VolSize / FLUID_STACK_MUL));
+        view.putInt("S", (int)(VolSize / FluidConstants.BUCKET));
         TGAHelper.WriteItem(view,"I", BufferBox.getStack(0));
         TGAHelper.WriteItem(view,"O", BufferBox.getStack(0));
         TGAHelper.WriteFluidType(view, "L", InnerTank.variant);
@@ -233,7 +232,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
 
     @Override
     protected void readData(ReadView view) {
-        VolSize = view.getInt("S", 1) * FLUID_STACK_MUL;
+        VolSize = view.getInt("S", 1) * FluidConstants.BUCKET;
         BufferBox.setStack(0, TGAHelper.ReadItem(view, "I"));
         BufferBox.setStack(1, TGAHelper.ReadItem(view, "O"));
         InnerTank.variant = TGAHelper.ReadFluidType(view, "L");
@@ -241,13 +240,13 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     }
 
     public void OnPlacedRebuild(TankComData data) {
-        VolSize = data.MaxStack * FLUID_STACK_MUL;
+        VolSize = data.MaxStack * FluidConstants.BUCKET;
         InnerTank.variant = data.FType == null ? FluidVariant.blank() : data.FType;
         InnerTank.amount = data.Count;
     }
 
     public TankComData GetDataComponent() {
-        return new TankComData((int) (VolSize / FLUID_STACK_MUL), InnerTank.variant, InnerTank.amount);
+        return new TankComData((int) (VolSize / FluidConstants.BUCKET), InnerTank.variant, InnerTank.amount);
     }
 
     @Override
@@ -294,7 +293,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
 
     @Override
     public Text getDisplayName() {
-        return switch ((int) (VolSize / FLUID_STACK_MUL)) {
+        return switch ((int) (VolSize / FluidConstants.BUCKET)) {
             case BoxStackBlock.SIZE_WOOD -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_wood"));
             case BoxStackBlock.SIZE_COPPER -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_copper"));
             case BoxStackBlock.SIZE_BRONZE -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_bronze"));

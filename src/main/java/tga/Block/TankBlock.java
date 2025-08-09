@@ -34,10 +34,15 @@ public class TankBlock extends Block implements BlockEntityProvider {
         return new TankBlock(settings, BoxStackBlock.SIZE_COPPER);
     }
 
+    public static TankBlock Create_Bronze(AbstractBlock.Settings settings) {
+        return new TankBlock(settings, BoxStackBlock.SIZE_BRONZE);
+    }
+
     private static ItemStack GetEmptyTank(int maxStack) {
         return switch (maxStack) {
             case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGABlocks.TANK_WOOD);
             case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGABlocks.TANK_COPPER);
+            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGABlocks.TANK_BRONZE);
             default -> ItemStack.EMPTY;
         };
     }
@@ -46,6 +51,7 @@ public class TankBlock extends Block implements BlockEntityProvider {
         return switch (maxStack) {
             case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGABlocks.TANK_WOOD_FILLED);
             case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGABlocks.TANK_COPPER_FILLED);
+            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGABlocks.TANK_BRONZE_FILLED);
             default -> ItemStack.EMPTY;
         };
     }

@@ -80,14 +80,17 @@ public class TGARecipes {
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00,
                 TGAItems.INGOT_BRONZE, TGAItems.PLATE_BRONZE));
 
+        AddCrackerRecipes(0, new OneToTwo( new ItemStack(Items.RAW_GOLD_BLOCK), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
+        AddCrackerRecipes(0, new OneToTwo( new ItemStack(Items.RAW_GOLD, 9), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
+
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_GOLD, 90, 1_900_00,
-                Items.GOLD_INGOT, Items.RAW_GOLD, TGAItems.PLATE_GOLD,
+                Items.GOLD_INGOT, TGAItems.PLATE_GOLD,
                 10,
                 Items.GOLD_NUGGET,
                 180,
                 Items.LIGHT_WEIGHTED_PRESSURE_PLATE,
                 810,
-                Items.GOLD_BLOCK, Items.RAW_GOLD_BLOCK));
+                Items.GOLD_BLOCK));
     }
 
     public static void AddMetalWork(int minlv, int mode, ItemStack result, long jinriki, int waterCool, ItemStack inputs)
