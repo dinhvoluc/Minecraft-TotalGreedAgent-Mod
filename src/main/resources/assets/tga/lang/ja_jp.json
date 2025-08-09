@@ -49,5 +49,16 @@
   "gui.tga.recipebook.searchinput" : "検索…",
   "gui.tga.power_need" : "%s人力が必要です",
   "gui.tga.craft_chance" : "%sの確率",
-  "sound.tga.machine_noise.sub": "機械の騒音"
+  "gui.tga.waterlevel" : "水：%s/%smB",
+  "gui.tga.metalwork.mode.0" : "板を作る",
+  "gui.tga.metalwork.mode.1" : "ワイアを作る",
+  "gui.tga.metalwork.mode.2" : "棒を作る",
+  "gui.tga.metalwork.mode.3" : "パイプを作る",
+  "gui.tga.metalwork.mode.4" : "釘を作る",
+  "gui.tga.metalwork.mode.5" : "ネジを作る",
+  "gui.tga.metalwork.mode.6" : "ケースを作る",
+  "gui.tga.metalwork.mode.7" : "網を作る",
+  "gui.tga.metalwb.needwater.tocool" : "冷却水量：%smB",
+  "sound.tga.machine_noise.sub": "機械の騒音",
+  "sound.tga.hammer_hit.sub": "ハンマーを叩く音"
 }

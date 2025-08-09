@@ -2,13 +2,11 @@ package tga.Screen;
 
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import tga.*;
-import tga.Machines.ManCrackerTile;
 import tga.Mechanic.IItemChecker;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.RecipeViewer.OneIn5RowRender;

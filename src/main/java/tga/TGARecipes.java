@@ -2,15 +2,24 @@ package tga;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import tga.MachineRecipes.*;
+import tga.BlockEntity.MetalWorkbenchTile;
+import tga.WorkBook.MetalWorkBook;
+import tga.WorkBook.OneSlotBook;
+import tga.WorkBook.WorkRecipes.*;
 
 public class TGARecipes {
     public static final float FIXED_CRAFT_CHANCE = 10f;
+    public static MetalWorkBook MetalWorkbench = new MetalWorkBook(MetalWorkbenchTile.WORK_MODE_SIZE);
     public static OneSlotBook Cracker_LV0 = new OneSlotBook();
     public static OneSlotBook Cracker_LV1 = new OneSlotBook();
     public static OneSlotBook Cracker_LV2 = new OneSlotBook();
 
-    public static void Load(){
+    public static void Load() {
+        //Metal Work
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.COPPER_PLATE), 5_000_00, 180, new ItemStack(Items.COPPER_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS, 9), 900_00, 90, new ItemStack(Items.IRON_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS), 100_00, 10, new ItemStack(Items.IRON_NUGGET));
+
         //CaCO3
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00,
                 Items.NAUTILUS_SHELL, Items.BONE,
@@ -67,7 +76,15 @@ public class TGARecipes {
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00,
                 TGAItems.INGOT_BRONZE));
     }
-    
+
+    public static void AddMetalWork(int minlv, int mode, ItemStack result, long jinriki, int waterCool, ItemStack... inputs)
+    {
+        if (inputs.length == 0) return;
+        if (minlv <= 0) MetalWorkbench.Registers( new MetalWorkRecipe(inputs, jinriki, result, waterCool, mode));
+        //todo machine auto metalwork
+
+    }
+
     public static void AddCrackerRecipes(int minlv, OneInRecipe... recipe) {
         if (minlv <= 0) Cracker_LV0.Registers(recipe);
         if (minlv <= 1) Cracker_LV1.Registers(recipe);

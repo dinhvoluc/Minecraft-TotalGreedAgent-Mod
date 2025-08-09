@@ -20,6 +20,7 @@ import tga.ComDat.BoxStackData;
 import tga.NetEvents.BoxStackGuiSync;
 import tga.Screen.BoxStackScreenHandler;
 import tga.TGAHelper;
+import tga.TGAShared;
 import tga.TGATileEnities;
 import tga.TotalGreedyAgent;
 
@@ -86,7 +87,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[]{0, 1};
+        return TGAShared.IntRange2;
     }
 
     @Override

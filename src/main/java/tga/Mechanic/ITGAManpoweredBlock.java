@@ -4,6 +4,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 public interface ITGAManpoweredBlock {
-    boolean IsFullCharge();
+    float GetJinrikiMul();
     void JinrikiGo(int power, ServerPlayerEntity player, World world);
 }

@@ -31,6 +31,7 @@ import tga.ComDat.TankComData;
 import tga.NetEvents.TankGuiSync;
 import tga.Screen.TankScreenHandler;
 import tga.TGAHelper;
+import tga.TGAShared;
 import tga.TGATileEnities;
 import tga.TotalGreedyAgent;
 
@@ -199,7 +200,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[] {0, 1};
+        return TGAShared.IntRange2;
     }
 
     @Override

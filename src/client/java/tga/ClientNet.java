@@ -1,12 +1,8 @@
 package tga;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import tga.NetEvents.BoxStackGuiSync;
-import tga.NetEvents.ManCrackerGuiSync;
-import tga.NetEvents.TankGuiSync;
-import tga.Screen.BoxStackScreen;
-import tga.Screen.MachineCrackerScreen;
-import tga.Screen.TankScreen;
+import tga.NetEvents.*;
+import tga.Screen.*;
 
 public class ClientNet {
     public static void Load() {
@@ -26,6 +22,12 @@ public class ClientNet {
                 ManCrackerGuiSync.PAYLOAD_ID,
                 (payload, context) -> {
                     context.client().execute(() -> MachineCrackerScreen.HandleSync(payload));
+                }
+        );
+        ClientPlayNetworking.registerGlobalReceiver(
+                MetalWorkbenchGuiSync.PAYLOAD_ID,
+                (payload, context) -> {
+                    context.client().execute(() -> MetalWorkbenchScreen.HandleSync(payload));
                 }
         );
     }

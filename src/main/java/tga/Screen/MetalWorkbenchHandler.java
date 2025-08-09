@@ -7,36 +7,39 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import tga.BlockEntity.ManCrackerTile;
+import tga.BlockEntity.MetalWorkbenchTile;
 import tga.ExSlots.CheckInsertSlot;
 import tga.ExSlots.TakeOnlySlot;
-import tga.NetEvents.ManCrackerGuiSync;
+import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.TGAScreenHandlers;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class MachineCrackerHandler extends ScreenHandler {
-    public static final int SLOT_COUNT = 2;
-    public final ManCrackerTile Machine;
-    public static ManCrackerTile LastWorkBlock;
+public class MetalWorkbenchHandler extends ScreenHandler {
+    public static final int SLOT_COUNT = 10;
+    public final MetalWorkbenchTile Machine;
+    public static MetalWorkbenchTile LastWorkBlock;
 
     //Client
-    public MachineCrackerHandler(int syncId, PlayerInventory playerInventory, BlockPos pos) {
-        this(syncId, playerInventory, (ManCrackerTile) playerInventory.player.getWorld().getBlockEntity(pos));
+    public MetalWorkbenchHandler(int syncId, PlayerInventory playerInventory, BlockPos pos) {
+        this(syncId, playerInventory, (MetalWorkbenchTile) playerInventory.player.getWorld().getBlockEntity(pos));
     }
 
     //Server
-    public MachineCrackerHandler(int syncId, PlayerInventory playerInventory, ManCrackerTile inventory) {
-        super(TGAScreenHandlers.M_CRACKER_0, syncId);
+    public MetalWorkbenchHandler(int syncId, PlayerInventory playerInventory, MetalWorkbenchTile inventory) {
+        super(TGAScreenHandlers.METAL_WORKBENCH, syncId);
         Machine = inventory;
         checkSize(inventory, SLOT_COUNT);
         inventory.onOpen(playerInventory.player);
         //箱のスロット
-        addSlot(new CheckInsertSlot(inventory, 0, 60, 36));
-        addSlot(new TakeOnlySlot(inventory, 1, 100, 36));
+        for (int row = 0; row < 3; ++row)
+            for (int col = 0; col < 3; ++col)
+                addSlot(new CheckInsertSlot(inventory, col + row * 3 + 1, 38 + col * 18, 18 + row * 18));
+        addSlot(new TakeOnlySlot(inventory, 0, 138, 36));
         //プレイヤー
         int startX = 8;
         int startY = 84;
@@ -47,10 +50,10 @@ public class MachineCrackerHandler extends ScreenHandler {
         for (int i = 0; i < 9; ++i) addSlot(new Slot(playerInventory, i, startX + i * 18, startY + 58));
     }
 
-    public static void SendUpdate(ManCrackerTile tile, ServerPlayerEntity player) {
+    public static void SendUpdate(MetalWorkbenchTile tile, ServerPlayerEntity player) {
         World wKey = tile.getWorld();
         if (wKey == null) return;
-        ManCrackerGuiSync payload = tile.GetSyncValue();
+        MetalWorkbenchGuiSync payload = tile.GetSyncValue();
         ServerPlayNetworking.send(player, payload);
     }
 
@@ -84,6 +87,10 @@ public class MachineCrackerHandler extends ScreenHandler {
             }
         }
         return newStack;
+    }
+
+    public static Text GetModeText(int mode) {
+        return Text.translatable("gui.tga.metalwork.mode." + mode);
     }
 
     public void onClosed(PlayerEntity player) {

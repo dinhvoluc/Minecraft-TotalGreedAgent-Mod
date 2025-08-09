@@ -49,5 +49,16 @@
   "gui.tga.recipebook.searchinput" : "Search...",
   "gui.tga.power_need" : "Need %sJrk",
   "gui.tga.craft_chance" : "Have %s chance",
-  "sound.tga.machine_noise.sub": "Machine noise"
+  "gui.tga.waterlevel" : "Water: %s/%smB",
+  "gui.tga.metalwork.mode.0" : "Crafting plate",
+  "gui.tga.metalwork.mode.1" : "Crafting wire",
+  "gui.tga.metalwork.mode.2" : "Crafting bar",
+  "gui.tga.metalwork.mode.3" : "Crafting pipe",
+  "gui.tga.metalwork.mode.4" : "Crafting nail",
+  "gui.tga.metalwork.mode.5" : "Crafting screw",
+  "gui.tga.metalwork.mode.6" : "Crafting casing",
+  "gui.tga.metalwork.mode.7" : "Crafting mesh",
+  "gui.tga.metalwb.needwater.tocool" : "Cooling water: %smB",
+  "sound.tga.machine_noise.sub": "Machine noise",
+  "sound.tga.hammer_hit.sub": "Hammer hitting"
 }

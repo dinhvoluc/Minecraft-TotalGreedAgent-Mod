@@ -1,4 +1,4 @@
-package tga.MachineRecipes;
+package tga.WorkBook;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import tga.Items.CraftOutputPatch;
 import tga.Items.ItemFloat;
 import tga.Mechanic.IItemChecker;
+import tga.WorkBook.WorkRecipes.OneInRecipe;
 
 import java.util.*;
 

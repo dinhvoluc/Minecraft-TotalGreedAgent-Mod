@@ -12,6 +12,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import tga.BlockEntity.ManCrackerTile;
 import tga.TGATileEnities;
 
 public class ManCracker extends MachineBasic {

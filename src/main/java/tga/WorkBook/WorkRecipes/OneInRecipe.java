@@ -1,8 +1,13 @@
-package tga.MachineRecipes;
+package tga.WorkBook.WorkRecipes;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 import tga.Items.ItemFloat;
+import tga.TGAHelper;
+import tga.TGATexts;
+
+import java.util.List;
 
 public abstract class OneInRecipe {
     public ItemStack Ingredient;
@@ -31,5 +36,9 @@ public abstract class OneInRecipe {
      */
     public boolean CanCraft(ItemStack stack) {
         return  ItemStack.areItemsAndComponentsEqual(stack, Ingredient) && stack.getCount() >= Ingredient.getCount();
+    }
+
+    public void GetExtraCostHint(List<Text> texts) {
+        texts.add(Text.translatable(TGATexts.RAW_NEED_POWER, TGAHelper.JinrikiToPower10String(NeedPower)));
     }
 }

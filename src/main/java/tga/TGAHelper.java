@@ -55,9 +55,9 @@ public class TGAHelper {
     // </editor-fold>
 
     // <editor-fold desc="Player">
-    public static boolean drainExperience(ServerPlayerEntity player) {
+    public static boolean drainExperience(ServerPlayerEntity player, float amount) {
         float exp = player.experienceProgress;
-        float tmp = exp - 1f / player.getNextLevelExperience();
+        float tmp = exp - amount / player.getNextLevelExperience();
         boolean rt = exp >= 0.0f;
         //レベルを落とす
         if (tmp <= 0f) {

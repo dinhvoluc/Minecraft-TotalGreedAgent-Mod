@@ -1,4 +1,4 @@
-package tga.Machines;
+package tga.BlockEntity;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -19,11 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import tga.MachineRecipes.OneInRecipe;
 import tga.Mechanic.ITGAManpoweredBlock;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.MachineCrackerHandler;
 import tga.*;
+import tga.WorkBook.WorkRecipes.OneInRecipe;
 
 import java.util.Arrays;
 
@@ -44,8 +44,8 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     public static final int MAX_JINRIKI_CAP = 60_000_00;
 
     @Override
-    public boolean IsFullCharge() {
-        return Jinriki >= JINRIKI_INPUT_OFF;
+    public float GetJinrikiMul() {
+        return Jinriki >= JINRIKI_INPUT_OFF ? 0f : 4f;
     }
 
     @Override
@@ -132,7 +132,7 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[]{0, 1};
+        return TGAShared.IntRange2;
     }
 
     @Override

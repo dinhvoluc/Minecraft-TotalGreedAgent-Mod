@@ -8,8 +8,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import tga.RecipeViewer.IRecipeViewer;
-import tga.TGAClientText;
 import tga.TGAScreenHandlers;
+import tga.TGATexts;
 
 public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends HandledScreen<T> implements IMousePointerSeeter {
     public static int BlinkerSwap;
@@ -31,6 +31,10 @@ public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends Ha
     public static final int POINT_RECIPE_SET_ALLCRAFT_BUTTON = 8;
     public static final int POINT_RECIPE_GRID = 9;
     public static final int POINT_RECIPE_ROW = 10;
+    public static final int POINT_RECIPE_CRFAT_INFO_0 = 11;
+    public static final int POINT_RECIPE_CRFAT_INFO_1 = 12;
+    public static final int POINT_RECIPE_CRFAT_INFO_2 = 13;
+    public static final int POINT_RECIPE_CRFAT_INFO_3 = 14;
 
     @Override
     public void SetPointID(int id) {
@@ -57,7 +61,6 @@ public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends Ha
                 init();
                 return true;
             case  POINT_RECIPE_SEARCH_BUTTON:
-                //todo Import textbox
                 Viewer.ActionSearch();
                 return true;
             case POINT_RECIPE_NEXT_BUTTON:
@@ -80,6 +83,11 @@ public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends Ha
                 return true;
             case POINT_RECIPE_ROW:
                 return true;
+            case POINT_RECIPE_CRFAT_INFO_0:
+            case POINT_RECIPE_CRFAT_INFO_1:
+            case POINT_RECIPE_CRFAT_INFO_2:
+            case POINT_RECIPE_CRFAT_INFO_3:
+                return OnClickCraftInfo(mouseX, mouseY, button);
         }
         if (Viewer.MouseClicked(mouseX, mouseY, button)) return true;
         return super.mouseClicked(mouseX, mouseY, button);
@@ -141,33 +149,46 @@ public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends Ha
         }
     }
 
+    public boolean OnClickCraftInfo(double mouseX, double mouseY, int button) {
+        return false;
+    }
+
+    public boolean DrawCraftInfo(DrawContext context, int mouseX, int mouseY, float delta) {
+        return false;
+    }
+
     public boolean DrawBasicToolTip(DrawContext context, int mouseX, int mouseY, float delta) {
         switch (PointID) {
             case POINT_RECIPE_BOOK_TOGLE:
-                context.drawTooltip(TGAClientText.TOGLE_RECIPE_BOOK, mouseX, mouseY);
+                context.drawTooltip(TGATexts.TOGLE_RECIPE_BOOK, mouseX, mouseY);
                 return true;
             case POINT_ERROR_FULL_INVENTORY:
-                context.drawTooltip(TGAClientText.WARN_NO_SLOT_FOR_OUTPUT, mouseX, mouseY);
+                context.drawTooltip(TGATexts.WARN_NO_SLOT_FOR_OUTPUT, mouseX, mouseY);
                 return true;
-            case  POINT_RECIPE_SEARCH_BUTTON:
-                context.drawTooltip(TGAClientText.BTN_SEARCH, mouseX, mouseY);
+            case POINT_RECIPE_SEARCH_BUTTON:
+                context.drawTooltip(TGATexts.BTN_SEARCH, mouseX, mouseY);
                 return true;
             case POINT_RECIPE_NEXT_BUTTON:
             case POINT_RECIPE_PREV_BUTTON:
                 return true;
             case POINT_RECIPE_RETURN_TO_ALL_BUTTON:
-                context.drawTooltip(TGAClientText.BTN_RETURN_TO_ALL_RECIPE, mouseX, mouseY);
+                context.drawTooltip(TGATexts.BTN_RETURN_TO_ALL_RECIPE, mouseX, mouseY);
                 return true;
             case POINT_RECIPE_SET_CANCRAFT_BUTTON:
-                context.drawTooltip(TGAClientText.TOGLE_CAN_CRAFT, mouseX, mouseY);
+                context.drawTooltip(TGATexts.TOGLE_CAN_CRAFT, mouseX, mouseY);
                 return true;
             case POINT_RECIPE_SET_ALLCRAFT_BUTTON:
-                context.drawTooltip(TGAClientText.TOGLE_ALL_CRAFT, mouseX, mouseY);
+                context.drawTooltip(TGATexts.TOGLE_ALL_CRAFT, mouseX, mouseY);
                 return true;
             case POINT_RECIPE_GRID:
             case POINT_RECIPE_ROW:
                 Viewer.DrawToolTip(context, textRenderer, mouseX, mouseY);
                 return true;
+            case POINT_RECIPE_CRFAT_INFO_0:
+            case POINT_RECIPE_CRFAT_INFO_1:
+            case POINT_RECIPE_CRFAT_INFO_2:
+            case POINT_RECIPE_CRFAT_INFO_3:
+                return DrawCraftInfo(context, mouseX, mouseY, delta);
             default:
                 return false;
         }

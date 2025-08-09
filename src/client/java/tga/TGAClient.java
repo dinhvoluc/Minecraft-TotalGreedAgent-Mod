@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import tga.Machines.ManCracker;
+import tga.Machines.MetalWorkbench;
 import tga.Screen.BoxStackScreen;
 import tga.Screen.MachineCrackerScreen;
+import tga.Screen.MetalWorkbenchScreen;
 import tga.Screen.TankScreen;
 
 public class TGAClient extends TotalGreedyAgent implements ClientModInitializer {
@@ -20,11 +22,13 @@ public class TGAClient extends TotalGreedyAgent implements ClientModInitializer 
 	public void onInitializeClient() {
 		LOGGER.info("Client=>LocalTicker");
 		ManCracker.TICKER_CLIENT = (a,b,c,d) -> TGAClientTickers.ManCrakerTick(d);
+		MetalWorkbench.TICKER_CLIENT = (a, b, c, d) -> TGAClientTickers.MetalWorkbenchTick(d);
 		LOGGER.info("Client=>NetEvents");
 		ClientNet.Load();
 		LOGGER.info("Client=>Screens");
 		HandledScreens.register(TGAScreenHandlers.BOX_STACK, BoxStackScreen::new);
 		HandledScreens.register(TGAScreenHandlers.M_CRACKER_0, MachineCrackerScreen::new);
+		HandledScreens.register(TGAScreenHandlers.METAL_WORKBENCH, MetalWorkbenchScreen::new);
 		HandledScreens.register(TGAScreenHandlers.TANK_GUI, TankScreen::new);
 		LOGGER.info("Client=>ToolTips");
 		TGAToolTips.Load();

@@ -10,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import tga.ComDat.BoxStackData;
 import tga.ComDat.TankComData;
+import tga.NetEvents.ClickedIDSync;
 import tga.NetEvents.JinrikiGogo;
 
 import java.util.Optional;
@@ -38,6 +39,13 @@ public class TGADataCom {
 
         ServerPlayNetworking.registerGlobalReceiver(
                 JinrikiGogo.PAYLOAD_ID,
+                (payload, context) -> {
+                    context.server().execute(() -> payload.Handle(context));
+                }
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                ClickedIDSync.PAYLOAD_ID,
                 (payload, context) -> {
                     context.server().execute(() -> payload.Handle(context));
                 }

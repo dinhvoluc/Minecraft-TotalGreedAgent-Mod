@@ -110,6 +110,7 @@ public final class TGABlocks {
         //Load server side ticker
         if (isClientSide) return;
         ManCracker.TICKER_SERVER = (a, b, c, d) -> d.TickS();
+        MetalWorkbench.TICKER_SERVER = (a, b, c, d) -> d.TickS(c);
     }
 
     public static Block NoDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {

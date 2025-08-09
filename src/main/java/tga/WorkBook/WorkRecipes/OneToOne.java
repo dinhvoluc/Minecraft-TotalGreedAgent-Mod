@@ -1,4 +1,4 @@
-package tga.MachineRecipes;
+package tga.WorkBook.WorkRecipes;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

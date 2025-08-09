@@ -7,5 +7,14 @@
         "stream": false
       }
     ]
-  }
+  },
+  "hammer": {
+  "subtitle":"sound.tga.hammer_hit.sub",
+  "sounds": [
+    {
+      "name": "tga:hammer",
+      "stream": false
+    }
+  ]
+}
 }
