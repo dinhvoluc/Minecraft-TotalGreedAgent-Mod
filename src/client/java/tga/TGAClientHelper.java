@@ -24,11 +24,7 @@ public class TGAClientHelper {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x, y, 303, 498, 14, 14, 512, 512);
             return;
         }
-        int sizeOfFrame = left * 14 / total;
-        if (sizeOfFrame <= 0) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x, y, 303, 498, 14, 14, 512, 512);
-            return;
-        }
+        int sizeOfFrame = 1 + left * 13 / total;
         if (sizeOfFrame >= 14)
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x, y, 318, 498, 14, 14, 512, 512);
         else {

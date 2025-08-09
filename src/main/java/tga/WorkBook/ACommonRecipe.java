@@ -19,12 +19,6 @@ public class ACommonRecipe {
         Result = result;
     }
 
-    public ItemStack RealCraft(Inventory holder) {
-        return ItemStack.EMPTY;
-        //todo recipe work
-
-    }
-
     public void GetExtraCostHint(List<Text> tooltips) {
         tooltips.add(Text.translatable(TGATexts.RAW_NEED_POWER, TGAHelper.JinrikiToPower10String(NeedPower)));
     }

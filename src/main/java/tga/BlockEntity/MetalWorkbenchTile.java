@@ -2,7 +2,15 @@ package tga.BlockEntity;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +22,8 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -21,17 +31,18 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.Mechanic.IClickedIDHandler;
+import tga.Mechanic.ICraftProvider;
 import tga.Mechanic.ITGAManpoweredBlock;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.Screen.MetalWorkbenchHandler;
 import tga.*;
+import tga.WorkBook.WorkRecipes.MetalWorkRecipe;
 
-public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlock, IClickedIDHandler, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, ITGAManpoweredBlock, IClickedIDHandler, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     public SimpleInventory BufferSlot = new SimpleInventory(9);
-    public static final int MAX_WATER_LEVEL = 16 * (int)FluidConstants.BUCKET;
-    public int WaterVol;
+    public static final int MAX_WATER_LEVEL = 4 * (int)FluidConstants.BUCKET;
     public int BurntimeLeft;
-    public int BurntimeTotal = 10;
+    public static final int BURN_TIME_BAR_MAX = 400;
     public int Jinriki = 0;
     public int WorkTotal = 10;
     public int Worked = 0;
@@ -39,7 +50,23 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     private static final int BUFFER_ID_SLOT_OUTPUT = 0;
     public ItemStack ResultSlot = ItemStack.EMPTY;
     public ItemStack Crafting = ItemStack.EMPTY;
-    public int TickStep = 0;
+    private final ContainerItemContext[] FluidSlotHelper = new ContainerItemContext[9];
+    public SingleVariantStorage<FluidVariant> InnerTank = new SingleVariantStorage<>() {
+        @Override
+        protected boolean canInsert(FluidVariant iType) {
+            return variant == iType;
+        }
+
+        @Override
+        protected FluidVariant getBlankVariant() {
+            return TGAShared.VARIANT_WATER;
+        }
+
+        @Override
+        protected long getCapacity(FluidVariant variant) {
+            return MAX_WATER_LEVEL;
+        }
+    };
 
     public static final int WORK_MODE_PLATE = 0;
     public static final int WORK_MODE_WIRE = 1;
@@ -51,10 +78,12 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     public static final int WORK_MODE_MESH = 7;
     public static final int WORK_MODE_SIZE = 8;
     public static final int JINRIKI_INPUT_OFF = 1_000_00;
-    public static final int MAX_JINRIKI_CAP = 20_000_00;
 
     public MetalWorkbenchTile(BlockPos pos, BlockState state) {
         super(TGATileEnities.M_METAL_WORKBENCH, pos, state);
+        InventoryStorage inSlotHelper2 = InventoryStorage.of(BufferSlot, null);
+        for(var i = 0; i < 9; i++)
+            FluidSlotHelper[i] = ContainerItemContext.ofSingleSlot(inSlotHelper2.getSlot(i));
     }
 
     // <editor-fold desc="Items">
@@ -77,12 +106,11 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     @Override
     public void clear() {
         BufferSlot.clear();
-        WaterVol = 0;
+        InnerTank.amount = 0;
         BurntimeLeft = 0;
         Worked = 0;
         Crafting = ItemStack.EMPTY;
         ResultSlot = ItemStack.EMPTY;
-        TickStep = 0;
         markDirty();
     }
 
@@ -115,6 +143,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     public void setStack(int slot, ItemStack stack) {
         if (slot == BUFFER_ID_SLOT_OUTPUT) ResultSlot = stack;
         else BufferSlot.setStack(slot - 1, stack);
+        CheckTankInput();
         markDirty();
     }
 
@@ -155,8 +184,154 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
 
     // </editor-fold>
 
-    // <editor-fold desc="Water">
+    // <editor-fold desc="Crafting">
+    @Override
+    public ItemStack GetCraftInputStack(int i) {
+        return BufferSlot.getStack(i);
+    }
 
+    @Override
+    public void SetCraftLeft(ItemStack[] setSlot) {
+        for(int i =0; i < 9; i++)
+        {
+            ItemStack setter = setSlot[i];
+            if (setter == null) continue;
+            BufferSlot.setStack(i, setter);
+        }
+        markDirty();
+    }
+
+    @Override
+    public int GetCraftInputSize() {
+        return 9;
+    }
+
+    private int tickToShow;
+
+    public void TickS(BlockState state) {
+if (++tickToShow % 40 == 0)
+        TotalGreedyAgent.broadcastDebugMessageF("J=%s B=%s WM=%s",
+                Jinriki, BurntimeLeft, WorkMode);
+
+        boolean isDirty = BurntimeLeft > 0;
+        if (isDirty) BurntimeLeft--;
+        //have nenergy for crafting
+        if (Jinriki < 20f) {
+            UpdateExit(isDirty, state);
+            return;
+        }
+        //find for new recipe
+        if (Crafting.isEmpty()) {
+            MetalWorkRecipe canCraft = TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode);
+            if (canCraft == null || canCraft.WaterToCool > InnerTank.amount || !TGAHelper.ItemCanStackTo(canCraft.Result, ResultSlot)) {
+                UpdateExit(isDirty, state);
+                return;
+            }
+            if ( TGARecipes.MetalWorkbench.RealCraft(canCraft, this))
+            {
+                Crafting = canCraft.Result;
+                WorkTotal = (int)canCraft.NeedPower;
+                Worked = 0;
+                InnerTank.amount -= canCraft.WaterToCool;
+                CheckTankInput();
+                isDirty = true;
+            }
+        }
+        //fuel ticks
+        if (BurntimeLeft <= 0) {
+            //get fuel for heat
+            for (int i = 0; i < 9; i++) {
+                ItemStack fuel = BufferSlot.getStack(i);
+                if (fuel.isOf(Items.COAL)) {
+                    BurntimeLeft = BURN_TIME_BAR_MAX;
+                    if (fuel.getCount() == 1) BufferSlot.heldStacks.set(i, ItemStack.EMPTY);
+                    else fuel.decrement(1);
+                    break;
+                } else if (fuel.isOf(Items.CHARCOAL)) {
+                    BurntimeLeft = BURN_TIME_BAR_MAX / 2;
+                    if (fuel.getCount() == 1) BufferSlot.heldStacks.set(i, ItemStack.EMPTY);
+                    else fuel.decrement(1);
+                    break;
+                }
+            }
+            //no heat no work
+            if (BurntimeLeft <= 0) {
+                UpdateExit(isDirty, state);
+                return;
+            }
+        }
+        //Crafting tick
+        int amount = Math.min(Jinriki / 10, 20_00);
+        Worked += amount;
+        Jinriki -= amount;
+        //Crafted
+        if (Worked >= WorkTotal) {
+            ResultSlot = TGAHelper.ItemStackTo(Crafting, ResultSlot);
+            Crafting = ItemStack.EMPTY;
+            Worked = 0;
+        }
+        UpdateExit(isDirty, state);
+    }
+
+    private void UpdateExit(boolean isDirty, BlockState state) {
+        int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > 0 ? 2 : 0);
+        if (state.get(TGABlocks.STATE4, -1) != newState) world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
+        if (isDirty) markDirty();
+    }
+
+    private void CheckTankInput() {
+        long tankFree = MAX_WATER_LEVEL - InnerTank.amount;
+        int freeSlot = -1;
+        boolean freeCheck = true;
+        for (int i = 0; i < 9; i++) {
+            if (tankFree <= 0) return;
+            Storage<FluidVariant> itemStorage = FluidSlotHelper[i].find(FluidStorage.ITEM);
+            if (itemStorage == null) continue;
+            //Check can add more
+            try (Transaction transaction = Transaction.openOuter()) {
+                long movedVol = itemStorage.extract(TGAShared.VARIANT_WATER, tankFree, transaction);
+                if (movedVol > 0) {
+                    InnerTank.insert(InnerTank.variant, movedVol, transaction);
+                    transaction.commit();
+                    return;
+                }
+            }
+            //check canbe split
+            ItemStack original = BufferSlot.heldStacks.get(i);
+            if (original.getCount() <= 1) continue;
+            if (freeCheck) {
+                for (int sle = 0; sle < 9; sle++)
+                    if (BufferSlot.heldStacks.get(sle).isEmpty()) {
+                        freeSlot = sle;
+                        break;
+                    }
+                freeCheck = false;
+            }
+            //No empty slot
+            if (freeSlot < 0) return;
+            ItemStack tmpSingle = original.copy();
+            tmpSingle.setCount(1);
+            Storage<FluidVariant> itemPortableStorage = ContainerItemContext.withConstant(tmpSingle).find(FluidStorage.ITEM);
+            if (itemPortableStorage == null) continue;
+            boolean canDoExchance;
+            try (Transaction transaction = Transaction.openOuter()) {
+                long movedVol = itemPortableStorage.extract(TGAShared.VARIANT_WATER, tankFree, transaction);
+                canDoExchance = movedVol > 0;
+            }
+            if (canDoExchance) {
+                //do the real input
+                BufferSlot.heldStacks.set(freeSlot, original.split(1));
+                Storage<FluidVariant> splitedItemStorage = FluidSlotHelper[freeSlot].find(FluidStorage.ITEM);
+                try (Transaction transaction = Transaction.openOuter()) {
+                    if (splitedItemStorage == null) throw new IllegalCallerException("Item-Not-Stabled-Ouput");
+                    long movedVol = splitedItemStorage.extract(TGAShared.VARIANT_WATER, tankFree, transaction);
+                    InnerTank.insert(InnerTank.variant, movedVol, transaction);
+                    transaction.commit();
+                }
+                return;
+            }
+        }
+    }
     // </editor-fold>
 
     // <editor-fold desc="GUI">
@@ -173,7 +348,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
         ItemStack[] sync = new ItemStack[10];
         sync[0] = ResultSlot;
         for (var i = 0; i < 9; i++) sync[i + 1] = BufferSlot.heldStacks.get(i);
-        return new MetalWorkbenchGuiSync(world.getRegistryKey().getValue().toString(), pos, WorkMode, Worked, WorkTotal, BurntimeLeft, BurntimeTotal, WaterVol, sync);
+        return new MetalWorkbenchGuiSync(world.getRegistryKey().getValue().toString(), pos, WorkMode, Worked, WorkTotal, BurntimeLeft, (int)InnerTank.amount, sync);
     }
 
     @Override
@@ -212,10 +387,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
         MetalWorkbenchHandler.UsingPlayerCount = MetalWorkbenchHandler.UsingPlayer.size();
     }
 
-    public void TickS(BlockState c) {
-        //todo ticking logicx
-    }
-
     public void TGAS2CSync(MetalWorkbenchGuiSync payload) {
         if (!pos.equals(payload.Pos)) return;
         if (world == null) return;
@@ -224,8 +395,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
         Worked = payload.WorkDone;
         WorkTotal = payload.WorkTotal;
         BurntimeLeft = payload.BurnLeft;
-        BurntimeTotal = payload.BurnTotal;
-        WaterVol = payload.WaterLevel;
+        InnerTank.amount = payload.WaterLevel;
         ResultSlot = payload.ItemSlots[0];
         for (var i = 0; i < 9; i++)
             BufferSlot.heldStacks.set(i, payload.ItemSlots[i + 1]);
@@ -241,6 +411,34 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     }
     // </editor-fold>
 
+    // <editor-fold desc="Data">
+
+    @Override
+    protected void readData(ReadView view) {
+        Jinriki = view.getInt("J", 0);
+        BurntimeLeft = view.getInt("B", 0);
+        WorkMode = view.getInt("M", 0);
+        Worked = view.getInt("W", 0);
+        WorkTotal = view.getInt("T", 10);
+        InnerTank.amount = view.getInt("F", 0);
+        TGAHelper.ReadStacks( view ,"I", BufferSlot.heldStacks, 0, 9);
+        Crafting = TGAHelper.ReadItem(view, "C");
+        ResultSlot = TGAHelper.ReadItem(view, "R");
+    }
+    @Override
+    protected void writeData(WriteView view) {
+        view.putInt("J", Jinriki);
+        view.putInt("M", WorkMode);
+        view.putInt("B", BurntimeLeft);
+        view.putInt("W", Worked);
+        view.putInt("T", WorkTotal);
+        view.putInt("F", (int)InnerTank.amount);
+        TGAHelper.WriteStacks( view ,"I", BufferSlot.heldStacks, 0, 9);
+        TGAHelper.WriteItem(view, "C", Crafting);
+        TGAHelper.WriteItem(view, "R", ResultSlot);
+    }
+// </editor-fold>
+
     // <editor-fold desc="Jinriki">
     @Override
     public float GetJinrikiMul() {
@@ -250,7 +448,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ITGAManpoweredBlo
     @Override
     public void JinrikiGo(int power, ServerPlayerEntity player, World world) {
         Jinriki += power;
-        if (Jinriki > MAX_JINRIKI_CAP) Jinriki = MAX_JINRIKI_CAP;
         world.playSound(null, pos, TGASounds.HAMMER, SoundCategory.BLOCKS, 1f, 1f);
     }
     // </editor-fold>

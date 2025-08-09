@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -89,7 +90,7 @@ public class MetalWorkbenchHandler extends ScreenHandler {
         return newStack;
     }
 
-    public static Text GetModeText(int mode) {
+    public static MutableText GetModeText(int mode) {
         return Text.translatable("gui.tga.metalwork.mode." + mode);
     }
 

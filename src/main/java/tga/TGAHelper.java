@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 
@@ -31,6 +32,29 @@ public class TGAHelper {
     // </editor-fold>
 
     // <editor-fold desc="Items">
+    public static void ReadStacks(ReadView view, String prefix, DefaultedList<ItemStack> heldStacks, int offset, int endIndex) {
+        for (int i = offset; i < endIndex; i++)
+            heldStacks.set(i, ReadItem(view, prefix + i));
+    }
+
+    public static void WriteStacks(WriteView view, String prefix, DefaultedList<ItemStack> heldStacks, int offset, int endIndex) {
+        for (int i = offset; i < endIndex; i++)
+            WriteItem(view, prefix + i, heldStacks.get(i));
+    }
+
+    public static ItemStack ItemStackTo(ItemStack item, ItemStack slot){
+        if (slot.isEmpty()) return item.copy();
+        if (!ItemStack.areItemsAndComponentsEqual(item, slot)) return slot;
+        slot.increment(item.getCount());
+        return slot;
+    }
+
+    public static boolean ItemCanStackTo(ItemStack item, ItemStack slot){
+        if (slot.isEmpty()) return true;
+        if (!ItemStack.areItemsAndComponentsEqual(item, slot)) return false;
+        return item.getCount() + slot.getCount() < slot.getMaxCount();
+    }
+
     public static void WriteItem(WriteView view, String name, ItemStack stack) {
         if (stack == null || stack.isEmpty()) return;
         view.put(name, ItemStack.CODEC, stack);

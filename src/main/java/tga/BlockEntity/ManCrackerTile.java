@@ -41,7 +41,6 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     public int Jinriki;
 
     public static final int JINRIKI_INPUT_OFF = 20_000_00;
-    public static final int MAX_JINRIKI_CAP = 60_000_00;
 
     @Override
     public float GetJinrikiMul() {
@@ -51,7 +50,6 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     @Override
     public void JinrikiGo(int power, ServerPlayerEntity player, World world) {
         Jinriki += power;
-        if (Jinriki > MAX_JINRIKI_CAP) Jinriki = MAX_JINRIKI_CAP;
         world.playSound(null, pos, TGASounds.GRINDER, SoundCategory.BLOCKS, 1f ,1f);
     }
 
@@ -106,7 +104,7 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
 
     public void TickS() {
         //No power or no crafting require
-        if (!ItemBuffer[1].isEmpty()) return;
+        if (Jinriki < 20f || !ItemBuffer[1].isEmpty()) return;
         if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
         //Max 50 human power/t
         int amount = Math.min(Jinriki / 10, 10_00);

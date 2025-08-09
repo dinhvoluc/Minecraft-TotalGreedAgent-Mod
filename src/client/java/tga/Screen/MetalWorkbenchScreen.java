@@ -47,18 +47,18 @@ public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchH
         if (TGAClientHelper.GUI_ButtonInrange(x+117, y + 17 , mouseX, mouseY))
             PointID =POINT_RECIPE_CRFAT_INFO_1;
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x + 117, y + 17, 0, 211, 18, 18, 512, 512);
-        if (handler.Machine.WaterVol <= 0) TGAClientHelper.GUI_DrawRoundEFMetterE(context, x + 119, y + 19);
+        if (handler.Machine.InnerTank.amount <= 0) TGAClientHelper.GUI_DrawRoundEFMetterE(context, x + 119, y + 19);
         else
-            TGAClientHelper.GUI_DrawRoundEFMetter(context, x + 119, y + 19, handler.Machine.WaterVol, MetalWorkbenchTile.MAX_WATER_LEVEL);
+            TGAClientHelper.GUI_DrawRoundEFMetter(context, x + 119, y + 19, handler.Machine.InnerTank.amount, MetalWorkbenchTile.MAX_WATER_LEVEL);
         //draw fuel bar
-        TGAClientHelper.GUI_DrawBurnFuelVol(context, x + 119, y + 55, handler.Machine.BurntimeLeft, handler.Machine.BurntimeTotal);
+        TGAClientHelper.GUI_DrawBurnFuelVol(context, x + 119, y + 55, handler.Machine.BurntimeLeft, MetalWorkbenchTile.BURN_TIME_BAR_MAX);
         //draw mode
         if (TGAClientHelper.GUI_Button12Blue(context, x + 97, y+35, mouseX, mouseY, 500, 31 + handler.Machine.WorkMode * 13))
             PointID = POINT_RECIPE_CRFAT_INFO_0;
-
-
-        //todo draw logic
-
+        //draw processing arrow
+        int workLevel = handler.Machine.Worked * 19 / handler.Machine.WorkTotal;
+        if (workLevel > 0)
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x + 117, y + 37, 38, 214, Math.min(18, workLevel), 14, 512, 512);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchH
                 context.drawTooltip(MetalWorkbenchHandler.GetModeText(handler.Machine.WorkMode), mouseX, mouseY);
                 return true;
             case POINT_RECIPE_CRFAT_INFO_1:
-                context.drawTooltip(Text.translatable("gui.tga.waterlevel", TGAHelper.ToFluid_mB(handler.Machine.WaterVol), TGAHelper.ToFluid_mB(MetalWorkbenchTile.MAX_WATER_LEVEL)), mouseX, mouseY);
+                context.drawTooltip(Text.translatable("gui.tga.waterlevel", TGAHelper.ToFluid_mB(handler.Machine.InnerTank.amount), TGAHelper.ToFluid_mB(MetalWorkbenchTile.MAX_WATER_LEVEL)), mouseX, mouseY);
                 return true;
             default:
                 return false;

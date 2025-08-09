@@ -24,13 +24,12 @@ public class MetalWorkbenchGuiSync implements CustomPayload {
                 int workDone = buf.readInt();
                 int workTotal = buf.readInt();
                 int burnLeft = buf.readInt();
-                int burnTotal = buf.readInt();
                 int waterLevel = buf.readInt();
                 int slotsCount = buf.readInt();
                 ItemStack[] slots = new ItemStack[slotsCount];
                 for (int i = 0; i < 10; i++)
                     slots[i] = TGAHelper.DecodeItem(buf);
-                return new MetalWorkbenchGuiSync(wrl, pos, workMode, workDone, workTotal, burnLeft, burnTotal, waterLevel, slots);
+                return new MetalWorkbenchGuiSync(wrl, pos, workMode, workDone, workTotal, burnLeft, waterLevel, slots);
             }
 
             @Override
@@ -41,7 +40,6 @@ public class MetalWorkbenchGuiSync implements CustomPayload {
                 buf.writeInt(value.WorkDone);
                 buf.writeInt(value.WorkTotal);
                 buf.writeInt(value.BurnLeft);
-                buf.writeInt(value.BurnTotal);
                 buf.writeInt(value.WaterLevel);
                 buf.writeInt(value.ItemSlots.length);
                 for(var i = 0; i < value.ItemSlots.length; i++)
@@ -51,7 +49,7 @@ public class MetalWorkbenchGuiSync implements CustomPayload {
         PayloadTypeRegistry.playS2C().register(PAYLOAD_ID, PACKET_CODEC);
     }
 
-    public MetalWorkbenchGuiSync(String world, BlockPos pos, int workMode, int workDone, int workTotal, int burnLeft, int burnTotal, int waterLevel, ItemStack[] slots) {
+    public MetalWorkbenchGuiSync(String world, BlockPos pos, int workMode, int workDone, int workTotal, int burnLeft, int waterLevel, ItemStack[] slots) {
         World = world;
         Pos = pos;
         WorkMode = workMode;
@@ -59,7 +57,6 @@ public class MetalWorkbenchGuiSync implements CustomPayload {
         WorkTotal = workTotal;
         ItemSlots = slots;
         BurnLeft = burnLeft;
-        BurnTotal = burnTotal;
         WaterLevel = waterLevel;
     }
 
@@ -69,7 +66,6 @@ public class MetalWorkbenchGuiSync implements CustomPayload {
     public final int WorkDone;
     public final int WorkTotal;
     public final int BurnLeft;
-    public final int BurnTotal;
     public final int WaterLevel;
     public final ItemStack[] ItemSlots;
 
