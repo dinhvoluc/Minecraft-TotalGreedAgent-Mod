@@ -209,10 +209,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
     private int tickToShow;
 
     public void TickS(BlockState state) {
-if (++tickToShow % 40 == 0)
-        TotalGreedyAgent.broadcastDebugMessageF("J=%s B=%s WM=%s",
-                Jinriki, BurntimeLeft, WorkMode);
-
         boolean isDirty = BurntimeLeft > 0;
         if (isDirty) BurntimeLeft--;
         //have nenergy for crafting
@@ -274,7 +270,7 @@ if (++tickToShow % 40 == 0)
     }
 
     private void UpdateExit(boolean isDirty, BlockState state) {
-        int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > 0 ? 2 : 0);
+        int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > 200 ? 2 : 0);
         if (state.get(TGABlocks.STATE4, -1) != newState) world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
         if (isDirty) markDirty();
     }

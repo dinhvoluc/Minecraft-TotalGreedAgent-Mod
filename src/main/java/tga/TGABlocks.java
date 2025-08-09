@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -54,7 +56,7 @@ public final class TGABlocks {
                 .sounds(BlockSoundGroup.STONE)
                 .nonOpaque());
         //BOX
-        BOX_WOOD_FILLED = Register("box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
+        BOX_WOOD_FILLED = Register(1, "box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD));
@@ -66,12 +68,12 @@ public final class TGABlocks {
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
-        BOX_COPPER_FILLED = Register("box_copper_filled", BoxStackBlock::Create_Copper, Block.Settings.create()
+        BOX_COPPER_FILLED = Register(1, "box_copper_filled", BoxStackBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
         //TANK
-        TANK_WOOD_FILLED = Register("tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
+        TANK_WOOD_FILLED = Register(1, "tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
                 .mapColor(MapColor.TERRACOTTA_BROWN)
                 .strength(0.2f, 3.5f)
                 .sounds(BlockSoundGroup.WOOD));
@@ -83,7 +85,7 @@ public final class TGABlocks {
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
-        TANK_COPPER_FILLED = Register("tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
+        TANK_COPPER_FILLED = Register(1, "tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
                 .mapColor(MapColor.BROWN)
                 .strength(0.2f, 2.5f)
                 .sounds(BlockSoundGroup.METAL));
@@ -117,6 +119,12 @@ public final class TGABlocks {
         final Identifier identifier = TotalGreedyAgent.GetID(path);
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
         return Blocks.register(registryKey, factory, settings);
+    }
+
+    public static Block Register(int maxStack, String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+        Block block = NoDirectItem(path, factory, settings);
+        Items.register(block, new Item.Settings().maxCount(1));
+        return block;
     }
 
     public static Block Register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {

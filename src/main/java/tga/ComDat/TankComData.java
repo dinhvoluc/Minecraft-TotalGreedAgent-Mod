@@ -39,4 +39,16 @@ public class TankComData implements TooltipAppender {
         if (Count <= 0 || FType == null || FType.isBlank()) return;
         textConsumer.accept(Text.literal((Count / FluidConstants.BUCKET) + "×" + TGAHelper.GetFluidName(FType)).formatted(Formatting.GOLD));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TankComData other)) return false;
+        return MaxStack == other.MaxStack && Count == other.Count && FType.equals(other.FType);
+    }
+
+    @Override
+    public int hashCode() {
+        return (int)(MaxStack + Count + FType.hashCode());
+    }
 }

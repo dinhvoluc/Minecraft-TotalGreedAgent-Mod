@@ -37,4 +37,16 @@ public class BoxStackData implements TooltipAppender {
         if (Count <= 0 || LockedType.isEmpty()) return;
         textConsumer.accept(Text.literal(Count + "×" + LockedType.getName().getString()).formatted(Formatting.GOLD));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof BoxStackData other)) return false;
+        return MaxStack == other.MaxStack && Count == other.Count && ItemStack.areItemsAndComponentsEqual(LockedType, other.LockedType);
+    }
+
+    @Override
+    public int hashCode() {
+        return MaxStack + Count + LockedType.hashCode();
+    }
 }
