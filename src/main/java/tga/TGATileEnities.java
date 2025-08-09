@@ -31,8 +31,14 @@ public class TGATileEnities {
     public static void Load(boolean isClientSide) {
         TGAShared.VARIANT_WATER = FluidVariant.of(Fluids.WATER);
 
-        BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new, TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED, TGABlocks.BOX_COPPER, TGABlocks.BOX_COPPER_FILLED);
-        TANK_TILE = register("tanktile", TankTile::new, TGABlocks.TANK_WOOD, TGABlocks.TANK_WOOD_FILLED, TGABlocks.TANK_COPPER, TGABlocks.TANK_COPPER_FILLED);
+        BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new,
+                TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED,
+                TGABlocks.BOX_COPPER, TGABlocks.BOX_COPPER_FILLED,
+                TGABlocks.BOX_BRONZE, TGABlocks.BOX_BRONZE_FILLED);
+        TANK_TILE = register("tanktile", TankTile::new,
+                TGABlocks.TANK_WOOD, TGABlocks.TANK_WOOD_FILLED,
+                TGABlocks.TANK_COPPER, TGABlocks.TANK_COPPER_FILLED,
+                TGABlocks.TANK_BRONZE, TGABlocks.TANK_BRONZE_FILLED);
         M_CRACKER_LV0 = register("mt_cracker", ManCrackerTile::new, TGABlocks.MAN_CRACKER);
         M_METAL_WORKBENCH = register("mt_metalwb", MetalWorkbenchTile::new, TGABlocks.METAL_WORKBENCH);
 

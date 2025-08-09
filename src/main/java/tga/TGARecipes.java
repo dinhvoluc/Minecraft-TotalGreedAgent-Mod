@@ -91,6 +91,9 @@ public class TGARecipes {
                 Items.LIGHT_WEIGHTED_PRESSURE_PLATE,
                 810,
                 Items.GOLD_BLOCK));
+
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_SILVER, 90, 2_200_00,
+                TGAItems.INGOT_SILVER));
     }
 
     public static void AddMetalWork(int minlv, int mode, ItemStack result, long jinriki, int waterCool, ItemStack inputs)

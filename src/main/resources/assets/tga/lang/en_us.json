@@ -56,6 +56,7 @@
   "gui.tga.tank_wood.title": "Wooden tank",
   "gui.tga.tank_copper.title": "Copper tank",
   "block.tga.m_cracker_lv0": "Manpower cracker",
+  "block.tga.metal_workbench": "Metal workbench",
   "itemGroup.tga.main": "Total Greedy Agent",
   "recipeGroup.tga.craft": "TGA recipes",
   "gui.tga.box_wood.any": "One item storage box",

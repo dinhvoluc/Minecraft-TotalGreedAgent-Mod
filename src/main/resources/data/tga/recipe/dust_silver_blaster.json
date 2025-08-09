@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": "tga:d_silver",
+  "result": {
+    "id": "tga:ingot_silver"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}
