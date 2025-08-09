@@ -12,7 +12,7 @@
     "A": "minecraft:anvil",
     "I": "minecraft:iron_trapdoor",
     "H": "minecraft:hopper",
-    "Z": "minecraft:chest"
+    "Z": "minecraft:smithing_table"
   },
   "result": {
     "id": "tga:metal_workbench",

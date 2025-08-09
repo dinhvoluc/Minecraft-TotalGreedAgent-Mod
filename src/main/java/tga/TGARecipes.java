@@ -17,9 +17,12 @@ public class TGARecipes {
 
     public static void Load() {
         //Metal Work
-        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.COPPER_PLATE), 5_000_00, 180, new ItemStack(Items.COPPER_INGOT));
-        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS, 9), 900_00, 90, new ItemStack(Items.IRON_INGOT));
-        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS), 100_00, 10, new ItemStack(Items.IRON_NUGGET));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_COPPER), 5_000_00, 240, new ItemStack(Items.COPPER_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_BRONZE), 6_000_00, 280, new ItemStack(TGAItems.INGOT_BRONZE));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_GOLD), 4_500_00, 300, new ItemStack(Items.GOLD_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_IRON), 7_000_00, 320, new ItemStack(Items.IRON_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS, 4), 900_00, 80, new ItemStack(Items.IRON_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_SCEW, new ItemStack(TGAItems.SCREW, 2), 1_200_00, 70, new ItemStack(Items.IRON_INGOT));
 
         //CaCO3
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00,
@@ -45,7 +48,7 @@ public class TGARecipes {
                 TGAItems.INGOT_TIN));
 
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_COPPER, 90, 2_000_00,
-                Items.COPPER_INGOT, TGAItems.COPPER_PLATE,
+                Items.COPPER_INGOT, TGAItems.PLATE_COPPER,
                 810,
                 Items.COPPER_BLOCK,
                 Items.CHISELED_COPPER, Items.COPPER_GRATE, Items.CUT_COPPER,
@@ -75,7 +78,16 @@ public class TGARecipes {
                 Items.WAXED_COPPER_DOOR, Items.WAXED_EXPOSED_COPPER_DOOR, Items.WAXED_OXIDIZED_COPPER_DOOR));
 
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00,
-                TGAItems.INGOT_BRONZE));
+                TGAItems.INGOT_BRONZE, TGAItems.PLATE_BRONZE));
+
+        AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_GOLD, 90, 1_900_00,
+                Items.GOLD_INGOT, Items.RAW_GOLD, TGAItems.PLATE_GOLD,
+                10,
+                Items.GOLD_NUGGET,
+                180,
+                Items.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                810,
+                Items.GOLD_BLOCK, Items.RAW_GOLD_BLOCK));
     }
 
     public static void AddMetalWork(int minlv, int mode, ItemStack result, long jinriki, int waterCool, ItemStack inputs)

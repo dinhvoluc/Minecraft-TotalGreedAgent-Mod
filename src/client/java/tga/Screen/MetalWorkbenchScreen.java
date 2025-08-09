@@ -51,7 +51,11 @@ public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchH
         else
             TGAClientHelper.GUI_DrawRoundEFMetter(context, x + 119, y + 19, handler.Machine.InnerTank.amount, MetalWorkbenchTile.MAX_WATER_LEVEL);
         //draw fuel bar
-        TGAClientHelper.GUI_DrawBurnFuelVol(context, x + 119, y + 55, handler.Machine.BurntimeLeft, MetalWorkbenchTile.BURN_TIME_BAR_MAX);
+        int xOfbar = x + 119;
+        int yOfbar = y + 55;
+        if (TGAHelper.InRangeXY(mouseX, mouseY, xOfbar, yOfbar, 14, 14))
+            PointID = POINT_RECIPE_CRFAT_INFO_2;
+        TGAClientHelper.GUI_DrawBurnFuelVol(context, xOfbar, yOfbar, handler.Machine.BurntimeLeft, MetalWorkbenchTile.BURN_TIME_BAR_MAX);
         //draw mode
         if (TGAClientHelper.GUI_Button12Blue(context, x + 97, y+35, mouseX, mouseY, 500, 31 + handler.Machine.WorkMode * 13))
             PointID = POINT_RECIPE_CRFAT_INFO_0;
@@ -78,6 +82,9 @@ public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchH
                 return true;
             case POINT_RECIPE_CRFAT_INFO_1:
                 context.drawTooltip(Text.translatable("gui.tga.waterlevel", TGAHelper.ToFluid_mB(handler.Machine.InnerTank.amount), TGAHelper.ToFluid_mB(MetalWorkbenchTile.MAX_WATER_LEVEL)), mouseX, mouseY);
+                return true;
+            case POINT_RECIPE_CRFAT_INFO_2:
+                context.drawTooltip(Text.translatable("gui.tga.fuel.coalorchar"), mouseX, mouseY);
                 return true;
             default:
                 return false;

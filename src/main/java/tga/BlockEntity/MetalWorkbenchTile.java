@@ -270,7 +270,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
     }
 
     private void UpdateExit(boolean isDirty, BlockState state) {
-        int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > 200 ? 2 : 0);
+        int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > FluidConstants.BOTTLE ? 2 : 0);
         if (state.get(TGABlocks.STATE4, -1) != newState) world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
         if (isDirty) markDirty();
     }
@@ -366,7 +366,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
 
     @Override
     public Text getDisplayName() {
-        return Text.translatable(TotalGreedyAgent.GetGuiLang("metalworkbench"));
+        return Text.translatable(TotalGreedyAgent.GetGuiLang("metalwb"));
     }
 
     @Override

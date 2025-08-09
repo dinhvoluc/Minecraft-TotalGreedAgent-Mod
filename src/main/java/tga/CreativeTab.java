@@ -43,15 +43,30 @@ public class CreativeTab {
                     entries.add(TGAItems.BREAD_DOUGH);
                     //Sozai
                     entries.add(TGAItems.NAILS);
-                    //Copper
-                    entries.add(TGAItems.DUST_COPPER);
-                    entries.add(TGAItems.COPPER_PLATE);
-                    //Tin
+                    //Dust
                     entries.add(TGAItems.DUST_TIN);
-                    entries.add(TGAItems.INGOT_TIN);
-                    //BRONZE
+                    entries.add(TGAItems.DUST_COPPER);
                     entries.add(TGAItems.DUST_BRONZE);
+                    entries.add(TGAItems.DUST_ALUMIUM);
+                    entries.add(TGAItems.DUST_GOLD);
+                    entries.add(TGAItems.DUST_IRON);
+                    entries.add(TGAItems.DUST_STEEL);
+                    entries.add(TGAItems.DUST_TITAN);
+                    //Ingot
+                    entries.add(TGAItems.INGOT_TIN);
                     entries.add(TGAItems.INGOT_BRONZE);
+                    entries.add(TGAItems.INGOT_ALUMIUM);
+                    entries.add(TGAItems.INGOT_STEEL);
+                    entries.add(TGAItems.INGOT_TITAN);
+                    //Plate
+                    entries.add(TGAItems.PLATE_COPPER);
+                    entries.add(TGAItems.PLATE_BRONZE);
+                    entries.add(TGAItems.PLATE_ALUMIUM);
+                    entries.add(TGAItems.PLATE_GOLD);
+                    entries.add(TGAItems.PLATE_IRON);
+                    entries.add(TGAItems.PLATE_STEEL);
+                    entries.add(TGAItems.PLATE_TITAN);
+                    //BRONZE
                     entries.add(TGAItems.PART_BRONZE_TANK);
                     entries.add(TGAItems.PART_BRONZE_BOX);
                     entries.add(TGAItems.PART_BRONZE_TURBIN);
