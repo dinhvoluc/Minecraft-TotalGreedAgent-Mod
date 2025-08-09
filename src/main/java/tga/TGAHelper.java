@@ -52,7 +52,7 @@ public class TGAHelper {
     public static boolean ItemCanStackTo(ItemStack item, ItemStack slot){
         if (slot.isEmpty()) return true;
         if (!ItemStack.areItemsAndComponentsEqual(item, slot)) return false;
-        return item.getCount() + slot.getCount() < slot.getMaxCount();
+        return item.getCount() + slot.getCount() <= slot.getMaxCount();
     }
 
     public static void WriteItem(WriteView view, String name, ItemStack stack) {
