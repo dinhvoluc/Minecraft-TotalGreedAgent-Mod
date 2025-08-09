@@ -1,5 +1,6 @@
 package tga;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import tga.BlockEntity.MetalWorkbenchTile;
@@ -80,7 +81,7 @@ public class TGARecipes {
     public static void AddMetalWork(int minlv, int mode, ItemStack result, long jinriki, int waterCool, ItemStack... inputs)
     {
         if (inputs.length == 0) return;
-        if (minlv <= 0) MetalWorkbench.Registers( new MetalWorkRecipe(inputs, jinriki, result, waterCool, mode));
+        if (minlv <= 0) MetalWorkbench.Registers( new MetalWorkRecipe(inputs, jinriki, result, (int)(FluidConstants.BUCKET * waterCool / 1000), mode));
         //todo machine auto metalwork
 
     }

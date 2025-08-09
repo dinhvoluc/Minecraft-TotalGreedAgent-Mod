@@ -176,7 +176,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX, rby, 57, 186, 101, 19, 512, 512);
         int rbyItem = rby + 2;
         if (TGAHelper.InRangeXY(mouseX, mouseY, RBX + 65, rbyItem, 18, 12)) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX + 23, rby + 4, 435, 0, 12, 12, 512, 512);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX + 68, rby + 4, 435, 0, 12, 12, 512, 512);
             mpset.SetPointID(BasicGUISizeWithRecipe.POINT_RECIPE_ROW);
             SubPointID = index * 16 + 1;
         }
@@ -194,11 +194,11 @@ public class OneOut5RowRender extends IRecipeViewer {
             SubPointID = index * 16;
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, rbx, rbyItem, 79, 168, 16, 16, 512, 512);
         }
-        rbx = RBX + 2;
         context.drawItem(recipe.Result, rbx, rbyItem);
         int count = recipe.Result.getCount();
         if (count != 1)
             context.drawText(textRenderer, Text.literal(String.valueOf(count)), RBX + 1, rby + 1, 0xff00ff00, true);
+        rbx = RBX + 2;
         for (int i = 0; i < recipe.Ingredient.length; i++) {
             ItemStack resultPart = recipe.Ingredient[i];
             if (TGAHelper.InRangeXY(mouseX, mouseY, rbx, rbyItem, 16, 16)) {

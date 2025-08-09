@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "___",
+    "CBA",
+    "IHZ"
+  ],
+  "key": {
+    "_": "tga:plate_copper",
+    "C": "minecraft:cauldron",
+    "B": "minecraft:blast_furnace",
+    "A": "minecraft:anvil",
+    "I": "minecraft:iron_trapdoor",
+    "H": "minecraft:hopper",
+    "Z": "minecraft:chest"
+  },
+  "result": {
+    "id": "tga:metal_workbench",
+    "count": 1
+  }
+}
