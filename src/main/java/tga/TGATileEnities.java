@@ -9,16 +9,14 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import tga.BlockEntity.BoxStackTile;
-import tga.BlockEntity.ManCrackerTile;
-import tga.BlockEntity.MetalWorkbenchTile;
-import tga.BlockEntity.TankTile;
+import tga.BlockEntity.*;
 
 public class TGATileEnities {
     public static BlockEntityType<BoxStackTile> BOX_STACK_TILE;
     public static BlockEntityType<TankTile> TANK_TILE;
     public static BlockEntityType<ManCrackerTile> M_CRACKER_LV0;
     public static BlockEntityType<MetalWorkbenchTile> M_METAL_WORKBENCH;
+    public static BlockEntityType<FluidInside> FLUID_INSIDE;
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,
@@ -30,7 +28,8 @@ public class TGATileEnities {
 
     public static void Load(boolean isClientSide) {
         TGAShared.VARIANT_WATER = FluidVariant.of(Fluids.WATER);
-
+        FLUID_INSIDE = register("havefluid", FluidInside::new,
+                TGABlocks.JRK_PUMP);
         BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new,
                 TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED,
                 TGABlocks.BOX_COPPER, TGABlocks.BOX_COPPER_FILLED,

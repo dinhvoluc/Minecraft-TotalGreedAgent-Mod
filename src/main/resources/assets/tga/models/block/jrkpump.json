@@ -1,0 +1,68 @@
+{
+	"parent": "block/block",
+	"display": {
+		"head": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 10.5, 0 ],
+			"scale":[ 1, 1, 1 ]
+		}
+	},
+	"textures": {
+		"0": "tga:block/bot/stone_dark",
+		"1": "tga:block/bronze_plate_wr",
+		"2": "tga:block/wood_plate",
+		"particle": "tga:block/bronze_plate_wr"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 4]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#0"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [8, -16, 5],
+			"to": [14, 16, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 2, 5]},
+			"faces": {
+				"north": {"uv": [6, 0, 12, 16], "texture": "#1"},
+				"east": {"uv": [2, 0, 8, 16], "texture": "#1"},
+				"south": {"uv": [2, 0, 8, 16], "texture": "#1"},
+				"west": {"uv": [8, 0, 14, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 6, 6], "texture": "#1"},
+				"down": {"uv": [0, 0, 6, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 6, 7],
+			"to": [3, 18, 9],
+			"rotation": {"angle": -37.5, "axis": "z", "origin": [1, 6, 7]},
+			"faces": {
+				"north": {"uv": [3, 2, 5, 14], "texture": "#2"},
+				"east": {"uv": [3, 2, 5, 14], "texture": "#2"},
+				"south": {"uv": [11, 2, 13, 14], "texture": "#2"},
+				"west": {"uv": [11, 2, 13, 14], "texture": "#2"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#2"}
+			}
+		},
+		{
+			"from": [14, 11, 6],
+			"to": [16, 15, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [14, 11, 6]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 4], "texture": "#1"},
+				"east": {"uv": [4, 2, 8, 6], "texture": "#0"},
+				"south": {"uv": [0, 0, 2, 4], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 4], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 4], "texture": "#1"}
+			}
+		}
+	]
+}

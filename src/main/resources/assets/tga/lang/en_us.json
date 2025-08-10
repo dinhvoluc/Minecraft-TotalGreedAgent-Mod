@@ -57,6 +57,7 @@
   "gui.tga.tank_copper.title": "Copper tank",
   "block.tga.m_cracker_lv0": "Manpower cracker",
   "block.tga.metal_workbench": "Metal workbench",
+  "block.tga.jrkpump": "Pump",
   "itemGroup.tga.main": "Total Greedy Agent",
   "recipeGroup.tga.craft": "TGA recipes",
   "gui.tga.box_wood.any": "One item storage box",
@@ -86,5 +87,6 @@
   "gui.tga.metalwb.title" : "Metal workbench",
   "gui.tga.metalwb.needwater.tocool" : "Cooling water: %smB",
   "sound.tga.machine_noise.sub": "Machine noise",
-  "sound.tga.hammer_hit.sub": "Hammer hitting"
+  "sound.tga.hammer_hit.sub": "Hammer hitting",
+  "sound.tga.waterpump.sub": "Fluid pumped"
 }

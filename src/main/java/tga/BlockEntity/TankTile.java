@@ -70,11 +70,6 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     public void SetTankSize(int stackSize) {
         VolSize = stackSize * FluidConstants.BUCKET;
     }
-
-    public void SetFluidLevel(FluidVariant variant, long vol) {
-        InnerTank.variant = variant;
-        InnerTank.amount = vol;
-    }
     // </editor-fold>
 
     public TankTile(BlockPos pos, BlockState state) {

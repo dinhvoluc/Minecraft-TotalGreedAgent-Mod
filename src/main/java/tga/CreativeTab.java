@@ -20,7 +20,8 @@ public class CreativeTab {
                     //Machine
                     entries.add(TGABlocks.MAN_CRACKER);
                     entries.add(TGABlocks.METAL_WORKBENCH);
-                    entries.add(TGAElectricBlocks.GEN_JINRIKI);
+                    entries.add(TGABlocks.JRK_PUMP);
+                    //entries.add(TGAElectricBlocks.GEN_JINRIKI);
                     //BOX
                     entries.add(TGABlocks.BOX_WOOD);
                     entries.add(TGABlocks.BOX_COPPER);

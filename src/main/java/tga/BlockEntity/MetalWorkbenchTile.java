@@ -215,6 +215,8 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             UpdateExit(isDirty, state);
             return;
         }
+        int amount = Math.min(Jinriki / 10, 20_00);
+        Jinriki -= amount;
         //find for new recipe
         if (Crafting.isEmpty()) {
             MetalWorkRecipe canCraft = TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode);
@@ -256,9 +258,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             }
         }
         //Crafting tick
-        int amount = Math.min(Jinriki / 10, 20_00);
         Worked += amount;
-        Jinriki -= amount;
         //Crafted
         if (Worked >= WorkTotal) {
             ResultSlot = TGAHelper.ItemStackTo(Crafting, ResultSlot);

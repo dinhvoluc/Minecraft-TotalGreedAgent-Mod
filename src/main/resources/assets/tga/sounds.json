@@ -1,6 +1,6 @@
 {
   "grinder": {
-    "subtitle":"sound.tga.machine_noise.sub",
+    "subtitle": "sound.tga.machine_noise.sub",
     "sounds": [
       {
         "name": "tga:grinder",
@@ -9,12 +9,21 @@
     ]
   },
   "hammer": {
-  "subtitle":"sound.tga.hammer_hit.sub",
-  "sounds": [
-    {
-      "name": "tga:hammer",
-      "stream": false
-    }
-  ]
-}
+    "subtitle": "sound.tga.hammer_hit.sub",
+    "sounds": [
+      {
+        "name": "tga:hammer",
+        "stream": false
+      }
+    ]
+  },
+  "waterpump": {
+    "subtitle": "sound.tga.waterpump.sub",
+    "sounds": [
+      {
+        "name": "tga:waterpump",
+        "stream": false
+      }
+    ]
+  }
 }

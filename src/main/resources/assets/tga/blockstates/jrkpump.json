@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "tga:block/jrkpump", "y": 270 },
+    "facing=south": { "model": "tga:block/jrkpump", "y": 90 },
+    "facing=west":  { "model": "tga:block/jrkpump", "y": 180 },
+    "facing=east":  { "model": "tga:block/jrkpump" }
+  }
+}

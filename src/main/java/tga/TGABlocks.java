@@ -14,6 +14,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 import tga.Block.BoxStackBlock;
+import tga.Block.JrkPump;
 import tga.Block.RubberSheetBlock;
 import tga.Block.TankBlock;
 import tga.Crops.CropGuayule;
@@ -48,6 +49,7 @@ public final class TGABlocks {
 
     public static Block MAN_CRACKER;
     public static Block METAL_WORKBENCH;
+    public static Block JRK_PUMP;
 
     public static void Load(boolean isClientSide) {
         CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0F, 0.0F, 2 + age * 2));
@@ -56,6 +58,8 @@ public final class TGABlocks {
                 Bs(4f, 6f, MapColor.DEEPSLATE_GRAY ,BlockSoundGroup.STONE));
         METAL_WORKBENCH = Register("metal_workbench", MetalWorkbench::new,
                 Bs(4f, 6f, MapColor.STONE_GRAY, BlockSoundGroup.STONE).nonOpaque());
+        JRK_PUMP = Register("jrkpump", JrkPump::new,
+                Bs(1f, 2f, MapColor.DEEPSLATE_GRAY, BlockSoundGroup.STONE).nonOpaque());
         //BOX
         TheBoxRegisterReturn woodenBox = RegisterBox("box_wood", BoxStackBlock::Create_Wooden,
                 Bs(0.2f, 1.5f, MapColor.TERRACOTTA_BROWN, BlockSoundGroup.WOOD));

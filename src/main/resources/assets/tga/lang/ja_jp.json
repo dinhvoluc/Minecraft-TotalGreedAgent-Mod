@@ -57,6 +57,7 @@
   "gui.tga.tank_copper.title": "銅のタンク",
   "block.tga.m_cracker_lv0": "人力粉砕機",
   "block.tga.metal_workbench": "金属加工台",
+  "block.tga.jrkpump": "手動ポンプ",
   "itemGroup.tga.main": "全部欲しいモノ",
   "recipeGroup.tga.craft": "TGAレシピ",
   "gui.tga.box_wood.any": "単種収納箱",
@@ -86,5 +87,6 @@
   "gui.tga.metalwb.title" : "金属加工台",
   "gui.tga.metalwb.needwater.tocool" : "冷却水量：%smB",
   "sound.tga.machine_noise.sub": "機械の騒音",
-  "sound.tga.hammer_hit.sub": "ハンマーを叩く音"
+  "sound.tga.hammer_hit.sub": "ハンマーを叩く音",
+  "sound.tga.waterpump.sub": "液体ポンプする音"
 }

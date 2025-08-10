@@ -1,7 +1,12 @@
 package tga;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.block.BlockState;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -10,11 +15,68 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import tga.Str.FFlSrc;
 
-import java.util.List;
+import java.util.*;
 
 public class TGAHelper {
     // <editor-fold desc="Fluids">
+    public static FFlSrc FindFluidSource(World world, BlockPos start, int maxRange) {
+        FluidState target = world.getBlockState(start).getFluidState();
+        if (target.isEmpty()) return null;
+        return FindFluidSource(world, start, target, maxRange);
+    }
+
+    public static FFlSrc FindFluidSource(World world, BlockPos start, FluidState startState, int maxRange) {
+        double radius = maxRange * maxRange;
+        Queue<BlockPos> queue = new ArrayDeque<>();
+        Set<BlockPos> visited = new HashSet<>();
+        //for search
+        queue.add(start);
+        visited.add(start);
+        Fluid targetFluid = startState.getFluid();
+        //finding
+        while (!queue.isEmpty()) {
+            BlockPos current = queue.poll();
+            BlockState state = world.getBlockState(current);
+            FluidState fs = state.getFluidState();
+            if (targetFluid.matchesType(fs.getFluid())) {
+                // 水源を発見
+                if (fs.isStill()) return new FFlSrc(current, targetFluid, state);
+                // 周囲を探索（水平4方向＋上）
+                BlockPos up = current.up();
+                if (!visited.contains(up) && start.getSquaredDistance(up) <= radius) {
+                    visited.add(up);
+                    queue.add(up);
+                }
+                BlockPos n = current.north();
+                if (!visited.contains(n) && start.getSquaredDistance(n) <= radius) {
+                    visited.add(n);
+                    queue.add(n);
+                }
+                BlockPos s = current.south();
+                if (!visited.contains(s) && start.getSquaredDistance(s) <= radius) {
+                    visited.add(s);
+                    queue.add(s);
+                }
+                BlockPos w = current.west();
+                if (!visited.contains(w) && start.getSquaredDistance(w) <= radius) {
+                    visited.add(w);
+                    queue.add(w);
+                }
+                BlockPos e = current.east();
+                if (!visited.contains(e) && start.getSquaredDistance(e) <= radius) {
+                    visited.add(e);
+                    queue.add(e);
+                }
+            }
+        }
+        return null;
+    }
+
     public static void WriteFluidType(WriteView view, String name, FluidVariant fType) {
         if (fType.isBlank()) return;
         view.put(name, FluidVariant.CODEC, fType);
@@ -178,6 +240,17 @@ public class TGAHelper {
     public static <T> T GetOrNull(T[] array, int index) {
         if (array == null || index < 0 || index >= array.length) return null;
         return array[index];
+    }
+
+    public static Storage<FluidVariant> GetFluidAttachedFC(World world, BlockPos pos, Direction dir) {
+       return switch (dir) {
+            case Direction.NORTH -> FluidStorage.SIDED.find(world, pos.north(), Direction.SOUTH);
+            case Direction.EAST -> FluidStorage.SIDED.find(world, pos.east(), Direction.WEST);
+            case Direction.SOUTH -> FluidStorage.SIDED.find(world, pos.south(), Direction.NORTH);
+            case Direction.WEST -> FluidStorage.SIDED.find(world, pos.west(), Direction.EAST);
+            case Direction.UP -> FluidStorage.SIDED.find(world, pos.up(), Direction.DOWN);
+           case Direction.DOWN -> FluidStorage.SIDED.find(world, pos.down(), Direction.UP);
+        };
     }
     // </editor-fold>
 }

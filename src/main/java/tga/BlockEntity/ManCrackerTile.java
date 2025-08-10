@@ -105,11 +105,11 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     public void TickS() {
         //No power or no crafting require
         if (Jinriki < 20f || !ItemBuffer[1].isEmpty()) return;
-        if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
-        //Max 50 human power/t
         int amount = Math.min(Jinriki / 10, 10_00);
-        Worked += amount;
         Jinriki -= amount;
+        if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
+        //Crafting
+        Worked += amount;
         //Crafted
         if (Worked >= WorkTotal) {
             ItemBuffer[1] = CraftMain;

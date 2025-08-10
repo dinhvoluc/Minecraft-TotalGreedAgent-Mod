@@ -1,6 +1,5 @@
 package tga.WorkBook;
 
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import tga.TGAHelper;
