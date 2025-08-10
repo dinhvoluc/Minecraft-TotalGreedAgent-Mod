@@ -207,8 +207,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         return 9;
     }
 
-    private int tickToShow;
-
     public void TickS(BlockState state) {
         boolean isDirty = BurntimeLeft > 0;
         if (isDirty) BurntimeLeft--;
@@ -278,6 +276,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
 
     private void CheckTankInput() {
         long tankFree = MAX_WATER_LEVEL - InnerTank.amount;
+        if (tankFree <= 0) return;
         int freeSlot = -1;
         boolean freeCheck = true;
         for (int i = 0; i < 9; i++) {
