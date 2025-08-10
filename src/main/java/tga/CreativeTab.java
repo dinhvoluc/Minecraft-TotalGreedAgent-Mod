@@ -26,9 +26,9 @@ public class CreativeTab {
                     entries.add(TGABlocks.BOX_COPPER);
                     entries.add(TGABlocks.BOX_BRONZE);
                     //TANK
-                    entries.add(TGABlocks.TANK_WOOD);
-                    entries.add(TGABlocks.TANK_COPPER);
-                    entries.add(TGABlocks.TANK_BRONZE);
+                    entries.add(TGAItems.TANK_WOOD);
+                    entries.add(TGAItems.TANK_COPPER);
+                    entries.add(TGAItems.TANK_BRONZE);
                     //Rubber
                     entries.add(TGABlocks.RUBBER_SHEET);
                     entries.add(TGAItems.RUBBER);

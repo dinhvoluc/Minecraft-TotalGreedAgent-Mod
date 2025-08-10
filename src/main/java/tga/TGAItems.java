@@ -57,6 +57,14 @@ public final class TGAItems {
     public static Item PART_BRONZE_TURBIN;
     public static Item PART_BRONZE_BOIL;
 
+    public static Item TANK_WOOD;
+    public static Item TANK_COPPER;
+    public static Item TANK_BRONZE;
+
+    public static Item TANK_WOOD_FILLED;
+    public static Item TANK_COPPER_FILLED;
+    public static Item TANK_BRONZE_FILLED;
+
     public static void Load(boolean isClientSide) {
         SetBurnTime(RUBBER = Register("rubber"), 2000);
         SetBioBurnTime(REISIN = Register("resin"), 0.2f, 1000);
@@ -124,11 +132,15 @@ public final class TGAItems {
         });
     }
 
-    private static Item Register(String path) {
+    public static Item Register(int maxStack, String path) {
+        return Register(path, Item::new, new Item.Settings().maxCount(1));
+    }
+
+    public static Item Register(String path) {
         return Register(path, Item::new, new Item.Settings());
     }
 
-    private static Item Register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {
+    public static Item Register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {
         final Identifier identifier = TotalGreedyAgent.GetID(path);
         final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, identifier);
         return Items.register(registryKey, factory, settings);

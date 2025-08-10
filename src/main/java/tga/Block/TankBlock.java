@@ -1,5 +1,6 @@
 package tga.Block;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -7,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
@@ -17,6 +19,7 @@ import net.minecraft.world.WorldView;
 import tga.BlockEntity.TankTile;
 import tga.ComDat.TankComData;
 import tga.TGABlocks;
+import tga.TGAItems;
 import tga.TGATileEnities;
 
 public class TankBlock extends Block implements BlockEntityProvider {
@@ -38,20 +41,30 @@ public class TankBlock extends Block implements BlockEntityProvider {
         return new TankBlock(settings, BoxStackBlock.SIZE_BRONZE);
     }
 
-    private static ItemStack GetEmptyTank(int maxStack) {
+    public static ItemStack GetEmptyTank(int maxStack) {
         return switch (maxStack) {
-            case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGABlocks.TANK_WOOD);
-            case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGABlocks.TANK_COPPER);
-            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGABlocks.TANK_BRONZE);
+            case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGAItems.TANK_WOOD);
+            case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGAItems.TANK_COPPER);
+            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGAItems.TANK_BRONZE);
             default -> ItemStack.EMPTY;
         };
     }
 
-    private static ItemStack GetFillTank(int maxStack) {
+    public static long GetVolCap(ItemStack stack) {
+        if (stack.isOf(TGAItems.TANK_WOOD) || stack.isOf(TGAItems.TANK_WOOD_FILLED))
+            return BoxStackBlock.SIZE_WOOD * FluidConstants.BUCKET;
+        if (stack.isOf(TGAItems.TANK_COPPER) || stack.isOf(TGAItems.TANK_COPPER_FILLED))
+            return BoxStackBlock.SIZE_COPPER * FluidConstants.BUCKET;
+        if (stack.isOf(TGAItems.TANK_BRONZE) || stack.isOf(TGAItems.TANK_BRONZE_FILLED))
+            return BoxStackBlock.SIZE_BRONZE * FluidConstants.BUCKET;
+        return 0;
+    }
+
+    public static ItemStack GetFillTank(int maxStack) {
         return switch (maxStack) {
-            case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGABlocks.TANK_WOOD_FILLED);
-            case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGABlocks.TANK_COPPER_FILLED);
-            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGABlocks.TANK_BRONZE_FILLED);
+            case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGAItems.TANK_WOOD_FILLED);
+            case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGAItems.TANK_COPPER_FILLED);
+            case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGAItems.TANK_BRONZE_FILLED);
             default -> ItemStack.EMPTY;
         };
     }
@@ -81,13 +94,11 @@ public class TankBlock extends Block implements BlockEntityProvider {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.onPlaced(world, pos, state, placer, stack);
-
-        if (!world.isClient) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof TankTile boxTile) {
-                TankComData data = stack.get(TankComData.COMPONET_TYPE);
-                if (data != null) boxTile.OnPlacedRebuild(data);
-            }
+        if (world.isClient) return;
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof TankTile boxTile) {
+            TankComData data = stack.get(TankComData.COMPONET_TYPE);
+            if (data != null) boxTile.OnPlacedRebuild(data);
         }
     }
 

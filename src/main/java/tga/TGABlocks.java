@@ -1,11 +1,11 @@
 package tga;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
@@ -18,6 +18,8 @@ import tga.Block.RubberSheetBlock;
 import tga.Block.TankBlock;
 import tga.Crops.CropGuayule;
 import tga.Crops.CustomCropBlock;
+import tga.Items.TankItem1;
+import tga.Items.TheBoxRegisterReturn;
 import tga.Machines.ManCracker;
 import tga.Machines.MetalWorkbench;
 
@@ -50,89 +52,76 @@ public final class TGABlocks {
     public static void Load(boolean isClientSide) {
         CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0F, 0.0F, 2 + age * 2));
         //Workbench
-        MAN_CRACKER = Register("m_cracker_lv0", ManCracker::new, AbstractBlock.Settings.create()
-                .mapColor(MapColor.DEEPSLATE_GRAY)
-                .strength(4f, 6f)
-                .sounds(BlockSoundGroup.STONE));
-        METAL_WORKBENCH = Register("metal_workbench", MetalWorkbench::new, AbstractBlock.Settings.create()
-                .mapColor(MapColor.STONE_GRAY)
-                .strength(4f, 6f)
-                .sounds(BlockSoundGroup.STONE)
-                .nonOpaque());
+        MAN_CRACKER = Register("m_cracker_lv0", ManCracker::new,
+                Bs(4f, 6f, MapColor.DEEPSLATE_GRAY ,BlockSoundGroup.STONE));
+        METAL_WORKBENCH = Register("metal_workbench", MetalWorkbench::new,
+                Bs(4f, 6f, MapColor.STONE_GRAY, BlockSoundGroup.STONE).nonOpaque());
         //BOX
-        BOX_WOOD_FILLED = Register(1, "box_wood_filled", BoxStackBlock::Create_Wooden, Block.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .strength(0.2f, 3.5f)
-                .sounds(BlockSoundGroup.WOOD));
-        TGAItems.SetBurnTime((BOX_WOOD = Register("box_wood", BoxStackBlock::Create_Wooden, Block.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .strength(0.2f, 3.5f)
-                .sounds(BlockSoundGroup.WOOD))).asItem(), 800);
-        BOX_COPPER = Register("box_copper", BoxStackBlock::Create_Copper, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        BOX_COPPER_FILLED = Register(1, "box_copper_filled", BoxStackBlock::Create_Copper, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        BOX_BRONZE = Register("box_bronze", BoxStackBlock::Create_Bronze, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        BOX_BRONZE_FILLED = Register(1, "box_bronze_filled", BoxStackBlock::Create_Bronze, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
+        TheBoxRegisterReturn woodenBox = RegisterBox("box_wood", BoxStackBlock::Create_Wooden,
+                Bs(0.2f, 1.5f, MapColor.TERRACOTTA_BROWN, BlockSoundGroup.WOOD));
+        BOX_WOOD = woodenBox.BlockEmpty;
+        TGAItems.SetBurnTime(woodenBox.ItemEmpty, 800);
+        BOX_WOOD_FILLED = woodenBox.BlockFilled;
+        TheBoxRegisterReturn copperBox = RegisterBox("box_copper", BoxStackBlock::Create_Copper,
+                Bs(0.2f, 2.5f, MapColor.BROWN, BlockSoundGroup.METAL));
+        BOX_COPPER = copperBox.BlockEmpty;
+        BOX_COPPER_FILLED = copperBox.BlockFilled;
+        TheBoxRegisterReturn bronzeBox = RegisterBox("box_bronze", BoxStackBlock::Create_Bronze,
+                Bs(0.2f, 3f, MapColor.BROWN, BlockSoundGroup.METAL));
+        BOX_BRONZE = bronzeBox.BlockEmpty;
+        BOX_BRONZE_FILLED = bronzeBox.BlockFilled;
         //TANK
-        TANK_WOOD_FILLED = Register(1, "tank_wood_filled", TankBlock::Create_Wooden, Block.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .strength(0.2f, 3.5f)
-                .sounds(BlockSoundGroup.WOOD));
-        TGAItems.SetBurnTime((TANK_WOOD = Register("tank_wood", TankBlock::Create_Wooden, Block.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .strength(0.2f, 3.5f)
-                .sounds(BlockSoundGroup.WOOD))).asItem(), 400);
-        TANK_COPPER = Register("tank_copper", TankBlock::Create_Copper, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        TANK_COPPER_FILLED = Register(1, "tank_copper_filled", TankBlock::Create_Copper, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        TANK_BRONZE = Register("tank_bronze", TankBlock::Create_Bronze, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
-        TANK_BRONZE_FILLED = Register(1, "tank_bronze_filled", TankBlock::Create_Bronze, Block.Settings.create()
-                .mapColor(MapColor.BROWN)
-                .strength(0.2f, 2.5f)
-                .sounds(BlockSoundGroup.METAL));
+        TheBoxRegisterReturn woodTank = RegisterTank( "tank_wood", TankBlock::Create_Wooden,
+                Bs(0.2f, 1.5f, MapColor.TERRACOTTA_BROWN, BlockSoundGroup.WOOD));
+        TANK_WOOD = woodTank.BlockEmpty;
+        TGAItems.SetBurnTime(TGAItems.TANK_WOOD = woodTank.ItemEmpty, 800);
+        TANK_WOOD_FILLED = woodTank.BlockFilled;
+        TGAItems.TANK_WOOD_FILLED = woodTank.ItemFilled;
+
+        TheBoxRegisterReturn copperTank = RegisterTank( "tank_copper", TankBlock::Create_Copper,
+                Bs(0.2f, 2.5f, MapColor.BROWN, BlockSoundGroup.METAL));
+        TANK_COPPER = copperTank.BlockEmpty;
+        TGAItems.TANK_COPPER = copperTank.ItemEmpty;
+        TANK_COPPER_FILLED = copperTank.BlockFilled;
+        TGAItems.TANK_COPPER_FILLED = copperTank.ItemFilled;
+
+        TheBoxRegisterReturn bronzeTank = RegisterTank( "tank_bronze", TankBlock::Create_Bronze,
+                Bs(0.2f, 3f, MapColor.BROWN, BlockSoundGroup.METAL));
+        TANK_BRONZE = bronzeTank.BlockEmpty;
+        TGAItems.TANK_BRONZE = bronzeTank.ItemEmpty;
+        TANK_BRONZE_FILLED = bronzeTank.BlockFilled;
+        TGAItems.TANK_BRONZE_FILLED = bronzeTank.ItemFilled;
         //OTHER
-        TGAItems.SetBurnTime((RUBBER_SHEET = Register("rubber_sheet", RubberSheetBlock::new, Block.Settings.create()
-                .mapColor(MapColor.BLACK)
-                .strength(0.2f, 0.2f)
-                .sounds(BlockSoundGroup.WOOL)
-                .nonOpaque())).asItem(), 600);
-        X_CROP_GUAYULE = NoDirectItem("crop_guayule", CropGuayule::new, AbstractBlock.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .noCollision()
-                .breakInstantly()
-                .sounds(BlockSoundGroup.GRASS)
-                .nonOpaque()
-                .pistonBehavior(PistonBehavior.DESTROY));
-        TGAItems.SetBioValue((CROP_GUAYULE_YONG = Register("sd_guayule", CustomCropBlock::CropGuayule, AbstractBlock.Settings.create()
-                .mapColor(MapColor.TERRACOTTA_BROWN)
-                .noCollision()
-                .breakInstantly()
-                .sounds(BlockSoundGroup.GRASS)
-                .nonOpaque()
-                .pistonBehavior(PistonBehavior.DESTROY))).asItem(), 0.3f);
+        TGAItems.SetBurnTime((RUBBER_SHEET = Register("rubber_sheet", RubberSheetBlock::new,
+                Bs(0.2f, 0.2f, MapColor.BLACK, BlockSoundGroup.WOOL).nonOpaque())).asItem(), 600);
+        AbstractBlock.Settings cropSetting = AbstractBlock.Settings.create()
+                .noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS).nonOpaque().pistonBehavior(PistonBehavior.DESTROY);
+        X_CROP_GUAYULE = NoDirectItem("crop_guayule", CropGuayule::new, cropSetting.mapColor(MapColor.GREEN));
+        TGAItems.SetBioValue((CROP_GUAYULE_YONG = Register("sd_guayule",
+                CustomCropBlock::CropGuayule, cropSetting.mapColor(MapColor.BROWN))).asItem(), 0.3f);
         //Load server side ticker
         if (isClientSide) return;
         ManCracker.TICKER_SERVER = (a, b, c, d) -> d.TickS();
         MetalWorkbench.TICKER_SERVER = (a, b, c, d) -> d.TickS(c);
+    }
+
+    private static AbstractBlock.Settings Bs(float hardness, float resistance, MapColor color, BlockSoundGroup sound) {
+        return AbstractBlock.Settings.create().strength(hardness, resistance).mapColor(color).sounds(sound);
+    }
+
+    public static TheBoxRegisterReturn RegisterBox(String path, Function<AbstractBlock.Settings, Block> blockFactory, AbstractBlock.Settings blockSetting) {
+        Block bE = Register(path, blockFactory, blockSetting);
+        Block bF = Register(1,path + "_filled", blockFactory, blockSetting);
+        return new TheBoxRegisterReturn(bE, bF);
+    }
+
+    public static TheBoxRegisterReturn RegisterTank(String path, Function<AbstractBlock.Settings, Block> blockFactory, AbstractBlock.Settings blockSetting) {
+        Block bE = Register(path, blockFactory, blockSetting);
+        Block bF = Register(1,path + "_filled", blockFactory, blockSetting);
+        Item iE = bE.asItem();
+        Item iF = bF.asItem();
+        FluidStorage.ITEM.registerForItems(TankItem1::of, iE, iF);
+        return new TheBoxRegisterReturn(bE, bF, iE, iF);
     }
 
     public static Block NoDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
