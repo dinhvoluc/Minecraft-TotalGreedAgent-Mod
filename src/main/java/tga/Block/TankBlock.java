@@ -8,8 +8,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import tga.BlockEntity.TankTile;
 import tga.ComDat.TankComData;
-import tga.TGABlocks;
 import tga.TGAItems;
 import tga.TGATileEnities;
 
@@ -67,6 +66,11 @@ public class TankBlock extends Block implements BlockEntityProvider {
             case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGAItems.TANK_BRONZE_FILLED);
             default -> ItemStack.EMPTY;
         };
+    }
+
+    public static boolean IsEmptyTank(ItemStack stack) {
+        return stack.isOf(Items.BUCKET) || stack.isOf(Items.GLASS_BOTTLE) ||
+                stack.isOf(TGAItems.TANK_WOOD) || stack.isOf(TGAItems.TANK_COPPER) || stack.isOf(TGAItems.TANK_BRONZE);
     }
 
     @Override

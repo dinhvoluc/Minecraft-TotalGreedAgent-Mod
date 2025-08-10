@@ -117,6 +117,11 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     }
 
     private void EjectItem(){
+        //Commit is from pipe system
+        if (!BufferBox.getStack(1).isEmpty()) {
+            markDirty();
+            return;
+        }
         //not found nothing to do dumpout
         BufferBox.setStack(1,BufferBox.removeStack(0));
         markDirty();

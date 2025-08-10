@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import tga.Block.TankBlock;
 import tga.Mechanic.IClickedIDHandler;
 import tga.Mechanic.ICraftProvider;
 import tga.Mechanic.ITGAManpoweredBlock;
@@ -136,7 +137,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return slot == BUFFER_ID_SLOT_OUTPUT || stack.isOf(Items.BUCKET) || stack.isOf(Items.GLASS_BOTTLE);
+        return slot == BUFFER_ID_SLOT_OUTPUT || TankBlock.IsEmptyTank(stack);
     }
 
     @Override
