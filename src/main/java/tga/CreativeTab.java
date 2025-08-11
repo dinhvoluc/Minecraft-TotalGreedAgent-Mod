@@ -76,6 +76,8 @@ public class CreativeTab {
                     entries.add(TGAItems.PART_BRONZE_BOX);
                     entries.add(TGAItems.PART_BRONZE_TURBIN);
                     entries.add(TGAItems.PART_BRONZE_BOIL);
+                    //PIPE
+                    entries.add(TGABlocks.PIPE_COPPER);
                 })
                 .build());
     }

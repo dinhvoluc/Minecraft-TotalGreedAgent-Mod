@@ -23,7 +23,7 @@ import tga.TGAHelper;
 import tga.TGASounds;
 
 public class JrkPump extends MachineBasic {
-    public static final long MAX_BUFFER = 2 * FluidConstants.BUCKET;
+    public static final long MAX_BUFFER = FluidConstants.BUCKET * 5 / 4;
 
     public JrkPump(AbstractBlock.Settings settings) {
         super(settings);
