@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 public final class TGABlocks {
     public static final IntProperty STATE4 = IntProperty.of("state", 0, 3);
-    public static final IntProperty DIR32 = IntProperty.of("plug", 0, 31);
+    public static final IntProperty PLUG_DIR64 = IntProperty.of("plug", 0, 63);
 
     public static Block BOX_WOOD;
     public static Block BOX_WOOD_FILLED;

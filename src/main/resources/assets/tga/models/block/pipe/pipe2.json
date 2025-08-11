@@ -1,4 +1,5 @@
 {
+	"parent": "block/block",
 	"textures": {
 		"0": "tga:block/pipe/copper",
 		"particle": "tga:block/bot/stone_dark"

@@ -1,21 +1,24 @@
 package tga.Str;
 
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dir32 {
-    private int PropValue;
+public class Dir64 {
+    public int PropValue;
 
-    public Dir32(boolean up, boolean down, boolean north, boolean south, boolean east, boolean west) {
+    public Dir64(boolean up, boolean down, boolean north, boolean south, boolean east, boolean west) {
         PropValue = up ? 1 : 0;
         if (down) PropValue += 2;
         if (north) PropValue += 4;
         if (south) PropValue += 8;
         if (east) PropValue += 16;
         if (west) PropValue += 32;
+    }
+
+    public Dir64(int dirs) {
+        PropValue = dirs;
     }
 
     public List<Direction> GetAllHave() {
