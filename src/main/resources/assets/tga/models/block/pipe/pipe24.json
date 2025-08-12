@@ -1,0 +1,32 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"0": "tga:block/pipe/copper",
+		"particle": "tga:block/bot/stone_dark"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 4],
+			"to": [16, 12, 12],
+			"faces": {
+				"north": {"uv": [3, 8, 15, 16], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"south": {"uv": [4, 8, 16, 16], "texture": "#0"},
+				"west": {"uv": [8, 8, 16, 16], "texture": "#0"},
+				"up": {"uv": [2, 8, 14, 16], "texture": "#0"},
+				"down": {"uv": [1, 8, 13, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 4, 12],
+			"to": [12, 12, 16],
+			"faces": {
+				"east": {"uv": [11, 5, 15, 13], "texture": "#0"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"west": {"uv": [4, 8, 8, 16], "texture": "#0"},
+				"up": {"uv": [8, 4, 16, 8], "texture": "#0"},
+				"down": {"uv": [8, 11, 16, 15], "texture": "#0"}
+			}
+		}
+	]
+}
