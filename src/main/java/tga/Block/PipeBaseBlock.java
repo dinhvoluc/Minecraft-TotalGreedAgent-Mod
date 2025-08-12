@@ -1,5 +1,6 @@
 package tga.Block;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -34,12 +35,15 @@ public class PipeBaseBlock extends Block {
     @Override
     protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
         if (world.isClient) return;
-        Dir64 plug = new Dir64(state.get(TGABlocks.PLUG_DIR64, 0));
-        for (Direction i : Direction.values())
-            if (world.getBlockState(pos.offset(i)).getBlock() == TGABlocks.PIPE_COPPER)
+        int old = state.get(TGABlocks.PLUG_DIR64, -1);
+        Dir64 plug = new Dir64(old);
+        for (Direction i : Direction.values()) {
+            BlockPos findPos = pos.offset(i);
+            if (world.getBlockState(findPos).getBlock() instanceof PipeBaseBlock || FluidStorage.SIDED.find(world, findPos, i.getOpposite()) != null)
                 plug.SetHave(i);
             else plug.SetNot(i);
-        world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, plug.PropValue), 3);
+        }
+        if (old != plug.PropValue) world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, plug.PropValue), 3);
         TotalGreedyAgent.broadcastDebugMessageF("%s S=%s", world.getBlockState(pos), sourceBlock);
 
         //todo connect pipe
@@ -56,24 +60,11 @@ public class PipeBaseBlock extends Block {
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
-        //todo delete this test code only
-        if (player.isSneaking()) {
-            int val = state.get(TGABlocks.PLUG_DIR64, 0) - 1;
-            if (val < 0) val = 63;
-            String dir = "";
-            for(Direction i : new Dir64(val).GetAllHave())
-                dir += " " + i;
-            TotalGreedyAgent.broadcastDebugMessageF("VAL=%s DIR=%s", val, dir);
-            world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, val), 3);
-        } else {
-            int val = state.get(TGABlocks.PLUG_DIR64, 0) + 1;
-            if (val > 63) val = 0;
-            String dir = "";
-            for(Direction i : new Dir64(val).GetAllHave())
-                dir += " " + i;
-            TotalGreedyAgent.broadcastDebugMessageF("VAL=%s DIR=%s", val, dir);
-            world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, val), 3);
-        }
+        int val = state.get(TGABlocks.PLUG_DIR64, 0);
+        String dir = "";
+        for (Direction i : new Dir64(val).GetAllHave())
+            dir += " " + i;
+        TotalGreedyAgent.broadcastDebugMessageF("VAL=%s DIR=%s", val, dir);
         return ActionResult.SUCCESS;
     }
 }
