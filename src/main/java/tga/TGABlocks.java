@@ -13,6 +13,8 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
 import tga.Block.*;
 import tga.Crops.CropGuayule;
 import tga.Crops.CustomCropBlock;
@@ -20,6 +22,7 @@ import tga.Items.TankItem1;
 import tga.Items.TheBoxRegisterReturn;
 import tga.Machines.ManCracker;
 import tga.Machines.MetalWorkbench;
+import tga.Str.Dir64;
 
 import java.util.function.Function;
 
@@ -49,10 +52,30 @@ public final class TGABlocks {
     public static Block METAL_WORKBENCH;
     public static Block JRK_PUMP;
 
-    public static Block PIPE_COPPER;
+    public static Block PIPE_BRONZE;
+    public static Block PIPE_STEEL;
 
     public static void Load(boolean isClientSide) {
-        CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0F, 0.0F, 2 + age * 2));
+        CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0D, 0.0D, 2 + age * 2));
+        PipeBaseBlock.SHAPE_BY_PLUG = new VoxelShape[64];
+        for(var i =0; i < 64; i++) {
+            double x = 4;
+            double y = 4;
+            double z = 4;
+            double xS = 12;
+            double yS = 12;
+            double zS = 12;
+            for (Direction checker : new Dir64(i).GetAllHave())
+                switch (checker) {
+                    case Direction.UP -> yS = 16;
+                    case Direction.DOWN -> y = 0;
+                    case Direction.NORTH -> z = 0;
+                    case Direction.SOUTH -> zS = 16;
+                    case Direction.WEST -> x = 0;
+                    case Direction.EAST -> xS = 16;
+                }
+            PipeBaseBlock.SHAPE_BY_PLUG[i] = Block.createCuboidShape(x, y, z, xS, yS, zS);
+        }
         //Workbench
         MAN_CRACKER = Register("m_cracker_lv0", ManCracker::new,
                 Bs(4f, 6f, MapColor.DEEPSLATE_GRAY ,BlockSoundGroup.STONE));
@@ -61,7 +84,9 @@ public final class TGABlocks {
         JRK_PUMP = Register("jrkpump", JrkPump::new,
                 Bs(1f, 2f, MapColor.DEEPSLATE_GRAY, BlockSoundGroup.STONE).nonOpaque());
         //PIPE
-        PIPE_COPPER = Register("pipe_copper", PipeBaseBlock::new,
+        PIPE_BRONZE = Register("pipe_bronze", PipeBaseBlock::Create_Bronze,
+                Bs(1f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
+        PIPE_STEEL = Register("pipe_steel", PipeBaseBlock::Create_Steel,
                 Bs(1f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
         //BOX
         TheBoxRegisterReturn woodenBox = RegisterBox("box_wood", BoxStackBlock::Create_Wooden,

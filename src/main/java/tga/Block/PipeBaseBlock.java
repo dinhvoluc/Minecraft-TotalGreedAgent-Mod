@@ -3,6 +3,7 @@ package tga.Block;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.block.WireOrientation;
 import org.jetbrains.annotations.Nullable;
@@ -19,14 +22,31 @@ import tga.TGABlocks;
 import tga.TotalGreedyAgent;
 
 public class PipeBaseBlock extends Block {
+    public static VoxelShape[] SHAPE_BY_PLUG;
+
     public PipeBaseBlock(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(TGABlocks.PLUG_DIR64, 0));
     }
 
+    public static Block Create_Bronze(Settings settings) {
+        return new PipeBaseBlock(settings);
+        //todo add tile varibale
+    }
+
+    public static Block Create_Steel(Settings settings) {
+        return new PipeBaseBlock(settings);
+        //todo add tile varibale
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(TGABlocks.PLUG_DIR64);
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE_BY_PLUG[state.get(TGABlocks.PLUG_DIR64, 0)];
     }
 
     //todo PIPE system, onload and unload
@@ -44,7 +64,6 @@ public class PipeBaseBlock extends Block {
             else plug.SetNot(i);
         }
         if (old != plug.PropValue) world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, plug.PropValue), 3);
-        TotalGreedyAgent.broadcastDebugMessageF("%s S=%s", world.getBlockState(pos), sourceBlock);
 
         //todo connect pipe
     }

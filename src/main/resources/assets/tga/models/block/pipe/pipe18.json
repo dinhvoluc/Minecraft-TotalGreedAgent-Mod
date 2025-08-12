@@ -3,7 +3,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "tga:block/pipe/copper",
+		"0": "tga:block/pipe/bronze",
 		"particle": "tga:block/bot/stone_dark"
 	},
 	"elements": [

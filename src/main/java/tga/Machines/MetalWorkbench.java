@@ -21,7 +21,7 @@ import tga.TGABlocks;
 import tga.TGATileEnities;
 
 public class MetalWorkbench extends MachineBasic {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 12.0, 16.0);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
     public MetalWorkbench(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(TGABlocks.STATE4, 0));
