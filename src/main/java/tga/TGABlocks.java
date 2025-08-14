@@ -84,9 +84,9 @@ public final class TGABlocks {
         JRK_PUMP = Register("jrkpump", JrkPump::new,
                 Bs(1f, 2f, MapColor.DEEPSLATE_GRAY, BlockSoundGroup.STONE).nonOpaque());
         //PIPE
-        PIPE_BRONZE = Register("pipe_bronze", PipeBaseBlock::Create_Bronze,
+        PIPE_BRONZE = Register(TGAID.ID_PIPE_BRONZE = TotalGreedyAgent.GetID("pipe_bronze"), PipeBaseBlock::Create_Bronze,
                 Bs(1f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
-        PIPE_STEEL = Register("pipe_steel", PipeBaseBlock::Create_Steel,
+        PIPE_STEEL = Register(TGAID.ID_PIPE_STEEL = TotalGreedyAgent.GetID("pipe_steel"), PipeBaseBlock::Create_Steel,
                 Bs(1f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
         //BOX
         TheBoxRegisterReturn woodenBox = RegisterBox("box_wood", BoxStackBlock::Create_Wooden,
@@ -157,20 +157,25 @@ public final class TGABlocks {
     }
 
     public static Block NoDirectItem(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        final Identifier identifier = TotalGreedyAgent.GetID(path);
-        final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
+        return NoDirectItem(TotalGreedyAgent.GetID(path), factory, settings);
+    }
+    public static Block NoDirectItem(Identifier id, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+        RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, id);
         return Blocks.register(registryKey, factory, settings);
     }
 
     public static Block Register(int maxStack, String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         Block block = NoDirectItem(path, factory, settings);
-        Items.register(block, new Item.Settings().maxCount(1));
+        Items.register(block, new Item.Settings().maxCount(maxStack));
         return block;
     }
 
-    public static Block Register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-        Block block = NoDirectItem(path, factory, settings);
+    public static Block Register(Identifier id, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+        Block block = NoDirectItem(id, factory, settings);
         Items.register(block);
         return block;
+    }
+    public static Block Register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+        return Register(TotalGreedyAgent.GetID(path), factory, settings);
     }
 }

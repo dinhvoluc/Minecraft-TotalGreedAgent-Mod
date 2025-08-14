@@ -71,6 +71,7 @@ public class JrkPump extends MachineBasic {
     private boolean DoPumping(FluidInside tile, World world, BlockPos pos, PlayerEntity player){
         //check buffer is free
         long freeBuffer = MAX_BUFFER - tile.Volume;
+        player.addExhaustion(1f);
         //Can not pump more
         if (freeBuffer < FluidConstants.BUCKET) return true;
         //find source block
