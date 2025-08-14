@@ -303,6 +303,9 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     }
 
     public void TGAS2CSync(TankGuiSync payload) {
+        if (!pos.equals(payload.Pos)) return;
+        if (world == null) return;
+        if (!world.getRegistryKey().getValue().toString().equals(payload.World)) return;
         InnerTank.variant = payload.FType;
         InnerTank.amount = payload.VolCount;
         BufferBox.setStack(0, payload.Slot0);

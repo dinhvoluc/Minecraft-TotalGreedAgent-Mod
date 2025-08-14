@@ -110,6 +110,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
     }
 
     private void InsertToStorage(BlockPos pos, Direction dir) {
+        if (Buffer.amount <= 0) return;
         Storage<FluidVariant> storage = FluidStorage.SIDED.find(world, pos, dir);
         if (storage != null) {
             try (Transaction transaction = Transaction.openOuter()) {
@@ -123,34 +124,33 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
             if (Buffer.amount > 0) FMTARGET.MarkDirty();
         }
     }
-
+    private void NoStockLeft(){
+        //No check down
+        if (FluidPlugDirect.HaveNorth()) {
+            BlockPos north = pos.north();
+            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.SOUTH);
+        }
+        if (FluidPlugDirect.HaveSouth()) {
+            BlockPos south = pos.south();
+            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.NORTH);
+        }
+        if (FluidPlugDirect.HaveEast()) {
+            BlockPos east = pos.east();
+            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.WEST);
+        }
+        if (FluidPlugDirect.HaveWest()) {
+            BlockPos west = pos.west();
+            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.EAST);
+        }
+        if (FluidPlugDirect.HaveUp()) {
+            BlockPos up = pos.up();
+            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.DOWN);
+        }
+    }
     @Override
     public void FluidManagerUpdate() {
         if (Buffer.amount <= 0) {
-            //Reset
-            SetAmount(0);
-            //check and active not null nearby
-            //No check down
-            if (FluidPlugDirect.HaveNorth()) {
-                BlockPos north = pos.north();
-                if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.SOUTH);
-            }
-            if (FluidPlugDirect.HaveSouth()) {
-                BlockPos south = pos.south();
-                if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.NORTH);
-            }
-            if (FluidPlugDirect.HaveEast()) {
-                BlockPos east = pos.east();
-                if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.WEST);
-            }
-            if (FluidPlugDirect.HaveWest()) {
-                BlockPos west = pos.west();
-                if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.EAST);
-            }
-            if (FluidPlugDirect.HaveUp()) {
-                BlockPos up = pos.up();
-                if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueuFMIfNotNull(Direction.DOWN);
-            }
+            NoStockLeft();
             return;
         }
         //update per side
@@ -164,6 +164,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                     pipe.QueuFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.UP);
             } else InsertToStorage(down, Direction.UP);
         }
+        if (Buffer.amount <= 0) {
+            NoStockLeft();
+            return;
+        }
         if (FluidPlugDirect.HaveNorth()) {
             BlockPos north = pos.north();
             if (world.getBlockEntity(north) instanceof IPipeType pipe) {
@@ -173,6 +177,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                 else
                     pipe.QueuFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.SOUTH);
             } else InsertToStorage(north, Direction.SOUTH);
+        }
+        if (Buffer.amount <= 0) {
+            NoStockLeft();
+            return;
         }
         if (FluidPlugDirect.HaveSouth()) {
             BlockPos south = pos.south();
@@ -184,6 +192,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                     pipe.QueuFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.NORTH);
             } else InsertToStorage(south, Direction.NORTH);
         }
+        if (Buffer.amount <= 0) {
+            NoStockLeft();
+            return;
+        }
         if (FluidPlugDirect.HaveEast()) {
             BlockPos east = pos.east();
             if (world.getBlockEntity(east) instanceof IPipeType pipe) {
@@ -193,6 +205,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                 else
                     pipe.QueuFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.WEST);
             } else InsertToStorage(east, Direction.WEST);
+        }
+        if (Buffer.amount <= 0) {
+            NoStockLeft();
+            return;
         }
         if (FluidPlugDirect.HaveWest()) {
             BlockPos west = pos.west();
@@ -204,6 +220,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                     pipe.QueuFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.EAST);
             } else InsertToStorage(west, Direction.EAST);
         }
+        if (Buffer.amount <= 0) {
+            NoStockLeft();
+            return;
+        }
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
             if (world.getBlockEntity(up) instanceof IPipeType pipe) {
@@ -214,6 +234,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
                     pipe.QueuFMIfMet(Buffer.variant, pressure, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.DOWN);
             } else if (GetLocalPressure() > 0) InsertToStorage(up, Direction.DOWN);
         }
+        if (Buffer.amount <= 0) NoStockLeft();
     }
 
     @Override
