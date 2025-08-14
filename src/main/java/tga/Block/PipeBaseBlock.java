@@ -81,7 +81,7 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
         world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, plug.PropValue), 3);
         if (!(world.getBlockEntity(pos) instanceof IPipeType pipe)) return;
         pipe.SetConnection(plug);
-        pipe.QueuFMIfNotNull(null);
+        pipe.QueueNext();
     }
 
     @Override

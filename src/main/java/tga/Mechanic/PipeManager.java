@@ -8,7 +8,7 @@ import tga.TotalGreedyAgent;
 import java.util.*;
 
 public class PipeManager {
-    public static final long MIN_ACTIVE_PRESSURE_GAP = FluidConstants.BUCKET / 1000;
+    public static final long MIN_ACTIVE_PRESSURE_GAP = FluidConstants.BUCKET / 4000;
     public static PipeManager INTANCE;
     public Queue<FMTarget> NeedUpdate = new ArrayDeque<>();
     private Queue<FMTarget> SwapCache = new ArrayDeque<>();

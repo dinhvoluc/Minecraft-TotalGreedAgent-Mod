@@ -12,4 +12,8 @@ public class PipeProperty {
         PressureLine = mbPressureLine * FluidConstants.BUCKET / 1000;
         MaxSpeed = mbMaxSpeed * FluidConstants.BUCKET / 1000;
     }
+
+    public long GetFillRate(long contain){
+        return contain * 200 / PressureLine;
+    }
 }
