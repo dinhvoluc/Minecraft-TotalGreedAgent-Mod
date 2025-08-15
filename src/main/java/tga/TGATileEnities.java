@@ -1,5 +1,6 @@
 package tga;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -58,5 +59,6 @@ public class TGATileEnities {
         if (isClientSide) return;
         PipeManager.INTANCE = new PipeManager();
         ServerTickEvents.END_SERVER_TICK.register(server -> PipeManager.INTANCE.ServerTick());
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> PipeManager.INTANCE.ClearQueue());
     }
 }

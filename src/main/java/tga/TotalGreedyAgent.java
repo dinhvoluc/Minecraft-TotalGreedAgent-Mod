@@ -60,7 +60,7 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static void broadcastDebugMessage(String message, boolean overlay) {
 		if (SERVER == null) return;
 		for (ServerPlayerEntity player : SERVER.getPlayerManager().getPlayerList()) {
-			player.sendMessage(Text.literal("[Debug] " + message), overlay);
+			player.sendMessage(Text.literal("[D] " + message), overlay);
 		}
 	}
 }

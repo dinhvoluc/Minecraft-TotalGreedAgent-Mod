@@ -65,6 +65,40 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
         FluidPlugDirect.PropValue = plug.PropValue;
     }
 
+    @Override
+    public long FluidInsert(FluidVariant variant, float pipePressure, long maxAmount, long pressureAmount, Direction dir) {
+        //check valid fluid
+        if (!Buffer.variant.isBlank())
+            if (!variant.equals(Buffer.variant)) return 0;
+        //Is full
+        long free = PROPERTY.PipeCap - Buffer.amount;
+        if (free < PipeManager.ACTIVE_FLUID_VOL) return 0;
+        float localPressure = PROPERTY.GetPressure(Buffer.amount);
+        float cprPressure = localPressure + PipeManager.ACTIVE_PRESSURE_GAP;
+        if (dir == Direction.UP) {
+            if (cprPressure < 1f) {
+                //push
+                long move = Math.min(free, Math.min(maxAmount, PROPERTY.MaxSpeed));
+                if (move <= 0) return 0;
+                Buffer.variant = variant;
+                SetAmount(Buffer.amount + move);
+                return move;
+            }
+            FMTARGET.MarkDirty();
+        } else if (dir == Direction.DOWN) {
+            if (pipePressure < 1f + PipeManager.ACTIVE_PRESSURE_GAP * 4) return 0;
+        }
+        float gapPressure = pipePressure - cprPressure;
+        if (gapPressure < PipeManager.ACTIVE_PRESSURE_GAP) return 0;
+        long move = Math.min(PROPERTY.MaxSpeed, Math.min(free, Math.min(maxAmount,
+                (long) ((pressureAmount < PipeManager.ACTIVE_FLUID_VOL ? maxAmount : pressureAmount) * gapPressure *
+                        (dir == Direction.DOWN ? 0.2f : 0.4f)))));
+        if (move <= 0) return 0;
+        Buffer.variant = variant;
+        SetAmount(Buffer.amount + move);
+        return move;
+    }
+
     public PipeBaseEnity(BlockPos pos, BlockState state) {
         super(TGATileEnities.PIPE_ENITY, pos, state);
         FluidPlugDirect = new Dir64(state.get(TGABlocks.PLUG_DIR64, 0));
@@ -128,25 +162,36 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
         //No check down
         if (FluidPlugDirect.HaveNorth()) {
             BlockPos north = pos.north();
-            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfNotNull(Direction.SOUTH);
+            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.SOUTH);
         }
         if (FluidPlugDirect.HaveSouth()) {
             BlockPos south = pos.south();
-            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfNotNull(Direction.NORTH);
+            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.NORTH);
         }
         if (FluidPlugDirect.HaveEast()) {
             BlockPos east = pos.east();
-            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfNotNull(Direction.WEST);
+            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.WEST);
         }
         if (FluidPlugDirect.HaveWest()) {
             BlockPos west = pos.west();
-            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfNotNull(Direction.EAST);
+            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.EAST);
         }
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
-            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfNotNull(Direction.DOWN);
+            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.DOWN);
         }
     }
+
+    private void FMUDir(BlockPos pos, Direction targetSide) {
+        if (world.getBlockEntity(pos) instanceof IPipeType pipe) {
+            float pressure = PROPERTY.GetPressure(Buffer.amount);
+            long move = pipe.FluidInsert(Buffer.variant, pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), PROPERTY.GetPressurVol(Buffer.amount), targetSide);
+            if (move > 0) SetAmount(Buffer.amount - move);
+            else
+                pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.ACTIVE_PRESSURE_GAP, targetSide);
+        } else InsertToStorage(pos, targetSide);
+    }
+
     @Override
     public void FluidManagerUpdate() {
         if (Buffer.amount <= 0) {
@@ -154,85 +199,40 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
             return;
         }
         //update per side
-        if (FluidPlugDirect.HaveDown()) {
-            BlockPos down = pos.down();
-            if (world.getBlockEntity(down) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), Direction.UP);
-                if (move > 0) SetAmount(Buffer.amount - move);
-                else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.UP);
-            } else InsertToStorage(down, Direction.UP);
-        }
+        if (FluidPlugDirect.HaveDown()) FMUDir(pos.down(), Direction.UP);
         if (Buffer.amount <= 0) {
             NoStockLeft();
             return;
         }
-        if (FluidPlugDirect.HaveNorth()) {
-            BlockPos north = pos.north();
-            if (world.getBlockEntity(north) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), Direction.SOUTH);
-                if (move > 0) SetAmount(Buffer.amount - move);
-                else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.SOUTH);
-            } else InsertToStorage(north, Direction.SOUTH);
-        }
+        if (FluidPlugDirect.HaveNorth()) FMUDir(pos.north(), Direction.SOUTH);
         if (Buffer.amount <= 0) {
             NoStockLeft();
             return;
         }
-        if (FluidPlugDirect.HaveSouth()) {
-            BlockPos south = pos.south();
-            if (world.getBlockEntity(south) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), Direction.NORTH);
-                if (move > 0) SetAmount(Buffer.amount - move);
-                else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.NORTH);
-            } else InsertToStorage(south, Direction.NORTH);
-        }
+        if (FluidPlugDirect.HaveSouth()) FMUDir(pos.south(), Direction.NORTH);
         if (Buffer.amount <= 0) {
             NoStockLeft();
             return;
         }
-        if (FluidPlugDirect.HaveEast()) {
-            BlockPos east = pos.east();
-            if (world.getBlockEntity(east) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), Direction.WEST);
-                if (move > 0) SetAmount(Buffer.amount - move);
-                else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.WEST);
-            } else InsertToStorage(east, Direction.WEST);
-        }
+        if (FluidPlugDirect.HaveEast()) FMUDir(pos.east(), Direction.WEST);
         if (Buffer.amount <= 0) {
             NoStockLeft();
             return;
         }
-        if (FluidPlugDirect.HaveWest()) {
-            BlockPos west = pos.west();
-            if (world.getBlockEntity(west) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), Direction.EAST);
-                if (move > 0) SetAmount(Buffer.amount - move);
-                else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.EAST);
-            } else InsertToStorage(west, Direction.EAST);
-        }
+        if (FluidPlugDirect.HaveWest()) FMUDir(pos.west(), Direction.EAST);
         if (Buffer.amount <= 0) {
             NoStockLeft();
             return;
         }
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
+            float pressure = PROPERTY.GetPressure(Buffer.amount);
             if (world.getBlockEntity(up) instanceof IPipeType pipe) {
-                long pressure = GetLocalPressure();
-                long move = pipe.FluidInsert(Buffer.variant, PROPERTY.GetFillRate(Buffer.amount), pressure, Math.min(pressure, PROPERTY.MaxSpeed), Direction.DOWN);
-                if (move > PipeManager.MIN_ACTIVE_PRESSURE_GAP) SetAmount(Buffer.amount - move);
+                long move = pipe.FluidInsert(Buffer.variant, pressure, Math.min(Buffer.amount, PROPERTY.MaxSpeed), PROPERTY.GetPressurVol(Buffer.amount), Direction.DOWN);
+                if (move > 0) SetAmount(Buffer.amount - move);
                 else
-                    pipe.QueueFMIfMet(Buffer.variant, pressure, Buffer.amount + PipeManager.MIN_ACTIVE_PRESSURE_GAP, Direction.DOWN);
-            } else if (GetLocalPressure() > 0) InsertToStorage(up, Direction.DOWN);
+                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
+            } else if (pressure > 1f) InsertToStorage(up, Direction.DOWN);
         }
         if (Buffer.amount <= 0) NoStockLeft();
     }
@@ -243,64 +243,20 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
     }
 
     @Override
-    public void QueueFMIfNotNull(Direction dir) {
-        if (Buffer.amount > PipeManager.MIN_ACTIVE_PRESSURE_GAP * 3) FMTARGET.MarkDirty();
-    }
-
-    @Override
-    public void QueueFMIfMet(FluidVariant variant, long minPressure, long minVol, Direction dir) {
-        if (variant.isBlank()) return;
+    public void QueueFMIfMet(FluidVariant variant, float pipePressure, Direction dir) {
+        if (Buffer.amount <= 0) return;
+        if (!variant.isBlank() && !variant.equals(Buffer.variant)) return;
+        float localPressure = PROPERTY.GetPressure(Buffer.amount);
         if (dir == Direction.UP) {
-            long localPress = GetLocalPressure();
-            if (localPress > 0 && localPress < minPressure) return;
-        } else if (minPressure == 0) {
-            if (dir != Direction.DOWN && minVol > Buffer.amount) return;
-        } else if (minPressure > GetLocalPressure()) return;
-        if (Buffer.variant.equals(variant)) FMTARGET.MarkDirty();
-    }
-
-    public long GetLocalPressure() {
-        long rt = Buffer.amount - PROPERTY.PressureLine;
-        return rt < PipeManager.MIN_ACTIVE_PRESSURE_GAP ? 0 : rt;
-    }
-
-    @Override
-    public long FluidInsert(FluidVariant variant, long fillRate , long pressure, long amount, Direction dir) {
-        //check valid fluid
-        if (!Buffer.variant.isBlank())
-            if (!variant.equals(Buffer.variant)) return 0;
-        //Is full
-        long free = PROPERTY.PipeCap - Buffer.amount;
-        if (free < PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-        long localPress = GetLocalPressure();
-        long pressGap = pressure - localPress;
-        //Up is diff
-        if (dir == Direction.UP) {
-            if (localPress > (PROPERTY.PipeCap - PROPERTY.PressureLine) / 2 && pressGap < PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-            long moveSize = Math.min(free, Math.min(PROPERTY.MaxSpeed, amount));
-            if (moveSize <= PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-            Buffer.variant = variant;
-            SetAmount(Buffer.amount + moveSize);
-            return moveSize;
+            if (localPressure > 1f)
+                if (localPressure > pipePressure) return;
         }
-        if (pressGap > PipeManager.MIN_ACTIVE_PRESSURE_GAP) {
-            //blancing pressure
-            long moveSize = Math.min(free, Math.min(PROPERTY.MaxSpeed, Math.min(amount, pressGap / 2)));
-            if (moveSize <= PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-            Buffer.variant = variant;
-            SetAmount(Buffer.amount + moveSize);
-            return moveSize;
+        else if (dir == Direction.DOWN)
+        {
+            if (pipePressure > 1f)
+                if (localPressure < pipePressure) return;
         }
-        //no down
-        if (dir == Direction.DOWN) return 0;
-        //spay arround
-        long noPressureFree = PROPERTY.PressureLine - Buffer.amount;
-        if (localPress > 0 && pressGap < PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-        if (fillRate <= PROPERTY.GetFillRate(Buffer.amount)) return 0;
-        long moveSize = Math.min(noPressureFree, Math.min(PROPERTY.MaxSpeed, amount));
-        if (moveSize <= PipeManager.MIN_ACTIVE_PRESSURE_GAP) return 0;
-        Buffer.variant = variant;
-        SetAmount(Buffer.amount + moveSize);
-        return moveSize;
+        else if (localPressure < pipePressure) return;
+        FMTARGET.MarkDirty();
     }
 }

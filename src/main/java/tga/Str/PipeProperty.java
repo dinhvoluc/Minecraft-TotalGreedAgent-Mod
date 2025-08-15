@@ -13,7 +13,13 @@ public class PipeProperty {
         MaxSpeed = mbMaxSpeed * FluidConstants.BUCKET / 1000;
     }
 
-    public long GetFillRate(long contain){
-        return contain * 200 / PressureLine;
+    public float GetPressure(long contain) {
+        if (contain <= 0) return 0;
+        if (contain > PressureLine) return 1f + (contain - PressureLine) / (float) (PipeCap - PressureLine);
+        return contain / (float) PressureLine;
+    }
+
+    public long GetPressurVol(long contain) {
+        return contain > PressureLine ? contain - PressureLine : 0;
     }
 }

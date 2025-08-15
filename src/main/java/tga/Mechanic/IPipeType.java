@@ -9,11 +9,9 @@ public interface IPipeType {
 
     void SetConnection(Dir64 plug);
 
-    long FluidInsert(FluidVariant variant, long fillRate, long pressure, long amount, Direction dir);
+    long FluidInsert(FluidVariant variant, float pipePressure, long maxAmount, long pressureAmount, Direction dir);
 
-    void QueueFMIfNotNull(Direction dir);
-
-    void QueueFMIfMet(FluidVariant variant, long minPressure, long minVol, Direction dir);
+    void QueueFMIfMet(FluidVariant variant, float pipePressure, Direction dir);
 
     void QueueNext();
 }

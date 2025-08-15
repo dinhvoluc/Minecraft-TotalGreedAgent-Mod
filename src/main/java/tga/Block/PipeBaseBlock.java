@@ -97,9 +97,8 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
         String dir = "";
         for (Direction i : new Dir64(val).GetAllHave())
             dir += " " + i;
-        TotalGreedyAgent.broadcastDebugMessageF("VAL=%s DIR=%s", val, dir);
         if (world.getBlockEntity(pos) instanceof PipeBaseEnity pipeTest) {
-            TotalGreedyAgent.broadcastDebugMessageF("Pressure=%s Vol=%s of %s", TGAHelper.ToFluid_mB(pipeTest.GetLocalPressure()), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount), pipeTest.Buffer.variant.getFluid().getBucketItem().getName());
+            TotalGreedyAgent.broadcastDebugMessageF("P=%s(%s) V=%s DIR=%s", TGAHelper.ToFluid_mB(pipeTest.PROPERTY.GetPressurVol(pipeTest.Buffer.amount)), pipeTest.PROPERTY.GetPressure(pipeTest.Buffer.amount), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount), dir);
         }
         return ActionResult.SUCCESS;
     }
