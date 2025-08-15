@@ -16,6 +16,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import tga.BlockEntity.PressurePipeTile;
 import tga.BlockEntity.TankTile;
 import tga.ComDat.TankComData;
 import tga.TGAItems;
@@ -44,6 +45,7 @@ public class TankBlock extends Block implements BlockEntityProvider {
         return switch (maxStack) {
             case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGAItems.TANK_WOOD);
             case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGAItems.TANK_COPPER);
+            case PressurePipeTile.VOL_STACK_SIZE -> new ItemStack(TGAItems.PIPE_HOPPER);
             case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGAItems.TANK_BRONZE);
             default -> ItemStack.EMPTY;
         };
@@ -54,6 +56,8 @@ public class TankBlock extends Block implements BlockEntityProvider {
             return BoxStackBlock.SIZE_WOOD * FluidConstants.BUCKET;
         if (stack.isOf(TGAItems.TANK_COPPER) || stack.isOf(TGAItems.TANK_COPPER_FILLED))
             return BoxStackBlock.SIZE_COPPER * FluidConstants.BUCKET;
+        if (stack.isOf(TGAItems.PIPE_HOPPER) || stack.isOf(TGAItems.PIPE_HOPPER_FILLED))
+            return PressurePipeTile.VOL_STACK_SIZE * FluidConstants.BUCKET;
         if (stack.isOf(TGAItems.TANK_BRONZE) || stack.isOf(TGAItems.TANK_BRONZE_FILLED))
             return BoxStackBlock.SIZE_BRONZE * FluidConstants.BUCKET;
         return 0;
@@ -63,6 +67,7 @@ public class TankBlock extends Block implements BlockEntityProvider {
         return switch (maxStack) {
             case BoxStackBlock.SIZE_WOOD -> new ItemStack(TGAItems.TANK_WOOD_FILLED);
             case BoxStackBlock.SIZE_COPPER -> new ItemStack(TGAItems.TANK_COPPER_FILLED);
+            case PressurePipeTile.VOL_STACK_SIZE -> new ItemStack(TGAItems.PIPE_HOPPER_FILLED);
             case BoxStackBlock.SIZE_BRONZE -> new ItemStack(TGAItems.TANK_BRONZE_FILLED);
             default -> ItemStack.EMPTY;
         };

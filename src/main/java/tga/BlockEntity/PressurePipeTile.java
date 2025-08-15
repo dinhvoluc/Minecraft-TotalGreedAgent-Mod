@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -14,15 +13,15 @@ import tga.Mechanic.IPipeType;
 import tga.Mechanic.PipeManager;
 import tga.Str.FMTarget;
 import tga.TGATileEnities;
-import tga.TotalGreedyAgent;
 
 public class PressurePipeTile extends TankTile implements IPipeType {
     public static final long PUMP_RATE = FluidConstants.BUCKET / 100;
     public FMTarget FMTARGET;
+    public static final int VOL_STACK_SIZE = 24;
 
     public PressurePipeTile(BlockPos pos, BlockState state) {
         super(TGATileEnities.PIPE_HOPPER, pos, state);
-        SetTankSize(48);
+        SetTankSize(VOL_STACK_SIZE);
     }
 
     @Override
@@ -84,11 +83,6 @@ public class PressurePipeTile extends TankTile implements IPipeType {
         InnerTank.variant = variant;
         SetAmount(InnerTank.amount + move);
         return move;
-    }
-
-    @Override
-    public Text getDisplayName() {
-        return Text.translatable(TotalGreedyAgent.GetGuiLang("fhopper"));
     }
 
     @Override

@@ -65,6 +65,9 @@ public final class TGAItems {
     public static Item TANK_COPPER_FILLED;
     public static Item TANK_BRONZE_FILLED;
 
+    public static Item PIPE_HOPPER;
+    public static Item PIPE_HOPPER_FILLED;
+
     public static void Load(boolean isClientSide) {
         SetBurnTime(RUBBER = Register("rubber"), 2000);
         SetBioBurnTime(REISIN = Register("resin"), 0.2f, 1000);

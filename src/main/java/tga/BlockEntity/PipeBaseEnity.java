@@ -237,16 +237,17 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
             NoStockLeft();
             return;
         }
-        if (pushUp && canPushUp > PipeManager.ACTIVE_FLUID_VOL && FluidPlugDirect.HaveUp()) {
+        if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
             float pressure = PROPERTY.GetPressure(Buffer.amount);
             if (world.getBlockEntity(up) instanceof IPipeType pipe) {
-                if (pressure > 1f) {
+                if (pushUp && canPushUp > PipeManager.ACTIVE_FLUID_VOL && pressure > 1f) {
                     long move = pipe.FluidInsert(Buffer.variant, pressure, Math.min(Buffer.amount, canPushUp), PROPERTY.GetPressurVol(Buffer.amount), Direction.DOWN);
                     if (move > 0) SetAmount(Buffer.amount - move);
                     else
                         pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
-                }
+                } else
+                    pipe.QueueFMIfMet(Buffer.variant, pressure + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
             } else if (pressure > 1f) InsertToStorage(up, Direction.DOWN);
         }
         if (Buffer.amount <= 0) NoStockLeft();
@@ -262,16 +263,13 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
         if (Buffer.amount <= 0) return;
         if (!variant.isBlank() && !variant.equals(Buffer.variant)) return;
         float localPressure = PROPERTY.GetPressure(Buffer.amount);
+        if (localPressure < pipePressure) return;
         if (dir == Direction.UP) {
-            if (localPressure > 1f)
-                if (localPressure > pipePressure) return;
+            if (localPressure < 1f) return;
         }
-        else if (dir == Direction.DOWN)
-        {
-            if (pipePressure > 1f)
-                if (localPressure < pipePressure) return;
+        else if (dir == Direction.DOWN) {
+            if (localPressure < pipePressure) return;
         }
-        else if (localPressure < pipePressure) return;
         FMTARGET.MarkDirty();
     }
 }

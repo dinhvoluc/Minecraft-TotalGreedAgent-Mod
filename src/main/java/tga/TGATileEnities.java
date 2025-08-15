@@ -43,7 +43,7 @@ public class TGATileEnities {
         PipeBaseEnity.PIPE_SHARED_INFO.put(TGAID.ID_PIPE_STEEL, new PipeProperty(2000, 800, 40));
         PIPE_ENITY = register("pipe", PipeBaseEnity::new,
                 TGABlocks.PIPE_BRONZE, TGABlocks.PIPE_STEEL);
-        PIPE_HOPPER = register("pipe_hopper", PressurePipeTile::new, TGABlocks.PIPE_HOPPER);
+        PIPE_HOPPER = register("pipe_hopper", PressurePipeTile::new, TGABlocks.PIPE_HOPPER, TGABlocks.PIPE_HOPPER_FILLED);
         //Storage
         BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new,
                 TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED,

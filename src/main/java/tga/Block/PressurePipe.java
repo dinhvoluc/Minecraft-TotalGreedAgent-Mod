@@ -9,18 +9,18 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.WorldView;
 import tga.BlockEntity.PressurePipeTile;
-import tga.BlockEntity.TankTile;
-import tga.Mechanic.IPipeType;
-import tga.TGAHelper;
-import tga.TotalGreedyAgent;
+import tga.ComDat.TankComData;
+import tga.TGABlocks;
+import tga.TGAItems;
 
 public class PressurePipe extends Block implements BlockEntityProvider  {
     public PressurePipe(Settings settings) {
@@ -51,12 +51,45 @@ public class PressurePipe extends Block implements BlockEntityProvider  {
         return ActionResult.SUCCESS;
     }
 
-
+    @Override
+    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
+        return new ItemStack(TGAItems.PIPE_HOPPER);
+    }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        super.onPlaced(world, pos, state, placer, stack);
         if (world.isClient) return;
-        if (!(world.getBlockEntity(pos) instanceof IPipeType pipe)) return;
-        pipe.QueueNext();
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof PressurePipeTile boxTile) {
+            TankComData data = stack.get(TankComData.COMPONET_TYPE);
+            if (data != null) boxTile.OnPlacedRebuild(data);
+            boxTile.QueueNext();
+        }
+    }
+
+    @Override
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (world.isClient) return super.onBreak(world, pos, state, player);
+        if (player != null && player.isCreative()) {
+            world.removeBlockEntity(pos);
+            return super.onBreak(world, pos, state, player);
+        }
+        BlockEntity bTile = world.getBlockEntity(pos);
+        if (bTile instanceof PressurePipeTile info) {
+            if (info.InnerTank.variant == null || info.InnerTank.variant.isBlank()) {
+                ItemStack drop = new ItemStack(TGABlocks.PIPE_HOPPER);
+                if (!drop.isEmpty()) Block.dropStack(world, pos, drop);
+            } else {
+                ItemStack drop = new ItemStack(TGABlocks.PIPE_HOPPER_FILLED);
+                if (!drop.isEmpty()) {
+                    drop.set(TankComData.COMPONET_TYPE, info.GetDataComponent());
+                    Block.dropStack(world, pos, drop);
+                }
+            }
+            ItemScatterer.spawn(world, pos, info.BufferBox);
+            world.removeBlockEntity(pos);
+        }
+        return super.onBreak(world, pos, state, player);
     }
 }

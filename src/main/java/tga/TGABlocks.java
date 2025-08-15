@@ -55,6 +55,7 @@ public final class TGABlocks {
     public static Block PIPE_BRONZE;
     public static Block PIPE_STEEL;
     public static Block PIPE_HOPPER;
+    public static Block PIPE_HOPPER_FILLED;
 
     public static void Load(boolean isClientSide) {
         CustomCropBlock.SHAPES_BY_AGE = Block.createShapeArray(6, (age) -> Block.createColumnShape(16.0D, 0.0D, 2 + age * 2));
@@ -89,8 +90,12 @@ public final class TGABlocks {
                 Bs(0.3f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
         PIPE_STEEL = Register(TGAID.ID_PIPE_STEEL = TotalGreedyAgent.GetID("pipe_steel"), PipeBaseBlock::Create_Steel,
                 Bs(0.3f, 2f, MapColor.BROWN, BlockSoundGroup.METAL).nonOpaque());
-        PIPE_HOPPER = Register("fhopper", PressurePipe::new,
+        TheBoxRegisterReturn fhopper = RegisterTank("fhopper", PressurePipe::new,
                 Bs(1f, 3f, MapColor.IRON_GRAY, BlockSoundGroup.METAL).nonOpaque());
+        PIPE_HOPPER = fhopper.BlockEmpty;
+        TGAItems.PIPE_HOPPER = fhopper.ItemEmpty;
+        PIPE_HOPPER_FILLED = fhopper.BlockFilled;
+        TGAItems.PIPE_HOPPER_FILLED = fhopper.ItemFilled;
         //BOX
         TheBoxRegisterReturn woodenBox = RegisterBox("box_wood", BoxStackBlock::Create_Wooden,
                 Bs(0.2f, 1.5f, MapColor.TERRACOTTA_BROWN, BlockSoundGroup.WOOD));

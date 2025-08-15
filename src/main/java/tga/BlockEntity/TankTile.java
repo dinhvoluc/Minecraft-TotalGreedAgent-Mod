@@ -302,14 +302,15 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
             case BoxStackBlock.SIZE_WOOD -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_wood"));
             case BoxStackBlock.SIZE_COPPER -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_copper"));
             case BoxStackBlock.SIZE_BRONZE -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_bronze"));
+            case PressurePipeTile.VOL_STACK_SIZE -> Text.translatable(TotalGreedyAgent.GetGuiLang("fhopper"));
             case BoxStackBlock.SIZE_IRON -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_iron"));
             default -> Text.translatable(TotalGreedyAgent.GetGuiLang("tank_any"));
         };
     }
 
     public void TGAS2CSync(TankGuiSync payload) {
-        if (!pos.equals(payload.Pos)) return;
         if (world == null) return;
+        if (!pos.equals(payload.Pos)) return;
         if (!world.getRegistryKey().getValue().toString().equals(payload.World)) return;
         InnerTank.variant = payload.FType;
         InnerTank.amount = payload.VolCount;

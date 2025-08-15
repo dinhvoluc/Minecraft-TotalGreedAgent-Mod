@@ -32,7 +32,7 @@ public class JrkPump extends MachineBasic {
 
     public static final VoxelShape SHAPE = VoxelShapes.union(
             Block.createCuboidShape(0, 0, 0, 16, 2, 16),
-            Block.createCuboidShape(8, -16, 5, 14, 16, 11)
+            Block.createCuboidShape(5, -16, 5, 11, 16, 11)
     );
 
     @Override
