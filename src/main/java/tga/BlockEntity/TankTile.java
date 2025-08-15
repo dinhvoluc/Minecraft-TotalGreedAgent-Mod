@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SidedInventory;
@@ -71,6 +72,10 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
         VolSize = stackSize * FluidConstants.BUCKET;
     }
     // </editor-fold>
+
+    protected TankTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
     public TankTile(BlockPos pos, BlockState state) {
         super(TGATileEnities.TANK_TILE, pos, state);
@@ -225,7 +230,7 @@ public class TankTile extends BlockEntity implements SidedInventory, ExtendedScr
     protected void writeData(WriteView view) {
         view.putInt("S", (int)(VolSize / FluidConstants.BUCKET));
         TGAHelper.WriteItem(view,"I", BufferBox.getStack(0));
-        TGAHelper.WriteItem(view,"O", BufferBox.getStack(0));
+        TGAHelper.WriteItem(view,"O", BufferBox.getStack(1));
         TGAHelper.WriteFluidType(view, "L", InnerTank.variant);
         view.putLong("V", InnerTank.amount);
     }

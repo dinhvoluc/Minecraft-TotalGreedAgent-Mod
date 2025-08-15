@@ -1,0 +1,44 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"0": "tga:block/pipe/steel",
+		"1": "tga:block/bronze_plate_wr",
+		"particle": "tga:block/bronze_plate_wr"
+	},
+	"elements": [
+		{
+			"from": [2, 4, 2],
+			"to": [14, 8, 14],
+			"faces": {
+				"north": {"uv": [4, 8, 16, 12], "texture": "#1"},
+				"east": {"uv": [4, 8, 16, 12], "texture": "#1"},
+				"south": {"uv": [4, 8, 16, 12], "texture": "#1"},
+				"west": {"uv": [4, 8, 16, 12], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 8], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 8], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 8], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
+			"from": [4, 0, 4],
+			"to": [12, 4, 12],
+			"faces": {
+				"north": {"uv": [6, 10, 14, 14], "texture": "#0"},
+				"east": {"uv": [8, 5, 16, 9], "texture": "#0"},
+				"south": {"uv": [8, 2, 16, 6], "texture": "#0"},
+				"west": {"uv": [8, 0, 16, 4], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#0"}
+			}
+		}
+	]
+}

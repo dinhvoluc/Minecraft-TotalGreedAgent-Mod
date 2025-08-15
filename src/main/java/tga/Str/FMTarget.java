@@ -1,8 +1,8 @@
 package tga.Str;
 
 import net.minecraft.util.math.BlockPos;
-import tga.Mechanic.PipeManager;
 import tga.Mechanic.IPipeType;
+import tga.Mechanic.PipeManager;
 
 public class FMTarget {
     public int DirtyTick;

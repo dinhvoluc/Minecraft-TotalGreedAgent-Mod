@@ -79,6 +79,7 @@ public class CreativeTab {
                     //PIPE
                     entries.add(TGABlocks.PIPE_BRONZE);
                     entries.add(TGABlocks.PIPE_STEEL);
+                    entries.add(TGABlocks.PIPE_HOPPER);
                 })
                 .build());
     }

@@ -8,7 +8,7 @@ import tga.TotalGreedyAgent;
 import java.util.*;
 
 public class PipeManager {
-    public static final float ACTIVE_PRESSURE_GAP = 0.0005f;
+    public static final float ACTIVE_PRESSURE_GAP = 0.001f;
     public static final long ACTIVE_FLUID_VOL = FluidConstants.BUCKET / 4000;
     public static PipeManager INTANCE;
     public Queue<FMTarget> NeedUpdate = new ArrayDeque<>();

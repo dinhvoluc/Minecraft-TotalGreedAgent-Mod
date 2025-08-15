@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.math.Direction;
 import tga.BlockEntity.*;
 import tga.Mechanic.PipeManager;
 import tga.Str.PipeProperty;
@@ -22,6 +23,7 @@ public class TGATileEnities {
     public static BlockEntityType<MetalWorkbenchTile> M_METAL_WORKBENCH;
     public static BlockEntityType<FluidInside> FLUID_INSIDE;
     public static BlockEntityType<PipeBaseEnity> PIPE_ENITY;
+    public static BlockEntityType<PressurePipeTile> PIPE_HOPPER;
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,
@@ -37,10 +39,12 @@ public class TGATileEnities {
         FLUID_INSIDE = register("havefluid", FluidInside::new,
                 TGABlocks.JRK_PUMP);
         //Pipe
-        PipeBaseEnity.PIPE_SHARED_INFO.put(TGAID.ID_PIPE_BRONZE, new PipeProperty(1000, 800, 20));
-        PipeBaseEnity.PIPE_SHARED_INFO.put(TGAID.ID_PIPE_STEEL, new PipeProperty(2000, 1600, 40));
+        PipeBaseEnity.PIPE_SHARED_INFO.put(TGAID.ID_PIPE_BRONZE, new PipeProperty(1000, 400, 20));
+        PipeBaseEnity.PIPE_SHARED_INFO.put(TGAID.ID_PIPE_STEEL, new PipeProperty(2000, 800, 40));
         PIPE_ENITY = register("pipe", PipeBaseEnity::new,
                 TGABlocks.PIPE_BRONZE, TGABlocks.PIPE_STEEL);
+        PIPE_HOPPER = register("pipe_hopper", PressurePipeTile::new, TGABlocks.PIPE_HOPPER);
+        //Storage
         BOX_STACK_TILE = register("boxstacktile", BoxStackTile::new,
                 TGABlocks.BOX_WOOD, TGABlocks.BOX_WOOD_FILLED,
                 TGABlocks.BOX_COPPER, TGABlocks.BOX_COPPER_FILLED,
@@ -49,12 +53,14 @@ public class TGATileEnities {
                 TGABlocks.TANK_WOOD, TGABlocks.TANK_WOOD_FILLED,
                 TGABlocks.TANK_COPPER, TGABlocks.TANK_COPPER_FILLED,
                 TGABlocks.TANK_BRONZE, TGABlocks.TANK_BRONZE_FILLED);
+        //Working machine
         M_CRACKER_LV0 = register("mt_cracker", ManCrackerTile::new, TGABlocks.MAN_CRACKER);
         M_METAL_WORKBENCH = register("mt_metalwb", MetalWorkbenchTile::new, TGABlocks.METAL_WORKBENCH);
 
         FluidStorage.SIDED.registerForBlockEntity((a, b) -> a.InnerTank, TANK_TILE);
         FluidStorage.SIDED.registerForBlockEntity((a, b) -> a.InnerTank, M_METAL_WORKBENCH);
         FluidStorage.SIDED.registerForBlockEntity((a,b)-> a.Buffer, PIPE_ENITY);
+        FluidStorage.SIDED.registerForBlockEntity((a,b) -> a.InnerTank, PIPE_HOPPER);
         //Manager
         if (isClientSide) return;
         PipeManager.INTANCE = new PipeManager();

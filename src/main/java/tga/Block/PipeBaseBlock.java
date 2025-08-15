@@ -24,8 +24,8 @@ import tga.Mechanic.IPipeType;
 import tga.Str.Dir64;
 import tga.TGABlocks;
 import tga.TGAHelper;
-import tga.TotalGreedyAgent;
 import tga.TGAID;
+import tga.TotalGreedyAgent;
 
 public class PipeBaseBlock extends Block implements BlockEntityProvider {
     public static VoxelShape[] SHAPE_BY_PLUG;
@@ -37,12 +37,10 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
 
     public static Block Create_Bronze(Settings settings) {
         return new PipeBaseBlock(settings);
-        //todo add tile varibale
     }
 
     public static Block Create_Steel(Settings settings) {
         return new PipeBaseBlock(settings);
-        //todo add tile varibale
     }
 
     @Override
@@ -73,33 +71,33 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
         Dir64 plug = new Dir64(old);
         for (Direction i : Direction.values()) {
             BlockPos findPos = pos.offset(i);
-            if (world.getBlockState(findPos).getBlock() instanceof PipeBaseBlock || FluidStorage.SIDED.find(world, findPos, i.getOpposite()) != null)
+            if (world.getBlockEntity(findPos) instanceof IPipeType || FluidStorage.SIDED.find(world, findPos, i.getOpposite()) != null)
                 plug.SetHave(i);
             else plug.SetNot(i);
         }
         if (old == plug.PropValue) return;
         world.setBlockState(pos, state.with(TGABlocks.PLUG_DIR64, plug.PropValue), 3);
         if (!(world.getBlockEntity(pos) instanceof IPipeType pipe)) return;
-        pipe.SetConnection(plug);
         pipe.QueueNext();
+        if (pipe instanceof PipeBaseEnity tile) tile.SetConnection(plug);
     }
+
+
+
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.getBlockEntity(pos) instanceof PipeBaseEnity pipeTest) {
+            TotalGreedyAgent.broadcastDebugMessageF("P=%s(%s) V=%s F=%s", TGAHelper.ToFluid_mB(pipeTest.PROPERTY.GetPressurVol(pipeTest.Buffer.amount)), pipeTest.PROPERTY.GetPressure(pipeTest.Buffer.amount), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount), pipeTest.Buffer.variant.getFluid().getBucketItem().getName().getString());
+        }
+        return ActionResult.SUCCESS;
+    }
+
+
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.isClient) return;
         PCheckConnection(state, world, pos);
-    }
-
-    @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.SUCCESS;
-        int val = state.get(TGABlocks.PLUG_DIR64, 0);
-        String dir = "";
-        for (Direction i : new Dir64(val).GetAllHave())
-            dir += " " + i;
-        if (world.getBlockEntity(pos) instanceof PipeBaseEnity pipeTest) {
-            TotalGreedyAgent.broadcastDebugMessageF("P=%s(%s) V=%s DIR=%s", TGAHelper.ToFluid_mB(pipeTest.PROPERTY.GetPressurVol(pipeTest.Buffer.amount)), pipeTest.PROPERTY.GetPressure(pipeTest.Buffer.amount), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount), dir);
-        }
-        return ActionResult.SUCCESS;
     }
 }

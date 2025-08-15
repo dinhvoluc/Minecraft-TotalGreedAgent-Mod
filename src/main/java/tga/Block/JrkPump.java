@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -14,6 +16,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.BlockEntity.FluidInside;
@@ -24,6 +29,16 @@ import tga.TGASounds;
 
 public class JrkPump extends MachineBasic {
     public static final long MAX_BUFFER = FluidConstants.BUCKET * 5 / 4;
+
+    public static final VoxelShape SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(0, 0, 0, 16, 2, 16),
+            Block.createCuboidShape(8, -16, 5, 14, 16, 11)
+    );
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
 
     public JrkPump(AbstractBlock.Settings settings) {
         super(settings);

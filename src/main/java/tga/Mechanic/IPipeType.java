@@ -7,8 +7,6 @@ import tga.Str.Dir64;
 public interface IPipeType {
     void FluidManagerUpdate();
 
-    void SetConnection(Dir64 plug);
-
     long FluidInsert(FluidVariant variant, float pipePressure, long maxAmount, long pressureAmount, Direction dir);
 
     void QueueFMIfMet(FluidVariant variant, float pipePressure, Direction dir);
