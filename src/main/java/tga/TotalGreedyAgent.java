@@ -41,8 +41,8 @@ public class TotalGreedyAgent implements ModInitializer {
 		LOGGER.info("Server=>Init-Ended");
 	}
 
-	public static String GetGuiLang(String name) {
-		return "gui.tga." + name + ".title";
+	public static Text GetGuiLang(String name) {
+		return Text.translatable("gui.tga." + name + ".title");
 	}
 
 	public static Identifier GetID(String name) {

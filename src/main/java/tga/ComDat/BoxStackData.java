@@ -17,17 +17,14 @@ public class BoxStackData implements TooltipAppender {
     public static ComponentType<BoxStackData> COMPONET_TYPE;
     public static Codec<BoxStackData> CODEC;
     public final ItemStack LockedType;
-    public final int MaxStack;
     public final int Count;
 
-    public BoxStackData(int maxStack, Optional<ItemStack> item, int exCount) {
-        MaxStack = maxStack;
+    public BoxStackData(Optional<ItemStack> item, int exCount) {
         LockedType = item.orElse(ItemStack.EMPTY);
         Count = LockedType.isEmpty() ? 0 : Math.max(0, exCount);
     }
 
-    public BoxStackData(int maxStack, ItemStack item, int count) {
-        MaxStack = maxStack;
+    public BoxStackData(ItemStack item, int count) {
         LockedType = item;
         Count = count;
     }
@@ -42,11 +39,11 @@ public class BoxStackData implements TooltipAppender {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof BoxStackData other)) return false;
-        return MaxStack == other.MaxStack && Count == other.Count && ItemStack.areItemsAndComponentsEqual(LockedType, other.LockedType);
+        return Count == other.Count && ItemStack.areItemsAndComponentsEqual(LockedType, other.LockedType);
     }
 
     @Override
     public int hashCode() {
-        return MaxStack + Count + LockedType.hashCode();
+        return Count + LockedType.hashCode();
     }
 }

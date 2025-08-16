@@ -203,7 +203,7 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
 
     @Override
     public Text getDisplayName() {
-        return Text.translatable(TotalGreedyAgent.GetGuiLang("mancracker"));
+        return TotalGreedyAgent.GetGuiLang("mancracker");
     }
 
     @Override

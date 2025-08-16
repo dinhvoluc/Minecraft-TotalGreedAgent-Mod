@@ -24,13 +24,11 @@ public class TGADataCom {
     public static void Load() {
         BoxStackData.CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.INT.fieldOf("m").forGetter((dat) -> dat.MaxStack),
                         ItemStack.CODEC.optionalFieldOf("i").forGetter((dat) -> dat.LockedType.isEmpty() ? Optional.empty() : Optional.of(dat.LockedType)),
                         Codec.INT.fieldOf("c").forGetter((dat) -> dat.Count)
                 ).apply(instance, BoxStackData::new));
         TankComData.CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.INT.fieldOf("m").forGetter((dat) -> dat.MaxStack),
                         FluidVariant.CODEC.optionalFieldOf("f").forGetter((dat) -> dat.FType == null || dat.FType.isBlank() ? Optional.empty() : Optional.of(dat.FType)),
                         Codec.LONG.fieldOf("c").forGetter((dat) -> dat.Count)
                 ).apply(instance, TankComData::new));

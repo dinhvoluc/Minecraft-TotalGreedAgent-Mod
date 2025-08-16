@@ -1,9 +1,12 @@
 package tga;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -16,7 +19,10 @@ import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import tga.Str.FFlSrc;
 
@@ -251,6 +257,16 @@ public class TGAHelper {
             case Direction.UP -> FluidStorage.SIDED.find(world, pos.up(), Direction.DOWN);
            case Direction.DOWN -> FluidStorage.SIDED.find(world, pos.down(), Direction.UP);
         };
+    }
+
+    public static boolean IsEmptyFluidHolder(ItemStack stack) {
+        Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.withConstant(stack));
+        if (storage == null) return false;
+        for (StorageView<FluidVariant> storageView : storage.nonEmptyViews()) {
+            if (storageView.isResourceBlank()) continue;
+            return false;
+        }
+        return true;
     }
     // </editor-fold>
 }

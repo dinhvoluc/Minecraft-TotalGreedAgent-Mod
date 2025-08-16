@@ -1,18 +1,14 @@
-package tga.Block;
+package tga.Block.Template;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -27,9 +23,6 @@ import tga.BlockEntity.PipeBaseEnity;
 import tga.Mechanic.IPipeType;
 import tga.Str.Dir64;
 import tga.TGABlocks;
-import tga.TGAHelper;
-import tga.TGAID;
-import tga.TotalGreedyAgent;
 
 public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterloggable {
     public static VoxelShape[] SHAPE_BY_PLUG;
@@ -57,11 +50,9 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterlo
         return SHAPE_BY_PLUG[state.get(TGABlocks.PLUG_DIR64, 0)];
     }
 
+    @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        Block me = state.getBlock();
-        if (me == TGABlocks.PIPE_BRONZE) return new PipeBaseEnity(pos, state, TGAID.ID_PIPE_BRONZE);
-        if (me == TGABlocks.PIPE_STEEL) return new PipeBaseEnity(pos, state, TGAID.ID_PIPE_STEEL);
-        return null;
+        return new PipeBaseEnity(pos, state);
     }
 
     @Override
@@ -75,7 +66,11 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterlo
         Dir64 plug = new Dir64(old);
         for (Direction i : Direction.values()) {
             BlockPos findPos = pos.offset(i);
-            if (world.getBlockEntity(findPos) instanceof IPipeType || FluidStorage.SIDED.find(world, findPos, i.getOpposite()) != null)
+            if (world.getBlockEntity(findPos) instanceof IPipeType target) {
+                //check connect able side
+                if (target.Canconnect(i.getOpposite())) plug.SetHave(i);
+                else plug.SetNot(i);
+            } else if (FluidStorage.SIDED.find(world, findPos, i.getOpposite()) != null)
                 plug.SetHave(i);
             else plug.SetNot(i);
         }
@@ -97,7 +92,7 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterlo
     protected FluidState getFluidState(BlockState state) {
         return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
-
+/*
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
@@ -110,8 +105,7 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterlo
         }
         return ActionResult.SUCCESS;
     }
-
-
+ */
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {

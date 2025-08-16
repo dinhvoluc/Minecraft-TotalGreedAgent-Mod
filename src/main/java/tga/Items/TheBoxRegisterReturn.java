@@ -3,20 +3,13 @@ package tga.Items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-public class TheBoxRegisterReturn {
+public class TheBoxRegisterReturn<T extends Item> {
     public final Block BlockEmpty;
     public final Block BlockFilled;
-    public final Item ItemEmpty;
-    public final Item ItemFilled;
+    public final T ItemEmpty;
+    public final T ItemFilled;
 
-    public TheBoxRegisterReturn(Block blockEmpty, Block blockFilled) {
-        BlockEmpty = blockEmpty;
-        BlockFilled = blockFilled;
-        ItemEmpty = blockEmpty.asItem();
-        ItemFilled = blockFilled.asItem();
-    }
-
-    public TheBoxRegisterReturn(Block blockEmpty, Block blockFilled, Item itemEmpty, Item itemFilled) {
+    public TheBoxRegisterReturn(Block blockEmpty, Block blockFilled, T itemEmpty, T itemFilled) {
         BlockEmpty = blockEmpty;
         BlockFilled = blockFilled;
         ItemEmpty = itemEmpty;

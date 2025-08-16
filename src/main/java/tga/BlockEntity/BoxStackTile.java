@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
@@ -15,17 +16,17 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
-import tga.Block.BoxStackBlock;
+import tga.Block.Template.BoxStackBlock;
 import tga.ComDat.BoxStackData;
 import tga.NetEvents.BoxStackGuiSync;
 import tga.Screen.BoxStackScreenHandler;
+import tga.Str.BoxStackProperty;
 import tga.TGAHelper;
 import tga.TGAShared;
 import tga.TGATileEnities;
-import tga.TotalGreedyAgent;
 
 public class BoxStackTile extends BlockEntity implements SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
-    public int InfoMaxStack;
+    public BoxStackProperty PROPERTY;
     public ItemStack LockedType = ItemStack.EMPTY;
     public int NoInStackCount;
     private final ItemStack[] VirtualSlot = new ItemStack[3];
@@ -40,6 +41,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
         VirtualSlot[0] = ItemStack.EMPTY;
         VirtualSlot[1] = ItemStack.EMPTY;
         VirtualSlot[2] = ItemStack.EMPTY;
+        PROPERTY = BoxStackBlock.SHARED_STACK_PROPERTY.get(Registries.BLOCK.getId(state.getBlock()));
     }
 
     @Override
@@ -52,30 +54,27 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
     }
 
     public BoxStackData GetDataComponent() {
-        return new BoxStackData(InfoMaxStack, LockedType, GetTotalCount());
+        return new BoxStackData(LockedType, GetTotalCount());
     }
 
     public int GetMaxSpace() {
-        return (LockedType.isEmpty() ? 64 : LockedType.getMaxCount()) * InfoMaxStack;
+        return (LockedType.isEmpty() ? 64 : LockedType.getMaxCount()) * PROPERTY.BoxSize;
     }
 
     @Override
     protected void writeData(WriteView view) {
-        view.putInt("M", InfoMaxStack);
         view.putInt("C", GetTotalCount());
         TGAHelper.WriteItem(view, "I", LockedType);
     }
 
     @Override
     protected void readData(ReadView view) {
-        InfoMaxStack = view.getInt("M", 1);
         int total = view.getInt("C", 0);
         LockedType = TGAHelper.ReadItem(view, "I");
         UpdateTempSlot(total);
     }
 
     public void OnPlacedRebuild(BoxStackData data) {
-        InfoMaxStack = data.MaxStack;
         LockedType = data.LockedType;
         UpdateTempSlot(data.Count);
     }
@@ -163,9 +162,9 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
             VirtualSlot[2] = ItemStack.EMPTY;
         } else {
             int sizePerStack = LockedType.getMaxCount();
-            int exMaxSize = sizePerStack * (InfoMaxStack - 2);
+            int exMaxSize = sizePerStack * (PROPERTY.BoxSize - 2);
             if (!ItemStack.areItemsAndComponentsEqual(VirtualSlot[0], LockedType)) VirtualSlot[0] = LockedType.copy();
-            int maxSpace = InfoMaxStack * sizePerStack;
+            int maxSpace = PROPERTY.BoxSize * sizePerStack;
             if (total > maxSpace) total = maxSpace;
             int forSlot0 = Math.min(sizePerStack, total);
             VirtualSlot[0].setCount(forSlot0);
@@ -238,13 +237,7 @@ public class BoxStackTile extends BlockEntity implements SidedInventory, Extende
 
     @Override
     public Text getDisplayName() {
-        return switch (InfoMaxStack) {
-            case BoxStackBlock.SIZE_WOOD -> Text.translatable(TotalGreedyAgent.GetGuiLang("box_wood"));
-            case BoxStackBlock.SIZE_COPPER -> Text.translatable(TotalGreedyAgent.GetGuiLang("box_copper"));
-            case BoxStackBlock.SIZE_BRONZE -> Text.translatable(TotalGreedyAgent.GetGuiLang("box_bronze"));
-            case BoxStackBlock.SIZE_IRON -> Text.translatable(TotalGreedyAgent.GetGuiLang("box_iron"));
-            default -> Text.translatable(TotalGreedyAgent.GetGuiLang("box_any"));
-        };
+        return PROPERTY.GUI_NAME;
     }
 
     @Override

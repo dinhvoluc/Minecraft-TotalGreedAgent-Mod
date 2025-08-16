@@ -16,8 +16,8 @@ public class PipeManager {
 
     public int GlobalTick;
 
-    public FMTarget Register(IPipeType target, BlockPos pos) {
-        FMTarget rt = new FMTarget(target, pos);
+    public FMTarget Register(IPipeType target) {
+        FMTarget rt = new FMTarget(target);
         NeedUpdate.add(rt);
         return rt;
     }

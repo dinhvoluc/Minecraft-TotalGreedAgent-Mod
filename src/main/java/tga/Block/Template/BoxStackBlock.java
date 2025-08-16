@@ -1,4 +1,4 @@
-package tga.Block;
+package tga.Block.Template;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -7,46 +7,41 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import tga.BlockEntity.BoxStackTile;
 import tga.ComDat.BoxStackData;
-import tga.TGABlocks;
-import tga.TGATileEnities;
+import tga.Str.BoxStackProperty;
+import tga.TotalGreedyAgent;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class BoxStackBlock extends Block implements BlockEntityProvider {
-    public final int MaxStack;
-    public static final int SIZE_WOOD = 16;
-    public static final int SIZE_COPPER = SIZE_WOOD * 2;
-    public static final int SIZE_BRONZE = SIZE_COPPER * 2;
-    public static final int SIZE_IRON = SIZE_BRONZE * 2;
+    public static final Map<Identifier, BoxStackProperty> SHARED_STACK_PROPERTY = new HashMap<>();
 
-    public BoxStackBlock(AbstractBlock.Settings settings, int maxStack) {
+    public BoxStackBlock(AbstractBlock.Settings settings) {
         super(settings);
-        MaxStack = maxStack;
     }
 
-    public static BoxStackBlock Create_Wooden(AbstractBlock.Settings settings) {
-        return new BoxStackBlock(settings, SIZE_WOOD);
-    }
-
-    public static BoxStackBlock Create_Copper(AbstractBlock.Settings settings) {
-        return new BoxStackBlock(settings, SIZE_COPPER);
-    }
-
-    public static BoxStackBlock Create_Bronze(AbstractBlock.Settings settings) {
-        return new BoxStackBlock(settings, SIZE_BRONZE);
+    public static void SetupType(int size, Identifier emptyID, Supplier<Item> itemEmpty, Identifier filledID, Supplier<Item> itemFilled, String guiName) {
+        BoxStackProperty prop = new BoxStackProperty(itemEmpty, itemFilled, size, TotalGreedyAgent.GetGuiLang(guiName));
+        SHARED_STACK_PROPERTY.put(emptyID, prop);
+        SHARED_STACK_PROPERTY.put(filledID, prop);
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        BoxStackTile rt = TGATileEnities.BOX_STACK_TILE.instantiate(pos, state);
-        rt.InfoMaxStack = MaxStack;
-        return rt;
+        return new BoxStackTile(pos, state);
     }
 
     @Override
@@ -56,24 +51,6 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
             player.openHandledScreen(tile);
         }
         return ActionResult.SUCCESS;
-    }
-
-    private static ItemStack GetEmptyBox(int maxStack) {
-        return switch (maxStack) {
-            case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD);
-            case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER);
-            case SIZE_BRONZE -> new ItemStack(TGABlocks.BOX_BRONZE);
-            default -> ItemStack.EMPTY;
-        };
-    }
-
-    private static ItemStack GetFillBox(int maxStack) {
-        return switch (maxStack) {
-            case SIZE_WOOD -> new ItemStack(TGABlocks.BOX_WOOD_FILLED);
-            case SIZE_COPPER -> new ItemStack(TGABlocks.BOX_COPPER_FILLED);
-            case SIZE_BRONZE -> new ItemStack(TGABlocks.BOX_BRONZE_FILLED);
-            default -> ItemStack.EMPTY;
-        };
     }
 
     @Override
@@ -91,7 +68,7 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
 
     @Override
     protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-        return GetEmptyBox(MaxStack);
+        return SHARED_STACK_PROPERTY.get(Registries.BLOCK.getId(state.getBlock())).CreateEmptyStack(1);
     }
 
     @Override
@@ -104,10 +81,10 @@ public class BoxStackBlock extends Block implements BlockEntityProvider {
         BlockEntity bTile = world.getBlockEntity(pos);
         if (bTile instanceof BoxStackTile info) {
             if (info.isEmpty()) {
-                ItemStack drop = GetEmptyBox(MaxStack);
+                ItemStack drop = info.PROPERTY.CreateEmptyStack(1);
                 if (!drop.isEmpty()) Block.dropStack(world, pos, drop);
             } else {
-                ItemStack drop = GetFillBox(MaxStack);
+                ItemStack drop = info.PROPERTY.CreateFilledStack(1);
                 if (!drop.isEmpty()) {
                     drop.set(BoxStackData.COMPONET_TYPE, info.GetDataComponent());
                     Block.dropStack(world, pos, drop);

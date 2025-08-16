@@ -7,11 +7,9 @@ import tga.Mechanic.PipeManager;
 public class FMTarget {
     public int DirtyTick;
     public IPipeType Entity;
-    public BlockPos Pos;
 
-    public FMTarget(IPipeType entity, BlockPos pos) {
+    public FMTarget(IPipeType entity) {
         Entity = entity;
-        Pos = pos;
     }
 
     public void MarkDirty(){

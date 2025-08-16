@@ -19,17 +19,14 @@ public class TankComData implements TooltipAppender {
     public static ComponentType<TankComData> COMPONET_TYPE;
     public static Codec<TankComData> CODEC;
     public final FluidVariant FType;
-    public final int MaxStack;
     public final long Count;
 
-    public TankComData(int maxStack, Optional<FluidVariant> fType, long hold) {
-        MaxStack = maxStack;
+    public TankComData(Optional<FluidVariant> fType, long hold) {
         FType = fType.orElse(FluidVariant.blank());
         Count = FType.isBlank() ? 0 : Math.max(0, hold);
     }
 
-    public TankComData(int maxStack, FluidVariant fType, long hold) {
-        MaxStack = maxStack;
+    public TankComData(FluidVariant fType, long hold) {
         FType = fType == null || fType.isBlank() ? null : fType;
         Count = hold;
     }
@@ -44,11 +41,11 @@ public class TankComData implements TooltipAppender {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TankComData other)) return false;
-        return MaxStack == other.MaxStack && Count == other.Count && FType.equals(other.FType);
+        return Count == other.Count && FType.equals(other.FType);
     }
 
     @Override
     public int hashCode() {
-        return (int)(MaxStack + Count + FType.hashCode());
+        return (int)(Count + FType.hashCode());
     }
 }

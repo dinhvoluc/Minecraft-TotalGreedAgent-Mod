@@ -1,59 +1,47 @@
-package tga.Block;
+package tga.Block.Template;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import tga.BlockEntity.PressurePipeTile;
+import tga.BlockEntity.TankTile;
 import tga.ComDat.TankComData;
-import tga.TGABlocks;
-import tga.TGAItems;
+import tga.Str.TankProperty;
 
-public class PressurePipe extends Block implements BlockEntityProvider  {
-    public PressurePipe(Settings settings) {
+import java.util.HashMap;
+import java.util.Map;
+
+public class TankBlock extends Block implements BlockEntityProvider {
+    public static final Map<Identifier, TankProperty> SHARED_TANK_PROPERTY = new HashMap<>();
+
+    public TankBlock(AbstractBlock.Settings settings) {
         super(settings);
     }
 
-    public static final VoxelShape SHAPE = VoxelShapes.union(
-            Block.createCuboidShape(2, 4, 2, 14, 8, 14),
-            Block.createCuboidShape(0, 8, 0, 16, 16, 16),
-            Block.createCuboidShape(4, 0, 4, 12, 4, 12)
-    );
-
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
-
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PressurePipeTile(pos, state);
+        return new TankTile(pos, state);
     }
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
-            if (!(world.getBlockEntity(pos) instanceof PressurePipeTile tile)) return ActionResult.PASS;
+            if (!(world.getBlockEntity(pos) instanceof TankTile tile)) return ActionResult.PASS;
             player.openHandledScreen(tile);
         }
         return ActionResult.SUCCESS;
-    }
-
-    @Override
-    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-        return new ItemStack(TGAItems.PIPE_HOPPER);
     }
 
     @Override
@@ -61,10 +49,9 @@ public class PressurePipe extends Block implements BlockEntityProvider  {
         super.onPlaced(world, pos, state, placer, stack);
         if (world.isClient) return;
         BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof PressurePipeTile boxTile) {
+        if (be instanceof TankTile boxTile) {
             TankComData data = stack.get(TankComData.COMPONET_TYPE);
             if (data != null) boxTile.OnPlacedRebuild(data);
-            boxTile.QueueNext();
         }
     }
 
@@ -76,12 +63,12 @@ public class PressurePipe extends Block implements BlockEntityProvider  {
             return super.onBreak(world, pos, state, player);
         }
         BlockEntity bTile = world.getBlockEntity(pos);
-        if (bTile instanceof PressurePipeTile info) {
+        if (bTile instanceof TankTile info) {
             if (info.InnerTank.variant == null || info.InnerTank.variant.isBlank()) {
-                ItemStack drop = new ItemStack(TGABlocks.PIPE_HOPPER);
+                ItemStack drop = SHARED_TANK_PROPERTY.get(Registries.BLOCK.getId(state.getBlock())).CreateEmptyStack(1);
                 if (!drop.isEmpty()) Block.dropStack(world, pos, drop);
             } else {
-                ItemStack drop = new ItemStack(TGABlocks.PIPE_HOPPER_FILLED);
+                ItemStack drop = SHARED_TANK_PROPERTY.get(Registries.BLOCK.getId(state.getBlock())).CreateFilledStack(1);
                 if (!drop.isEmpty()) {
                     drop.set(TankComData.COMPONET_TYPE, info.GetDataComponent());
                     Block.dropStack(world, pos, drop);

@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.Identifier;
@@ -29,10 +30,9 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
     public boolean TopUnlock = true;
     public PipeProperty PROPERTY;
     public FMTarget FMTARGET;
-    public Identifier PipeType;
     public Dir64 FluidPlugDirect;
-    public static Map<Identifier, PipeProperty> PIPE_SHARED_INFO = new HashMap<>();
-    public SingleVariantStorage<FluidVariant> Buffer = new SingleVariantStorage<FluidVariant>() {
+    public static final Map<Identifier, PipeProperty> PIPE_SHARED_INFO = new HashMap<>();
+    public SingleVariantStorage<FluidVariant> Buffer = new SingleVariantStorage<>() {
         @Override
         protected boolean canInsert(FluidVariant iType) {
             return variant.isBlank() || variant == iType;
@@ -58,7 +58,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
     public void setWorld(World world) {
         super.setWorld(world);
         if (world.isClient) return;
-        FMTARGET = PipeManager.INTANCE.Register(this, pos);
+        FMTARGET = PipeManager.INTANCE.Register(this);
     }
 
     public void SetConnection(Dir64 plug) {
@@ -108,18 +108,12 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
 
     public PipeBaseEnity(BlockPos pos, BlockState state) {
         super(TGATileEnities.PIPE_ENITY, pos, state);
+        PROPERTY = PIPE_SHARED_INFO.get(Registries.BLOCK.getId(state.getBlock()));
         FluidPlugDirect = new Dir64(state.get(TGABlocks.PLUG_DIR64, 0));
-    }
-
-    public PipeBaseEnity(BlockPos pos, BlockState state, Identifier pipeType) {
-        this(pos, state);
-        PROPERTY = PIPE_SHARED_INFO.get(PipeType = pipeType);
     }
 
     @Override
     protected void writeData(WriteView view) {
-        if (PipeType == null) return;
-        view.putString("T", PipeType.toString());
         view.putLong("V", Buffer.amount);
         TGAHelper.WriteFluidType(view, "F", Buffer.variant);
     }
@@ -128,8 +122,6 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
     protected void readData(ReadView view) {
         String id = view.getString("T", null);
         if (id == null) return;
-        PipeType = Identifier.tryParse(id);
-        PROPERTY = PIPE_SHARED_INFO.get(PipeType);
         Buffer.variant = TGAHelper.ReadFluidType(view, "F");
         Buffer.amount = view.getLong("V", 0);
     }
@@ -272,5 +264,10 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
             if (localPressure < pipePressure) return;
         }
         FMTARGET.MarkDirty();
+    }
+
+    @Override
+    public boolean Canconnect(Direction dir) {
+        return true;
     }
 }

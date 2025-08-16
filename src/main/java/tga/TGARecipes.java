@@ -23,6 +23,7 @@ public class TGARecipes {
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_IRON), 7_000_00, 320, new ItemStack(Items.IRON_INGOT));
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS, 4), 900_00, 80, new ItemStack(Items.IRON_INGOT));
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_SCEW, new ItemStack(TGAItems.SCREW, 2), 1_200_00, 70, new ItemStack(Items.IRON_INGOT));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PIPE, new ItemStack(TGABlocks.PIPE_BRONZE), 4_700_00, 1_250, new ItemStack(TGAItems.INGOT_BRONZE, 2));
 
         //CaCO3
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00,
@@ -78,10 +79,13 @@ public class TGARecipes {
                 Items.WAXED_COPPER_DOOR, Items.WAXED_EXPOSED_COPPER_DOOR, Items.WAXED_OXIDIZED_COPPER_DOOR));
 
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_BRONZE, 90, 2_300_00,
-                TGAItems.INGOT_BRONZE, TGAItems.PLATE_BRONZE));
+                TGAItems.INGOT_BRONZE, TGAItems.PLATE_BRONZE,
 
-        AddCrackerRecipes(0, new OneToTwo( new ItemStack(Items.RAW_GOLD_BLOCK), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
-        AddCrackerRecipes(0, new OneToTwo( new ItemStack(Items.RAW_GOLD, 9), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
+                180,
+                TGABlocks.PIPE_BRONZE.asItem()));
+
+        AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.RAW_GOLD_BLOCK), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
+        AddCrackerRecipes(0, new OneToTwo(new ItemStack(Items.RAW_GOLD, 9), 20_000_00, new ItemStack(TGAItems.DUST_GOLD, 9), new ItemStack(TGAItems.DUST_SILVER)));
 
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.DUST_GOLD, 90, 1_900_00,
                 Items.GOLD_INGOT, TGAItems.PLATE_GOLD,

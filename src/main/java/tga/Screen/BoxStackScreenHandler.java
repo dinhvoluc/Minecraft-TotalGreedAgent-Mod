@@ -160,7 +160,7 @@ public class BoxStackScreenHandler extends ScreenHandler {
         if (maxInput <= 0) return ItemStack.EMPTY;
         ItemStack baseItem = original.getStack().copy();
         //初期化
-        if (Tile.isEmpty()) maxInput = baseItem.getMaxCount() * Tile.InfoMaxStack;
+        if (Tile.isEmpty()) maxInput = baseItem.getMaxCount() * Tile.PROPERTY.BoxSize;
             //違うアイテムなのでNGを出します。
         else if (!ItemStack.areItemsAndComponentsEqual(baseItem, Tile.getStack(0))) return ItemStack.EMPTY;
         //まずはオリジナルか回収

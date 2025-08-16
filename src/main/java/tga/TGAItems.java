@@ -2,11 +2,13 @@ package tga;
 
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import tga.Items.EFItemTank;
 
 import java.util.function.Function;
 
@@ -57,16 +59,27 @@ public final class TGAItems {
     public static Item PART_BRONZE_TURBIN;
     public static Item PART_BRONZE_BOIL;
 
-    public static Item TANK_WOOD;
-    public static Item TANK_COPPER;
-    public static Item TANK_BRONZE;
+    public static Item BOX_WOOD;
+    public static Item BOX_COPPER;
+    public static Item BOX_BRONZE;
 
-    public static Item TANK_WOOD_FILLED;
-    public static Item TANK_COPPER_FILLED;
-    public static Item TANK_BRONZE_FILLED;
+    public static Item BOX_WOOD_FILLED;
+    public static Item BOX_COPPER_FILLED;
+    public static Item BOX_BRONZE_FILLED;
 
-    public static Item PIPE_HOPPER;
-    public static Item PIPE_HOPPER_FILLED;
+    public static EFItemTank TANK_WOOD;
+    public static EFItemTank TANK_COPPER;
+    public static EFItemTank TANK_BRONZE;
+
+    public static EFItemTank TANK_WOOD_FILLED;
+    public static EFItemTank TANK_COPPER_FILLED;
+    public static EFItemTank TANK_BRONZE_FILLED;
+
+    public static EFItemTank PIPE_HOPPER;
+    public static EFItemTank PIPE_HOPPER_FILLED;
+
+    public static EFItemTank JRK_PUMP;
+    public static EFItemTank JRK_PUMP_FILLED;
 
     public static void Load(boolean isClientSide) {
         SetBurnTime(RUBBER = Register("rubber"), 2000);
@@ -144,8 +157,10 @@ public final class TGAItems {
     }
 
     public static Item Register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {
-        final Identifier identifier = TotalGreedyAgent.GetID(path);
-        final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, identifier);
+        return Register(TotalGreedyAgent.GetID(path), factory, settings);
+    }
+    public static Item Register(Identifier id, Function<Item.Settings, Item> factory, Item.Settings settings) {
+        final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, id);
         return Items.register(registryKey, factory, settings);
     }
 }

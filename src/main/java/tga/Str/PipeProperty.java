@@ -1,11 +1,14 @@
 package tga.Str;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.util.math.Direction;
+
+import java.util.function.Function;
 
 public class PipeProperty {
-    public long PipeCap;
-    public long MaxSpeed;
-    public long PressureLine;
+    public final long PipeCap;
+    public final long MaxSpeed;
+    public final long PressureLine;
 
     public PipeProperty(int mbNormalCap, int mbPressureLine, int mbMaxSpeed) {
         PipeCap = mbNormalCap * FluidConstants.BUCKET / 1000;

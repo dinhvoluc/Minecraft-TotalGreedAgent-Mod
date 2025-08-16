@@ -38,10 +38,10 @@ public class TankScreen extends HandledScreen<TankScreenHandler> {
         //Draw metter back
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, x + 41, y + 45, 0, 211, 18, 18, 512, 512);
         if (handler.Tile.InnerTank.amount > 0) {
-            TGAClientHelper.GUI_DrawRoundEFMetter(context, x + 43, y + 47, handler.Tile.InnerTank.amount, handler.Tile.VolSize);
+            TGAClientHelper.GUI_DrawRoundEFMetter(context, x + 43, y + 47, handler.Tile.InnerTank.amount, handler.Tile.PROPERTY.TankCap);
             context.drawText(textRenderer, TGAHelper.GetFluidName(handler.Tile.InnerTank.variant), x + 50, y + 24, 0xff404040, false);
         } else TGAClientHelper.GUI_DrawRoundEFMetterE(context, x + 43, y + 47);
-        context.drawText(textRenderer, Text.literal(TGAHelper.ToFluid_mB(handler.Tile.InnerTank.amount) + "/" + TGAHelper.ToFluid_mB(handler.Tile.VolSize) + "mB"), x + 72, y + 49, 0xff704040, false);
+        context.drawText(textRenderer, Text.literal(TGAHelper.ToFluid_mB(handler.Tile.InnerTank.amount) + "/" + TGAHelper.ToFluid_mB(handler.Tile.PROPERTY.TankCap) + "mB"), x + 72, y + 49, 0xff704040, false);
     }
 
     @Override
