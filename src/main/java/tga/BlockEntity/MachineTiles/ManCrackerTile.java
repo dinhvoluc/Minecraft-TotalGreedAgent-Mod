@@ -83,7 +83,7 @@ public class ManCrackerTile extends BlockEntity implements MMMTargetBasic.ITarge
         if (!ItemBuffer[1].isEmpty()) return;
         if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
         //Crafting
-        int amount = Math.min(Jinriki / 10, 40_00);
+        int amount = Math.min(Jinriki / 10, 25_00);
         Jinriki -= amount;
         Worked += amount + 5;
         //Crafted

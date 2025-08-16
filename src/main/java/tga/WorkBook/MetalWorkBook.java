@@ -19,12 +19,12 @@ public class MetalWorkBook implements ICommonBook {
             RECIPE_MAP[i] = new HashMap<>();
     }
 
-    public MetalWorkRecipe GetNextCraft(ICraftProvider inputSlots, int mode) {
+    public List<MetalWorkRecipe> GetNextCraft(ICraftProvider inputSlots, int mode) {
+        List<MetalWorkRecipe> rt = new ArrayList<>();
         //search for first recipe exist
         int slotCount = inputSlots.GetCraftInputSize();
         Map<Item, MetalWorkRecipe> mode_book = RECIPE_MAP[mode];
-        for(var i = 0; i < slotCount; i++)
-        {
+        for (var i = 0; i < slotCount; i++) {
             ItemStack stackInSlot = inputSlots.GetCraftInputStack(i);
             if (stackInSlot.isEmpty()) continue;
             MetalWorkRecipe recipe = mode_book.get(stackInSlot.getItem());
@@ -33,14 +33,15 @@ public class MetalWorkBook implements ICommonBook {
             Item needItem = recipe.Ingredient[0].getItem();
             int needAmounth = recipe.Ingredient[0].getCount() - stackInSlot.getCount();
             while (needAmounth > 0)
-                for(int j = i + 1; j < slotCount; j++){
+                for (int j = i + 1; j < slotCount; j++) {
                     ItemStack checkMergerSlot = inputSlots.GetCraftInputStack(j);
                     if (checkMergerSlot.isOf(needItem)) needAmounth -= checkMergerSlot.getCount();
                 }
-            if (needAmounth <= 0) return recipe;
+            if (needAmounth <= 0) rt.add(recipe);
         }
-        return null;
+        return rt;
     }
+
     public boolean RealCraft(MetalWorkRecipe recipe, ICraftProvider inputSlots) {
         //search for first recipe exist
         int slotCount = inputSlots.GetCraftInputSize();

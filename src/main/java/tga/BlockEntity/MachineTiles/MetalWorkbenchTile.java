@@ -230,29 +230,29 @@ public class MetalWorkbenchTile extends BlockEntity implements MMMTargetBasic.IT
     public void MachineUpdate(ManMachineManager mng) {
         if (removed) return;
         BlockState state = world.getBlockState(pos);
-        if (BurntimeLeft > 0) BurntimeLeft--;
+        boolean isBurn = BurntimeLeft > 0;
+        if (isBurn) BurntimeLeft--;
         //have nenergy for crafting
         if (Jinriki < 20) {
             Jinriki = 0;
-            UpdateExit(BurntimeLeft > 0, state);
+            UpdateExit(isBurn, state);
             return;
         }
+        Ticker.QueQueNext(mng);
         Jinriki -= 5;
         //find for new recipe
-        if (Crafting.isEmpty()) {
-            MetalWorkRecipe canCraft = TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode);
-            if (canCraft == null || canCraft.WaterToCool > InnerTank.amount || !TGAHelper.ItemCanStackTo(canCraft.Result, ResultSlot)) {
-                UpdateExit(true, state);
-                return;
+        if (Crafting.isEmpty())
+            for(MetalWorkRecipe canCraft : TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode)) {
+                if (canCraft.WaterToCool > InnerTank.amount || !TGAHelper.ItemCanStackTo(canCraft.Result, ResultSlot)) continue;
+                if (TGARecipes.MetalWorkbench.RealCraft(canCraft, this)) {
+                    Crafting = canCraft.Result;
+                    WorkTotal = (int) canCraft.NeedPower;
+                    Worked = 0;
+                    InnerTank.amount -= canCraft.WaterToCool;
+                    CheckTankInput();
+                    break;
+                }
             }
-            if (TGARecipes.MetalWorkbench.RealCraft(canCraft, this)) {
-                Crafting = canCraft.Result;
-                WorkTotal = (int) canCraft.NeedPower;
-                Worked = 0;
-                InnerTank.amount -= canCraft.WaterToCool;
-                CheckTankInput();
-            }
-        }
         //fuel ticks
         if (BurntimeLeft <= 0) {
             //get fuel for heat
