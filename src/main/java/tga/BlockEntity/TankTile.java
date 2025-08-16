@@ -3,7 +3,6 @@ package tga.BlockEntity;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -28,9 +27,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
-import tga.Block.Template.BoxStackBlock;
-import tga.Block.FluidHopper;
-import tga.Block.JrkPump;
 import tga.Block.Template.TankBlock;
 import tga.ComDat.TankComData;
 import tga.NetEvents.TankGuiSync;
@@ -39,7 +35,6 @@ import tga.Str.TankProperty;
 import tga.TGAHelper;
 import tga.TGAShared;
 import tga.TGATileEnities;
-import tga.TotalGreedyAgent;
 
 public class TankTile extends BlockEntity implements SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     // <editor-fold desc="Fluids">

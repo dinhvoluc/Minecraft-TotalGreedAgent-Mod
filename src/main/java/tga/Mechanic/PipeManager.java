@@ -1,11 +1,11 @@
 package tga.Mechanic;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.util.math.BlockPos;
 import tga.Str.FMTarget;
 import tga.TotalGreedyAgent;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class PipeManager {
     public static final float ACTIVE_PRESSURE_GAP = 0.001f;

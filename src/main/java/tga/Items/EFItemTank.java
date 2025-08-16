@@ -1,15 +1,11 @@
 package tga.Items;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import tga.Block.Template.TankBlock;
 import tga.Str.TankProperty;
-
-import java.util.function.Supplier;
 
 public class EFItemTank extends BlockItem {
     public final TankProperty PROPERTY;

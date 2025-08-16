@@ -25,7 +25,6 @@ import tga.Block.Template.TankBlock;
 import tga.BlockEntity.PressurePipeTile;
 import tga.BlockEntity.TankTile;
 import tga.ComDat.TankComData;
-import tga.TGAItems;
 
 public class FluidHopper extends Block implements BlockEntityProvider  {
     public FluidHopper(Settings settings) {

@@ -1,9 +1,6 @@
 package tga.Str;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.util.math.Direction;
-
-import java.util.function.Function;
 
 public class PipeProperty {
     public final long PipeCap;

@@ -30,7 +30,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import tga.Block.Template.TankBlock;
 import tga.Mechanic.IClickedIDHandler;
 import tga.Mechanic.ICraftProvider;
 import tga.Mechanic.ITGAManpoweredBlock;
@@ -66,6 +65,12 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         @Override
         protected long getCapacity(FluidVariant variant) {
             return MAX_WATER_LEVEL;
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            super.onFinalCommit();
+            markDirty();
         }
     };
 

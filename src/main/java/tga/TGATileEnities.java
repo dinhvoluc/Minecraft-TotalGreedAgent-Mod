@@ -11,7 +11,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.math.Direction;
 import tga.BlockEntity.*;
 import tga.Mechanic.PipeManager;
 import tga.Str.PipeProperty;

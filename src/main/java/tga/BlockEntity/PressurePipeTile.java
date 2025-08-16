@@ -58,6 +58,7 @@ public class PressurePipeTile extends TankTile implements IPipeType {
     @Override
     public void FluidManagerUpdate() {
         if (removed) return;
+        if (PushDirection == null) return;
         if (InnerTank.amount <= 0) return;
         //check target
         BlockPos target = pos.offset(PushDirection);

@@ -2,6 +2,7 @@ package tga.Str;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.item.Item;
+
 import java.util.function.Supplier;
 
 public class FHopperProperty extends TankProperty {

@@ -1,6 +1,5 @@
 package tga.Str;
 
-import net.minecraft.util.math.BlockPos;
 import tga.Mechanic.IPipeType;
 import tga.Mechanic.PipeManager;
 
