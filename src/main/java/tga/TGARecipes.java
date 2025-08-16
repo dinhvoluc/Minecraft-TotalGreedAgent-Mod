@@ -3,7 +3,7 @@ package tga;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import tga.BlockEntity.MetalWorkbenchTile;
+import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.WorkBook.MetalWorkBook;
 import tga.WorkBook.OneSlotBook;
 import tga.WorkBook.WorkRecipes.*;
@@ -23,7 +23,8 @@ public class TGARecipes {
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PLATE, new ItemStack(TGAItems.PLATE_IRON), 7_000_00, 320, new ItemStack(Items.IRON_INGOT));
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_NAIL, new ItemStack(TGAItems.NAILS, 4), 900_00, 80, new ItemStack(Items.IRON_INGOT));
         AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_SCEW, new ItemStack(TGAItems.SCREW, 2), 1_200_00, 70, new ItemStack(Items.IRON_INGOT));
-        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PIPE, new ItemStack(TGABlocks.PIPE_BRONZE), 4_700_00, 1_250, new ItemStack(TGAItems.INGOT_BRONZE, 2));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PIPE, new ItemStack(TGABlocks.PIPE_BRONZE), 8_700_00, 1_250, new ItemStack(TGAItems.INGOT_BRONZE, 2));
+        AddMetalWork(0, MetalWorkbenchTile.WORK_MODE_PIPE, new ItemStack(TGABlocks.PIPE_STEEL), 20_000_00, 2_250, new ItemStack(TGAItems.INGOT_STEEL, 2));
 
         //CaCO3
         AddCrackerRecipes(0, OneToOne.CreateAutoBlanced(TGAItems.CACO3, 90, 1_000_00,

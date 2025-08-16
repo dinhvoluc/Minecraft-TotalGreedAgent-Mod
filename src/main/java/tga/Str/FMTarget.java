@@ -2,6 +2,7 @@ package tga.Str;
 
 import tga.Mechanic.IPipeType;
 import tga.Mechanic.PipeManager;
+import tga.TotalGreedyAgent;
 
 public class FMTarget {
     public int DirtyTick;
@@ -12,8 +13,8 @@ public class FMTarget {
     }
 
     public void MarkDirty(){
-        if (DirtyTick == PipeManager.INTANCE.GlobalTick) return;
-        DirtyTick = PipeManager.INTANCE.GlobalTick;
+        if (DirtyTick == TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK) return;
+        DirtyTick = TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK;
         PipeManager.INTANCE.NeedUpdate.add(this);
     }
 }

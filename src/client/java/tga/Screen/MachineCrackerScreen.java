@@ -7,7 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import tga.*;
+import tga.BlockEntity.MachineTiles.ManCrackerTile;
+import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
+import tga.Mechanic.ManMachineManager;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.RecipeViewer.OneIn5RowRender;
 
@@ -17,18 +20,19 @@ public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerH
     public MachineCrackerScreen(MachineCrackerHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, Viewer);
         Viewer.SetTarget(TGARecipes.Cracker_LV0, this);
-        MachineCrackerHandler.LastWorkBlock = handler.Machine;
+        JinrikiWork.PLAYER_WORKING_TARGET = handler.Machine;
+        handler.Machine.Ticker.QueQueNext(ManMachineManager.CLIENT_INTANCE);
     }
 
     public static void HandleSync(ManCrackerGuiSync payload) {
-        if (MachineCrackerHandler.LastWorkBlock == null) return;
-        MachineCrackerHandler.LastWorkBlock.TGAS2CSync(payload);
+        if (JinrikiWork.PLAYER_WORKING_TARGET instanceof ManCrackerTile machine)
+            machine.TGAS2CSync(payload);
     }
 
     @Override
     public void close() {
         super.close();
-        MachineCrackerHandler.LastWorkBlock = null;
+        JinrikiWork.PLAYER_WORKING_TARGET = null;
     }
 
     @Override

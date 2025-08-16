@@ -4,8 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -16,9 +14,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import tga.BlockEntity.MetalWorkbenchTile;
+import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.TGABlocks;
-import tga.TGATileEnities;
 
 public class MetalWorkbench extends MachineBasic {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
@@ -40,7 +37,7 @@ public class MetalWorkbench extends MachineBasic {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return TGATileEnities.M_METAL_WORKBENCH.instantiate(pos, state);
+        return new MetalWorkbenchTile(pos, state);
     }
 
     @Override
@@ -65,14 +62,5 @@ public class MetalWorkbench extends MachineBasic {
             world.removeBlockEntity(pos);
         }
         return super.onBreak(world, pos, state, player);
-    }
-
-    public static BlockEntityTicker<MetalWorkbenchTile> TICKER_SERVER;
-    public static BlockEntityTicker<MetalWorkbenchTile> TICKER_CLIENT;
-
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (type != TGATileEnities.M_METAL_WORKBENCH) return null;
-        return (BlockEntityTicker)(world.isClient ? TICKER_CLIENT : TICKER_SERVER);
     }
 }

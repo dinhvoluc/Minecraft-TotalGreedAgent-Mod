@@ -1,4 +1,4 @@
-package tga.BlockEntity;
+package tga.BlockEntity.MachineTiles;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -33,12 +33,18 @@ import org.jetbrains.annotations.Nullable;
 import tga.Mechanic.IClickedIDHandler;
 import tga.Mechanic.ICraftProvider;
 import tga.Mechanic.ITGAManpoweredBlock;
+import tga.Mechanic.ManMachineManager;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.Screen.MetalWorkbenchHandler;
 import tga.*;
+import tga.Str.IMMMTarget;
+import tga.Str.MMMTargetBasic;
 import tga.WorkBook.WorkRecipes.MetalWorkRecipe;
 
-public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, ITGAManpoweredBlock, IClickedIDHandler, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+import java.util.function.Function;
+
+public class MetalWorkbenchTile extends BlockEntity implements MMMTargetBasic.ITarget, ICraftProvider, ITGAManpoweredBlock, IClickedIDHandler, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+    public IMMMTarget Ticker;
     public SimpleInventory BufferSlot = new SimpleInventory(9);
     public static final int MAX_WATER_LEVEL = 4 * (int)FluidConstants.BUCKET;
     public int BurntimeLeft;
@@ -74,6 +80,8 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         }
     };
 
+    public static Function<MetalWorkbenchTile, IMMMTarget> TICKER_BUILDER_CLIENT;
+
     public static final int WORK_MODE_PLATE = 0;
     public static final int WORK_MODE_WIRE = 1;
     public static final int WORK_MODE_BAR = 2;
@@ -92,7 +100,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             FluidSlotHelper[i] = ContainerItemContext.ofSingleSlot(inSlotHelper2.getSlot(i));
     }
 
-    // <editor-fold desc="Items">
     public DefaultedList<ItemStack> GetDrops() {
         DefaultedList<ItemStack> drop = DefaultedList.of();
         drop.add(new ItemStack(TGABlocks.METAL_WORKBENCH));
@@ -178,7 +185,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
     public ItemStack removeStack(int slot, int amount) {
         if (slot == BUFFER_ID_SLOT_OUTPUT) {
             ItemStack itemStack = ResultSlot.split(amount);
-            if (!itemStack.isEmpty()) this.markDirty();
+            if (!itemStack.isEmpty()) markDirty();
             return itemStack;
         } else {
             ItemStack rt = BufferSlot.removeStack(slot - 1, amount);
@@ -188,9 +195,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         }
     }
 
-    // </editor-fold>
-
-    // <editor-fold desc="Crafting">
     @Override
     public ItemStack GetCraftInputStack(int i) {
         return BufferSlot.getStack(i);
@@ -212,31 +216,41 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         return 9;
     }
 
-    public void TickS(BlockState state) {
-        boolean isDirty = BurntimeLeft > 0;
-        if (isDirty) BurntimeLeft--;
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+        if (world.isClient) Ticker = TICKER_BUILDER_CLIENT.apply(this);
+        else {
+            Ticker = new MMMTargetBasic(this);
+            Ticker.QueQueNext(ManMachineManager.SERVER_INTANCE);
+        }
+    }
+
+    @Override
+    public void MachineUpdate(ManMachineManager mng) {
+        if (removed) return;
+        BlockState state = world.getBlockState(pos);
+        if (BurntimeLeft > 0) BurntimeLeft--;
         //have nenergy for crafting
-        if (Jinriki < 20f) {
-            UpdateExit(isDirty, state);
+        if (Jinriki < 20) {
+            Jinriki = 0;
+            UpdateExit(BurntimeLeft > 0, state);
             return;
         }
-        int amount = Math.min(Jinriki / 10, 20_00);
-        Jinriki -= amount;
+        Jinriki -= 5;
         //find for new recipe
         if (Crafting.isEmpty()) {
             MetalWorkRecipe canCraft = TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode);
             if (canCraft == null || canCraft.WaterToCool > InnerTank.amount || !TGAHelper.ItemCanStackTo(canCraft.Result, ResultSlot)) {
-                UpdateExit(isDirty, state);
+                UpdateExit(true, state);
                 return;
             }
-            if ( TGARecipes.MetalWorkbench.RealCraft(canCraft, this))
-            {
+            if (TGARecipes.MetalWorkbench.RealCraft(canCraft, this)) {
                 Crafting = canCraft.Result;
-                WorkTotal = (int)canCraft.NeedPower;
+                WorkTotal = (int) canCraft.NeedPower;
                 Worked = 0;
                 InnerTank.amount -= canCraft.WaterToCool;
                 CheckTankInput();
-                isDirty = true;
             }
         }
         //fuel ticks
@@ -258,24 +272,27 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             }
             //no heat no work
             if (BurntimeLeft <= 0) {
-                UpdateExit(isDirty, state);
+                UpdateExit(true, state);
                 return;
             }
         }
         //Crafting tick
-        Worked += amount;
+        int amount = Math.min(Jinriki / 10, 20_00);
+        Jinriki -= amount;
+        Worked += amount + 5;
         //Crafted
         if (Worked >= WorkTotal) {
             ResultSlot = TGAHelper.ItemStackTo(Crafting, ResultSlot);
             Crafting = ItemStack.EMPTY;
             Worked = 0;
         }
-        UpdateExit(isDirty, state);
+        UpdateExit(true, state);
     }
 
     private void UpdateExit(boolean isDirty, BlockState state) {
         int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > FluidConstants.BOTTLE ? 2 : 0);
-        if (state.get(TGABlocks.STATE4, -1) != newState) world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
+        if (state.get(TGABlocks.STATE4, -1) != newState)
+            world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
         if (isDirty) markDirty();
     }
 
@@ -333,9 +350,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             }
         }
     }
-    // </editor-fold>
 
-    // <editor-fold desc="GUI">
     @Override
     public void ClickedID(int id) {
         if (id!=0) return;
@@ -402,17 +417,15 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
             BufferSlot.heldStacks.set(i, payload.ItemSlots[i + 1]);
     }
 
-    @Override
     public void markDirty() {
         super.markDirty();
-        if (MetalWorkbenchHandler.UsingPlayerCount == 0 || world == null || world.isClient) return;
+        if (world.isClient) return;
+        Ticker.QueQueNext(ManMachineManager.SERVER_INTANCE);
+        if (MetalWorkbenchHandler.UsingPlayerCount == 0) return;
         MetalWorkbenchGuiSync payload = GetSyncValue();
         for (ServerPlayerEntity player : MetalWorkbenchHandler.UsingPlayer)
             ServerPlayNetworking.send(player, payload);
     }
-    // </editor-fold>
-
-    // <editor-fold desc="Data">
 
     @Override
     protected void readData(ReadView view) {
@@ -438,9 +451,7 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
         TGAHelper.WriteItem(view, "C", Crafting);
         TGAHelper.WriteItem(view, "R", ResultSlot);
     }
-// </editor-fold>
 
-    // <editor-fold desc="Jinriki">
     @Override
     public float GetJinrikiMul() {
         return Jinriki >= JINRIKI_INPUT_OFF ? 0f : 16f;
@@ -450,6 +461,6 @@ public class MetalWorkbenchTile extends BlockEntity implements ICraftProvider, I
     public void JinrikiGo(int power, ServerPlayerEntity player, World world) {
         Jinriki += power;
         world.playSound(null, pos, TGASounds.HAMMER, SoundCategory.BLOCKS, 1f, 1f);
+        Ticker.QueQueNext(ManMachineManager.SERVER_INTANCE);
     }
-    // </editor-fold>
 }

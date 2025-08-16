@@ -7,8 +7,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import tga.BlockEntity.MetalWorkbenchTile;
+import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
+import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
+import tga.Mechanic.ManMachineManager;
 import tga.NetEvents.ClickedIDSync;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.RecipeViewer.OneOut5RowRender;
@@ -23,18 +25,19 @@ public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchH
     public MetalWorkbenchScreen(MetalWorkbenchHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, Viewer);
         Viewer.SetTarget(TGARecipes.MetalWorkbench, this);
-        MetalWorkbenchHandler.LastWorkBlock = handler.Machine;
+        JinrikiWork.PLAYER_WORKING_TARGET = handler.Machine;
+        handler.Machine.Ticker.QueQueNext(ManMachineManager.CLIENT_INTANCE);
     }
 
     public static void HandleSync(MetalWorkbenchGuiSync payload) {
-        if (MetalWorkbenchHandler.LastWorkBlock == null) return;
-        MetalWorkbenchHandler.LastWorkBlock.TGAS2CSync(payload);
+        if (JinrikiWork.PLAYER_WORKING_TARGET instanceof MetalWorkbenchTile machine)
+            machine.TGAS2CSync(payload);
     }
 
     @Override
     public void close() {
         super.close();
-        MetalWorkbenchHandler.LastWorkBlock = null;
+        JinrikiWork.PLAYER_WORKING_TARGET = null;
     }
 
     @Override

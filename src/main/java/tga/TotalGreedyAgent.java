@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TotalGreedyAgent implements ModInitializer {
+	public static int TGA_SERVER_UPDATE_GLOBAL_TICK;
+	public static int TGA_CLIENT_UPDATE_GLOBAL_TICK;
 	public static final String MOD_ID = "tga";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static boolean IsClientSize = false;
@@ -18,7 +20,10 @@ public class TotalGreedyAgent implements ModInitializer {
     @Override
 	public void onInitialize() {
 		LOGGER.info("Server=>Init...");
-		ServerLifecycleEvents.SERVER_STARTED.register(s -> SERVER = s);
+		ServerLifecycleEvents.SERVER_STARTED.register(s -> {
+			SERVER = s;
+			TGA_SERVER_UPDATE_GLOBAL_TICK = 1;
+		});
 		ServerLifecycleEvents.SERVER_STOPPED.register(s -> SERVER = null);
 		LOGGER.info("Server=>Items");
 		TGAItems.Load(IsClientSize);

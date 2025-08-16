@@ -11,7 +11,7 @@ import tga.RecipeViewer.IRecipeViewer;
 import tga.TGAScreenHandlers;
 import tga.TGATexts;
 
-public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends HandledScreen<T> implements IMousePointerSeeter {
+public abstract class BasicGUISizeWithRecipe<T extends ScreenHandler> extends HandledScreen<T> implements IMousePointerSetter {
     public static int BlinkerSwap;
     public static long BlinkerTimeTick = Long.MIN_VALUE;
     protected int PointID;

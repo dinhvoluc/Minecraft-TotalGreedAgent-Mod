@@ -34,7 +34,7 @@ public class TankComData implements TooltipAppender {
     @Override
     public void appendTooltip(Item.TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
         if (Count <= 0 || FType == null || FType.isBlank()) return;
-        textConsumer.accept(Text.literal((Count / FluidConstants.BUCKET) + "×" + TGAHelper.GetFluidName(FType)).formatted(Formatting.GOLD));
+        textConsumer.accept(Text.literal(TGAHelper.ToFluid_mB(Count) + "mB×" + TGAHelper.GetFluidName(FType)).formatted(Formatting.GOLD));
     }
 
     @Override

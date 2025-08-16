@@ -12,7 +12,12 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import tga.BlockEntity.*;
+import tga.BlockEntity.MachineTiles.ManCrackerTile;
+import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
+import tga.Mechanic.ManMachineManager;
 import tga.Mechanic.PipeManager;
+import tga.Str.IMMMTarget;
+import tga.Str.MMMTargetBasic;
 import tga.Str.PipeProperty;
 
 public class TGATileEnities {
@@ -22,6 +27,7 @@ public class TGATileEnities {
     public static BlockEntityType<MetalWorkbenchTile> M_METAL_WORKBENCH;
     public static BlockEntityType<PipeBaseEnity> PIPE_ENITY;
     public static BlockEntityType<PressurePipeTile> PIPE_HOPPER;
+
 
     private static <T extends BlockEntity> BlockEntityType<T> register(
             String name,
@@ -58,9 +64,19 @@ public class TGATileEnities {
         FluidStorage.SIDED.registerForBlockEntity((a, b)-> a.Canconnect(b) ? a.Buffer : null, PIPE_ENITY);
         FluidStorage.SIDED.registerForBlockEntity((a,b) -> a.InnerTank, PIPE_HOPPER);
         //Manager
+        ManMachineManager.SERVER_INTANCE = new ManMachineManager();
         if (isClientSide) return;
+        //Events
         PipeManager.INTANCE = new PipeManager();
-        ServerTickEvents.END_SERVER_TICK.register(server -> PipeManager.INTANCE.ServerTick());
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> PipeManager.INTANCE.ClearQueue());
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK > 0x7f_ff_ff_ef) TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK = 1;
+            else TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK++;
+            PipeManager.INTANCE.ServerTick();
+            ManMachineManager.SERVER_INTANCE.Ticking();
+        });
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            PipeManager.INTANCE.ClearQueue();
+            ManMachineManager.SERVER_INTANCE.ClearQueue();
+        });
     }
 }

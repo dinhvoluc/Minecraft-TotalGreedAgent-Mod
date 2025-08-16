@@ -180,8 +180,6 @@ public final class TGABlocks {
                 CustomCropBlock::CropGuayule, cropSetting.mapColor(MapColor.BROWN))).asItem(), 0.3f);
         //Load server side ticker
         if (isClientSide) return;
-        ManCracker.TICKER_SERVER = (a, b, c, d) -> d.TickS();
-        MetalWorkbench.TICKER_SERVER = (a, b, c, d) -> d.TickS(c);
     }
 
     private static AbstractBlock.Settings Bs(float hardness, float resistance, MapColor color, BlockSoundGroup sound) {

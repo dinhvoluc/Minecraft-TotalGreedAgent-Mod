@@ -9,7 +9,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import tga.BlockEntity.ManCrackerTile;
+import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.ExSlots.CheckInsertSlot;
 import tga.ExSlots.TakeOnlySlot;
 import tga.NetEvents.ManCrackerGuiSync;
@@ -21,7 +21,6 @@ import java.util.Set;
 public class MachineCrackerHandler extends ScreenHandler {
     public static final int SLOT_COUNT = 2;
     public final ManCrackerTile Machine;
-    public static ManCrackerTile LastWorkBlock;
 
     //Client
     public MachineCrackerHandler(int syncId, PlayerInventory playerInventory, BlockPos pos) {

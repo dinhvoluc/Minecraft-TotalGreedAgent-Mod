@@ -14,8 +14,6 @@ public class PipeManager {
     public Queue<FMTarget> NeedUpdate = new ArrayDeque<>();
     private Queue<FMTarget> SwapCache = new ArrayDeque<>();
 
-    public int GlobalTick;
-
     public FMTarget Register(IPipeType target) {
         FMTarget rt = new FMTarget(target);
         NeedUpdate.add(rt);
@@ -23,20 +21,14 @@ public class PipeManager {
     }
 
     public void ServerTick() {
-        int tt = 0;
-        if (GlobalTick > 0xfffffff) GlobalTick = 1;
-        else GlobalTick++;
         //Reset Queue
         Queue<FMTarget> tmp = NeedUpdate;
         NeedUpdate = SwapCache;
         SwapCache = tmp;
         while (!tmp.isEmpty()) {
-            tt++;
             FMTarget target = tmp.poll();
             target.Entity.FluidManagerUpdate();
         }
-        if (tt > 0)
-            TotalGreedyAgent.broadcastDebugMessage(String.format("Pipe Manager updated=%s [TK=%s]", tt, GlobalTick), true);
     }
 
     public void ClearQueue() {

@@ -1,4 +1,4 @@
-package tga.BlockEntity;
+package tga.BlockEntity.MachineTiles;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -20,14 +20,19 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.Mechanic.ITGAManpoweredBlock;
+import tga.Mechanic.ManMachineManager;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.MachineCrackerHandler;
 import tga.*;
+import tga.Str.IMMMTarget;
+import tga.Str.MMMTargetBasic;
 import tga.WorkBook.WorkRecipes.OneInRecipe;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
-public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+public class ManCrackerTile extends BlockEntity implements MMMTargetBasic.ITarget, ITGAManpoweredBlock, SidedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+    public IMMMTarget Ticker;
     private final ItemStack[] ItemBuffer = new ItemStack[BUFFER_SIZE];
     private static final int BUFFER_ID_SLOT_INPUT = 0;
     private static final int BUFFER_ID_SLOT_OUTPUT = 1;
@@ -50,7 +55,48 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     @Override
     public void JinrikiGo(int power, ServerPlayerEntity player, World world) {
         Jinriki += power;
-        world.playSound(null, pos, TGASounds.GRINDER, SoundCategory.BLOCKS, 1f ,1f);
+        world.playSound(null, pos, TGASounds.GRINDER, SoundCategory.BLOCKS, 1f, 1f);
+        Ticker.QueQueNext(ManMachineManager.SERVER_INTANCE);
+    }
+
+    public static Function<ManCrackerTile, IMMMTarget> TICKER_BUILDER_CLIENT;
+
+    @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+        if (world.isClient) Ticker = TICKER_BUILDER_CLIENT.apply(this);
+        else {
+            Ticker = new MMMTargetBasic(this);
+            Ticker.QueQueNext(ManMachineManager.SERVER_INTANCE);
+        }
+    }
+
+    public void MachineUpdate(ManMachineManager mng) {
+        if (removed) return;
+        //No power or no crafting require
+        if (Jinriki < 20){
+            Jinriki = 0;
+            return;
+        }
+        Ticker.QueQueNext(mng);
+        Jinriki -= 5;
+        if (!ItemBuffer[1].isEmpty()) return;
+        if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
+        //Crafting
+        int amount = Math.min(Jinriki / 10, 40_00);
+        Jinriki -= amount;
+        Worked += amount + 5;
+        //Crafted
+        if (Worked >= WorkTotal) {
+            ItemBuffer[1] = CraftMain;
+            SubOutput = CraftSub;
+            Worked = 0;
+            WorkTotal = 1;
+            CraftMain = ItemStack.EMPTY;
+            CraftSub = ItemStack.EMPTY;
+            TryCraft();
+        }
+        markDirty();
     }
 
     @Override
@@ -100,27 +146,6 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
             CraftMain = ItemStack.EMPTY;
             CraftSub = ItemStack.EMPTY;
         }
-    }
-
-    public void TickS() {
-        //No power or no crafting require
-        if (Jinriki < 20f || !ItemBuffer[1].isEmpty()) return;
-        int amount = Math.min(Jinriki / 10, 10_00);
-        Jinriki -= amount;
-        if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
-        //Crafting
-        Worked += amount;
-        //Crafted
-        if (Worked >= WorkTotal) {
-            ItemBuffer[1] = CraftMain;
-            SubOutput = CraftSub;
-            Worked = 0;
-            WorkTotal = 1;
-            CraftMain = ItemStack.EMPTY;
-            CraftSub = ItemStack.EMPTY;
-            TryCraft();
-        }
-        markDirty();
     }
 
     @Override
@@ -216,14 +241,13 @@ public class ManCrackerTile extends BlockEntity implements ITGAManpoweredBlock, 
     @Override
     public void markDirty() {
         super.markDirty();
-        if (MachineCrackerHandler.UsingPlayerCount == 0 || world == null || world.isClient) return;
+        if (world.isClient || MachineCrackerHandler.UsingPlayerCount == 0) return;
         ManCrackerGuiSync payload = new ManCrackerGuiSync(world.getRegistryKey().getValue().toString(), pos, Worked, WorkTotal, ItemBuffer[0], ItemBuffer[1]);
         for (ServerPlayerEntity player : MachineCrackerHandler.UsingPlayer)
             ServerPlayNetworking.send(player, payload);
     }
 
     public ManCrackerGuiSync GetSyncValue() {
-        if (world == null) throw new IllegalCallerException("SyncTarget-Null-of-ManCracker");
         return new ManCrackerGuiSync(world.getRegistryKey().getValue().toString(), pos, Worked, WorkTotal, ItemBuffer[0], ItemBuffer[1]);
     }
 

@@ -11,7 +11,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import tga.BlockEntity.MetalWorkbenchTile;
+import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.ExSlots.CheckInsertSlot;
 import tga.ExSlots.TakeOnlySlot;
 import tga.NetEvents.MetalWorkbenchGuiSync;
@@ -23,7 +23,6 @@ import java.util.Set;
 public class MetalWorkbenchHandler extends ScreenHandler {
     public static final int SLOT_COUNT = 10;
     public final MetalWorkbenchTile Machine;
-    public static MetalWorkbenchTile LastWorkBlock;
 
     //Client
     public MetalWorkbenchHandler(int syncId, PlayerInventory playerInventory, BlockPos pos) {

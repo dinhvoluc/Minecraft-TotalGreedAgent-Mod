@@ -10,12 +10,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 import tga.Items.CraftOutputPatch;
-import tga.Items.ItemFloat;
 import tga.WorkBook.ICommonBook;
 import tga.WorkBook.ACommonRecipe;
 import tga.Mechanic.IItemChecker;
 import tga.Screen.BasicGUISizeWithRecipe;
-import tga.Screen.IMousePointerSeeter;
+import tga.Screen.IMousePointerSetter;
 import tga.*;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class OneOut5RowRender extends IRecipeViewer {
     private TextFieldWidget SearchInput;
     public boolean IsForcusing = false;
 
-    public void SetAnchor(int x, int y, IMousePointerSeeter mpset) {
+    public void SetAnchor(int x, int y, IMousePointerSetter mpset) {
         X = x - 66;
         Y = y;
         //Togle craft ablity
@@ -88,7 +87,7 @@ public class OneOut5RowRender extends IRecipeViewer {
 
     // <editor-fold desc="Drawwing">
     @Override
-    public void DrawViewer(DrawContext context, TextRenderer textRenderer, float deltaTicks, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    public void DrawViewer(DrawContext context, TextRenderer textRenderer, float deltaTicks, int mouseX, int mouseY, IMousePointerSetter mpset) {
         DrawButToggleCheckCanCraft(context, mouseX, mouseY, mpset);
         if (SetTarget.isEmpty()) {
             //All output mode
@@ -127,7 +126,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         }
     }
 
-    private void DrawRecipeGrid(DrawContext context, TextRenderer textRenderer, CraftOutputPatch<ACommonRecipe> result, int index, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    private void DrawRecipeGrid(DrawContext context, TextRenderer textRenderer, CraftOutputPatch<ACommonRecipe> result, int index, int mouseX, int mouseY, IMousePointerSetter mpset) {
         int rby = RBY + ((index % 25) / 5) * 20;
         int rbx = RBX + 1 + (index % 5) * 20;
         boolean isPointing = mouseX > rbx + 1 && mouseY > rby + 1 && mouseX < rbx + 18 && mouseY < rby + 18;
@@ -170,7 +169,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         }
     }
 
-    private void DrawRecipeSlot(DrawContext context, TextRenderer textRenderer, ACommonRecipe recipe, int index, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    private void DrawRecipeSlot(DrawContext context, TextRenderer textRenderer, ACommonRecipe recipe, int index, int mouseX, int mouseY, IMousePointerSetter mpset) {
         int rby = RBY + (index % 5) * 20;
         int rbx = RBX + 2;
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, RBX, rby, 57, 186, 101, 19, 512, 512);
@@ -216,7 +215,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         }
     }
 
-    protected void DrawButToggleCheckCanCraft(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    protected void DrawButToggleCheckCanCraft(DrawContext context, int mouseX, int mouseY, IMousePointerSetter mpset) {
         boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT0X, BT0Y, mouseX, mouseY);
         if (isPointing) {
             if (ShowOnlyCanCraft) {
@@ -234,7 +233,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         }
     }
 
-    protected void DrawButtonSearch(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset, float deltaTicks) {
+    protected void DrawButtonSearch(DrawContext context, int mouseX, int mouseY, IMousePointerSetter mpset, float deltaTicks) {
         boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT1X, BT1Y, 19, 186, 18, 18, 512, 512);
@@ -245,7 +244,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         SearchInput.render(context, mouseX, mouseY, deltaTicks);
     }
 
-    protected void DrawReturnButton(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    protected void DrawReturnButton(DrawContext context, int mouseX, int mouseY, IMousePointerSetter mpset) {
         boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT1X, BT1Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT1X, BT1Y, 19, 186, 18, 18, 512, 512);
@@ -255,7 +254,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         context.drawItem(SetTarget, BT1X + 1, BT1Y + 1);
     }
 
-    protected void DrawButonPagePrev(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    protected void DrawButonPagePrev(DrawContext context, int mouseX, int mouseY, IMousePointerSetter mpset) {
         boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT2X, BT2Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT2X, BT2Y, 19, 186, 18, 18, 512, 512);
@@ -267,7 +266,7 @@ public class OneOut5RowRender extends IRecipeViewer {
         }
     }
 
-    protected void DrawButtonPageNext(DrawContext context, int mouseX, int mouseY, IMousePointerSeeter mpset) {
+    protected void DrawButtonPageNext(DrawContext context, int mouseX, int mouseY, IMousePointerSetter mpset) {
         boolean isPointing = TGAClientHelper.GUI_ButtonInrange(BT3X, BT3Y, mouseX, mouseY);
         if (isPointing) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, TGAScreenHandlers.GUI_SHARE_0, BT3X, BT3Y, 19, 186, 18, 18, 512, 512);
