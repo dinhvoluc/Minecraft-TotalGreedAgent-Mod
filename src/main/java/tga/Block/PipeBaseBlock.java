@@ -1,23 +1,27 @@
 package tga.Block;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 import tga.BlockEntity.PipeBaseEnity;
 import tga.Mechanic.IPipeType;
@@ -27,12 +31,12 @@ import tga.TGAHelper;
 import tga.TGAID;
 import tga.TotalGreedyAgent;
 
-public class PipeBaseBlock extends Block implements BlockEntityProvider {
+public class PipeBaseBlock extends Block implements BlockEntityProvider, Waterloggable {
     public static VoxelShape[] SHAPE_BY_PLUG;
 
     public PipeBaseBlock(Settings settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(TGABlocks.PLUG_DIR64, 0));
+        setDefaultState(getStateManager().getDefaultState().with(TGABlocks.PLUG_DIR64, 0).with(Properties.WATERLOGGED, false));
     }
 
     public static Block Create_Bronze(Settings settings) {
@@ -45,7 +49,7 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(TGABlocks.PLUG_DIR64);
+        builder.add(TGABlocks.PLUG_DIR64, Properties.WATERLOGGED);
     }
 
     @Override
@@ -82,13 +86,27 @@ public class PipeBaseBlock extends Block implements BlockEntityProvider {
         if (pipe instanceof PipeBaseEnity tile) tile.SetConnection(plug);
     }
 
+    @Override
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+        if (state.get(Properties.WATERLOGGED))
+            tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    }
 
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
         if (world.getBlockEntity(pos) instanceof PipeBaseEnity pipeTest) {
-            TotalGreedyAgent.broadcastDebugMessageF("P=%s(%s) V=%s F=%s", TGAHelper.ToFluid_mB(pipeTest.PROPERTY.GetPressurVol(pipeTest.Buffer.amount)), pipeTest.PROPERTY.GetPressure(pipeTest.Buffer.amount), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount), pipeTest.Buffer.variant.getFluid().getBucketItem().getName().getString());
+            TotalGreedyAgent.broadcastDebugMessageF("P=%s(%s) V=%s F=%s Wl=%s",
+                    TGAHelper.ToFluid_mB(pipeTest.PROPERTY.GetPressurVol(pipeTest.Buffer.amount)),
+                    pipeTest.PROPERTY.GetPressure(pipeTest.Buffer.amount), TGAHelper.ToFluid_mB(pipeTest.Buffer.amount),
+                    pipeTest.Buffer.variant.getFluid().getBucketItem().getName().getString(),
+                    state.get(Properties.WATERLOGGED));
         }
         return ActionResult.SUCCESS;
     }

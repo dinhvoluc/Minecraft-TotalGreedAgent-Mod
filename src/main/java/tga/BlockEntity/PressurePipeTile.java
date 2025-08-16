@@ -49,6 +49,7 @@ public class PressurePipeTile extends TankTile implements IPipeType {
 
     @Override
     public void FluidManagerUpdate() {
+        if (removed) return;
         if (InnerTank.amount <= 0) return;
         //check down
         BlockPos down = pos.down();

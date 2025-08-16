@@ -204,6 +204,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType {
 
     @Override
     public void FluidManagerUpdate() {
+        if (removed) return;
         boolean pushUp = TopUnlock;
         TopUnlock = true;
         if (Buffer.amount <= 0) {
