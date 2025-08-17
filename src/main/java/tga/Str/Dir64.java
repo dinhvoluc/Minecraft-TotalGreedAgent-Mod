@@ -29,6 +29,10 @@ public class Dir64 {
         PropValue = dirs;
     }
 
+    public static Dir64 AllDirection() {
+        return new Dir64(63);
+    }
+
     public List<Direction> GetAllHave() {
         List<Direction> rt = new ArrayList<>();
         if ((PropValue & DIR_INT_UP) != DIR_INT_NONE) rt.add(Direction.UP);

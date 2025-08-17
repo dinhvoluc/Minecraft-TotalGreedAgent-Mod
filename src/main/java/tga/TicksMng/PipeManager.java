@@ -1,41 +1,82 @@
 package tga.TicksMng;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.util.math.Direction;
 import tga.Mechanic.IPipeType;
+import tga.Str.PipeProperty;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class PipeManager {
-    public static final float ACTIVE_PRESSURE_GAP = 0.001f;
-    public static final long ACTIVE_FLUID_VOL = FluidConstants.BUCKET / 4000;
+    public static final float ACTIVE_PRESSURE_GAP = 0.00045f;
     public static PipeManager INTANCE;
-    public Queue<FMTarget> NeedUpdate = new ArrayDeque<>();
-    private Queue<FMTarget> SwapCache = new ArrayDeque<>();
-
-    public FMTarget Register(IPipeType target) {
-        FMTarget rt = new FMTarget(target);
-        NeedUpdate.add(rt);
-        return rt;
-    }
+    public Queue<IFMTarget> NeedUpdate = new ArrayDeque<>();
+    private Queue<IFMTarget> SwapCache = new ArrayDeque<>();
 
     public int TurnUpdated;
 
     public void ServerTick() {
         TurnUpdated = 0;
         //Reset Queue
-        Queue<FMTarget> tmp = NeedUpdate;
+        Queue<IFMTarget> tmp = NeedUpdate;
         NeedUpdate = SwapCache;
         SwapCache = tmp;
         while (!tmp.isEmpty()) {
             TurnUpdated++;
-            FMTarget target = tmp.poll();
-            target.Entity.FluidManagerUpdate();
+            IFMTarget target = tmp.poll();
+            target.PipeUpdate(this);
         }
     }
 
     public void ClearQueue() {
         NeedUpdate.clear();
         SwapCache.clear();
+    }
+
+    /**
+     * @return calc transfer amont not do actual transfer, do not hanlde source null or  check variants
+     */
+    public static long TransferCalcHelper(PipeProperty source, PipeProperty target, Direction dirFromSource, long amountSource, long amountTarget) {
+        //Target is full
+        float pressureTarget = target.GetPressure(amountTarget);
+        if (pressureTarget >= target.PressureCap) return 0;
+        if (dirFromSource == Direction.DOWN) {
+            //drop to lower height
+            if (pressureTarget < 1f) {
+                long maxMove = Math.min(amountSource, Math.min(source.MaxSpeed, target.MaxSpeed));
+                long gapToFull = target.PressureLine - amountTarget;
+                //can apcept full
+                if (gapToFull >= maxMove) return maxMove;
+                long leftAmount = maxMove - gapToFull;
+                //update after
+                long newSourceAmount = amountSource - gapToFull;
+                long newTargetAmount = amountTarget + gapToFull;
+                float pressureSource = source.GetPressure(newSourceAmount);
+                float targetNewPressure = target.GetPressure(newTargetAmount);
+                float presureGap = pressureSource - targetNewPressure;
+                //not enoght pressure
+                if (presureGap < ACTIVE_PRESSURE_GAP) return gapToFull;
+                float blancedPressure = Math.min(target.PressureCap - targetNewPressure, presureGap * 0.5f);
+                float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
+                long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
+                return Math.min(leftAmount, maxSpeed < 0 ? gapToFull : (maxSpeed + gapToFull));
+            }
+        } else if (dirFromSource == Direction.UP) {
+            //only push
+            float pressureSource = source.GetPressure(amountSource);
+            //Not enough pressure
+            if (pressureSource <= 1f) return 0;
+        }
+        //normal dir
+        float pressureSource = source.GetPressure(amountSource);
+        float presureGap = pressureSource - pressureTarget;
+        //not enoght pressure
+        if (presureGap < ACTIVE_PRESSURE_GAP) return 0;
+        float blancedPressure = Math.min(target.PressureCap - pressureTarget, presureGap * 0.5f);
+        float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
+        long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
+        return maxSpeed < 0 ? 1 : maxSpeed;
     }
 }

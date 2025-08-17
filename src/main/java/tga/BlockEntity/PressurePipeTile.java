@@ -12,13 +12,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import tga.Mechanic.IPipeType;
 import tga.Str.FHopperProperty;
+import tga.Str.PipeProperty;
 import tga.TGATileEnities;
-import tga.TicksMng.FMTarget;
+import tga.TicksMng.FMTargetBasic;
+import tga.TicksMng.IFMTarget;
 import tga.TicksMng.PipeManager;
 
-public class PressurePipeTile extends TankTile implements IPipeType {
+public class PressurePipeTile extends TankTile implements IPipeType, FMTargetBasic.ITarget {
     public final FHopperProperty PROPERTY2;
-    public FMTarget FMTARGET;
+    public IFMTarget FMTARGET;
     public Direction PushDirection;
 
     public PressurePipeTile(BlockPos pos, BlockState state) {
@@ -36,14 +38,15 @@ public class PressurePipeTile extends TankTile implements IPipeType {
     public void setWorld(World world) {
         super.setWorld(world);
         if (world.isClient) return;
-        FMTARGET = PipeManager.INTANCE.Register(this);
+        FMTARGET = new FMTargetBasic(this);
+        QueueNext();
     }
 
     @Override
     public void markDirty() {
         super.markDirty();
         if (world.isClient) return;
-        FMTARGET.MarkDirty();
+        QueueNext();
     }
 
     public void SetAmount(long value) {
@@ -56,18 +59,16 @@ public class PressurePipeTile extends TankTile implements IPipeType {
     }
 
     @Override
-    public void FluidManagerUpdate() {
+    public void PipeUpdate(PipeManager mng) {
         if (removed) return;
         if (PushDirection == null) return;
         if (InnerTank.amount <= 0) return;
         //check target
         BlockPos target = pos.offset(PushDirection);
         if (world.getBlockEntity(target) instanceof IPipeType pipe) {
-            long maxSpeed = Math.min(InnerTank.amount, PROPERTY2.PumpRate);
-            long move = pipe.FluidInsert(InnerTank.variant, 10f, maxSpeed, maxSpeed, PushDirection.getOpposite());
+            long move = pipe.PipeInsert(InnerTank.variant, PushDirection, Math.min(InnerTank.amount, PROPERTY2.PumpRate));
             if (move > 0) SetAmount(InnerTank.amount - move);
         } else {
-            if (InnerTank.amount <= 0) return;
             Storage<FluidVariant> storage = FluidStorage.SIDED.find(world, target, PushDirection.getOpposite());
             if (storage != null) {
                 try (Transaction transaction = Transaction.openOuter()) {
@@ -78,17 +79,59 @@ public class PressurePipeTile extends TankTile implements IPipeType {
                     }
                 }
                 //connected to storage so push to update
-                if (InnerTank.amount > 0) FMTARGET.MarkDirty();
+                if (InnerTank.amount > 0) QueueNext();
             }
+        }
+        if (GetTankEmptyVol() <= 0) return;
+        //notify side if is pipe
+        if (PushDirection != Direction.NORTH) {
+            BlockPos north = pos.north();
+            if (world.getBlockEntity(north) instanceof IPipeType pipe)
+                pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.SOUTH);
+        }
+        if (PushDirection != Direction.SOUTH) {
+            BlockPos south = pos.south();
+            if (world.getBlockEntity(south) instanceof IPipeType pipe)
+                pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.NORTH);
+        }
+        if (PushDirection != Direction.EAST) {
+            BlockPos east = pos.east();
+            if (world.getBlockEntity(east) instanceof IPipeType pipe)
+                pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.WEST);
+        }
+        if (PushDirection != Direction.WEST) {
+            BlockPos west = pos.west();
+            if (world.getBlockEntity(west) instanceof IPipeType pipe)
+                pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.EAST);
+        }
+        if (PushDirection != Direction.UP) {
+            BlockPos up = pos.up();
+            if (world.getBlockEntity(up) instanceof IPipeType pipe)
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.DOWN);
         }
     }
 
     @Override
-    public long FluidInsert(FluidVariant variant, float pipePressure, long maxAmount, long pressureAmount, Direction dir) {
-        if (dir == PushDirection) return 0;
+    public long PipeInsert(FluidVariant variant, Direction flowDir, long insertAmount) {
+        //Is full
+        long free = GetTankEmptyVol();
+        if (free < 0) return 0;
+        //Check fluid type
+        if (!InnerTank.variant.isBlank() && !variant.equals(InnerTank.variant)) return 0;
+        //real insert
+        long size = Math.min(free, insertAmount);
+        if (size <= 0) return 0;
+        InnerTank.variant = variant;
+        SetAmount(InnerTank.amount + size);
+        return size;
+    }
+
+    @Override
+    public long PipeInsert(FluidVariant variant, PipeProperty source, Direction flowDir, long amountSource) {
+        if (flowDir == PushDirection.getOpposite()) return 0;
         long free = PROPERTY.TankCap - InnerTank.amount;
         if (free <= 0) return 0;
-        long move = Math.min(free, maxAmount);
+        long move = Math.min(free, source.MaxSpeed);
         if (move <= 0) return 0;
         InnerTank.variant = variant;
         SetAmount(InnerTank.amount + move);
@@ -97,14 +140,14 @@ public class PressurePipeTile extends TankTile implements IPipeType {
 
     @Override
     public void QueueFMIfMet(FluidVariant variant, float pipePressure, Direction dir) {
-        if (InnerTank.amount <= 0) return;
+        if (InnerTank.amount <= 0 || dir != PushDirection) return;
         if (!variant.isBlank() && !variant.equals(InnerTank.variant)) return;
-        FMTARGET.MarkDirty();
+        QueueNext();
     }
 
     @Override
     public void QueueNext() {
-        FMTARGET.MarkDirty();
+        FMTARGET.QueQueNext(PipeManager.INTANCE);
     }
 
     @Override
