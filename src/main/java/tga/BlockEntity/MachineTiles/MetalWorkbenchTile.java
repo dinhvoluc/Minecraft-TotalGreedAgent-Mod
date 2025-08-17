@@ -229,17 +229,16 @@ public class MetalWorkbenchTile extends BlockEntity implements MMMTargetBasic.IT
     @Override
     public void MachineUpdate(ManMachineManager mng) {
         if (removed) return;
-        BlockState state = world.getBlockState(pos);
         boolean isBurn = BurntimeLeft > 0;
         if (isBurn) BurntimeLeft--;
         //have nenergy for crafting
         if (Jinriki < 20) {
             Jinriki = 0;
-            UpdateExit(isBurn, state);
+            UpdateExit(isBurn);
             return;
         }
         Ticker.QueQueNext(mng);
-        Jinriki -= 5;
+        Jinriki -= 50;
         //find for new recipe
         if (Crafting.isEmpty())
             for(MetalWorkRecipe canCraft : TGARecipes.MetalWorkbench.GetNextCraft(this, this.WorkMode)) {
@@ -253,6 +252,7 @@ public class MetalWorkbenchTile extends BlockEntity implements MMMTargetBasic.IT
                     break;
                 }
             }
+        if (Crafting.isEmpty()) return;
         //fuel ticks
         if (BurntimeLeft <= 0) {
             //get fuel for heat
@@ -272,25 +272,26 @@ public class MetalWorkbenchTile extends BlockEntity implements MMMTargetBasic.IT
             }
             //no heat no work
             if (BurntimeLeft <= 0) {
-                UpdateExit(true, state);
+                UpdateExit(true);
                 return;
             }
         }
         //Crafting tick
         int amount = Math.min(Jinriki / 10, 20_00);
         Jinriki -= amount;
-        Worked += amount + 5;
+        Worked += amount + 50;
         //Crafted
         if (Worked >= WorkTotal) {
             ResultSlot = TGAHelper.ItemStackTo(Crafting, ResultSlot);
             Crafting = ItemStack.EMPTY;
             Worked = 0;
         }
-        UpdateExit(true, state);
+        UpdateExit(true);
     }
 
-    private void UpdateExit(boolean isDirty, BlockState state) {
+    private void UpdateExit(boolean isDirty) {
         int newState = (BurntimeLeft > 0 ? 1 : 0) + (InnerTank.amount > FluidConstants.BOTTLE ? 2 : 0);
+        BlockState state = world.getBlockState(pos);
         if (state.get(TGABlocks.STATE4, -1) != newState)
             world.setBlockState(pos, state.with(TGABlocks.STATE4, newState), Block.NOTIFY_ALL);
         if (isDirty) markDirty();

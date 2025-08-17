@@ -45,7 +45,7 @@ public class ManCrackerTile extends BlockEntity implements MMMTargetBasic.ITarge
     public int WorkTotal = 1;
     public int Jinriki;
 
-    public static final int JINRIKI_INPUT_OFF = 20_000_00;
+    public static final int JINRIKI_INPUT_OFF = 3_000_00;
 
     @Override
     public float GetJinrikiMul() {
@@ -79,13 +79,13 @@ public class ManCrackerTile extends BlockEntity implements MMMTargetBasic.ITarge
             return;
         }
         Ticker.QueQueNext(mng);
-        Jinriki -= 5;
+        Jinriki -= 50;
         if (!ItemBuffer[1].isEmpty()) return;
         if (CraftMain.isEmpty() && ItemBuffer[0].isEmpty()) return;
         //Crafting
         int amount = Math.min(Jinriki / 10, 25_00);
         Jinriki -= amount;
-        Worked += amount + 5;
+        Worked += amount + 50;
         //Crafted
         if (Worked >= WorkTotal) {
             ItemBuffer[1] = CraftMain;

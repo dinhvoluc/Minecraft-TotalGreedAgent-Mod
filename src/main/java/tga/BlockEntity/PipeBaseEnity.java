@@ -149,26 +149,27 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
         }
         return move;
     }
+
     private void NoStockLeft(){
         if (FluidPlugDirect.HaveNorth()) {
             BlockPos north = pos.north();
-            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.SOUTH);
+            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.SOUTH);
         }
         if (FluidPlugDirect.HaveSouth()) {
             BlockPos south = pos.south();
-            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.NORTH);
+            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.NORTH);
         }
         if (FluidPlugDirect.HaveEast()) {
             BlockPos east = pos.east();
-            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.WEST);
+            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.WEST);
         }
         if (FluidPlugDirect.HaveWest()) {
             BlockPos west = pos.west();
-            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_PRESSURE_GAP, Direction.EAST);
+            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.EAST);
         }
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
-            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.DOWN);
+            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.DOWN);
         }
     }
 
@@ -176,7 +177,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
         if (world.getBlockEntity(pos) instanceof IPipeType pipe) {
             long move = pipe.PipeInsert(Buffer.variant, PROPERTY, flow, Buffer.amount);
             if (move > 0) SetAmount(Buffer.amount - move);
-            else pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount) + PipeManager.ACTIVE_PRESSURE_GAP, flow.getOpposite());
+            else pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount), flow.getOpposite());
             return move;
         } else return InsertToStorage(pos, flow.getOpposite());
     }
@@ -225,9 +226,9 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
                     long move = pipe.PipeInsert(Buffer.variant, PROPERTY, Direction.UP, Buffer.amount);
                     if (move > 0) SetAmount(Buffer.amount - move);
                     else
-                        pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount) + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
+                        pipe.QueueFMIfMet(Buffer.variant, pressure, Direction.DOWN);
                 } else
-                    pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount) + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
+                    pipe.QueueFMIfMet(Buffer.variant, pressure, Direction.DOWN);
             } else if (pressure > 1f) InsertToStorage(up, Direction.DOWN);
         }
         if (Buffer.amount <= 0) NoStockLeft();
@@ -243,13 +244,13 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
         if (Buffer.amount <= 0) return;
         if (!variant.isBlank() && !variant.equals(Buffer.variant)) return;
         float localPressure = PROPERTY.GetPressure(Buffer.amount);
-        if (localPressure < pipePressure) return;
         if (dir == Direction.UP) {
-            if (localPressure < 1f + PipeManager.ACTIVE_PRESSURE_GAP) return;
+            if (localPressure <= 1f) return;
         }
         else if (dir == Direction.DOWN) {
-            if (localPressure < pipePressure) return;
+            if (pipePressure <= 1f) return;
         }
+        if (localPressure <= pipePressure) return;
         QueueNext();
     }
 

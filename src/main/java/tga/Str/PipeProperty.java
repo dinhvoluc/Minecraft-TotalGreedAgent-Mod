@@ -13,7 +13,7 @@ public class PipeProperty {
         PipeCap = mbNormalCap * FluidConstants.BUCKET / 1000;
         PressureLine = mbPressureLine * FluidConstants.BUCKET / 1000;
         MaxSpeed = mbMaxSpeed * FluidConstants.BUCKET / 1000;
-        PressureCap = (float) PipeCap / PressureLine - PipeManager.ACTIVE_PRESSURE_GAP;
+        PressureCap = (float) PipeCap / PressureLine - PipeManager.ACTIVE_GAP;
     }
 
     public float GetPressure(long contain) {

@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class PipeManager {
-    public static final float ACTIVE_PRESSURE_GAP = 0.00009f;
+    public static final float ACTIVE_GAP = 0.0003f;
     public static PipeManager INTANCE;
     public Queue<IFMTarget> NeedUpdate = new ArrayDeque<>();
     private Queue<IFMTarget> SwapCache = new ArrayDeque<>();
@@ -44,9 +44,9 @@ public class PipeManager {
         if (pressureTarget >= target.PressureCap) return 0;
         if (dirFromSource == Direction.DOWN) {
             //drop to lower height
-            if (pressureTarget < 1f + ACTIVE_PRESSURE_GAP) {
+            if (pressureTarget < 1f) {
                 long maxMove = Math.min(amountSource, Math.min(source.MaxSpeed, target.MaxSpeed));
-                long gapToFull = Math.max( (long)(target.PressureLine * ( 1f + ACTIVE_PRESSURE_GAP)) - amountTarget, 5);
+                long gapToFull = Math.max(target.PressureLine - amountTarget, 1);
                 //can apcept full
                 if (gapToFull >= maxMove) return maxMove;
                 long leftAmount = maxMove - gapToFull;
@@ -57,46 +57,44 @@ public class PipeManager {
                 float targetNewPressure = target.GetPressure(newTargetAmount);
                 float presureGap = pressureSource - targetNewPressure;
                 //not enoght pressure
-                if (presureGap < ACTIVE_PRESSURE_GAP) return gapToFull;
-                float blancedPressure = Math.min(target.PressureCap - targetNewPressure, presureGap * 0.8f);
+                float blancedPressure = Math.min(target.PressureCap - targetNewPressure, presureGap * 0.5f);
                 float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
                 long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
-                return Math.min(leftAmount, maxSpeed < 0 ? gapToFull : (maxSpeed + gapToFull));
-            }
-            else {
+                return Math.min(maxMove, maxSpeed <= 0 ? gapToFull : (maxSpeed + gapToFull));
+            } else {
+                //normal dir
                 float pressureSource = source.GetPressure(amountSource);
-                float presureGap = pressureSource + ACTIVE_PRESSURE_GAP * 16 - pressureTarget;
+                float presureGap = pressureSource + ACTIVE_GAP - pressureTarget;
                 //not enoght pressure
-                if (presureGap < ACTIVE_PRESSURE_GAP) return 0;
-                float blancedPressure = Math.min(target.PressureCap - pressureTarget, presureGap * 0.8f);
+                if (presureGap < ACTIVE_GAP) return 0;
+                float blancedPressure = Math.min(target.PressureCap - pressureTarget, presureGap);
                 float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
                 long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
-                return maxSpeed <= 0 ? 5 : maxSpeed;
+                return maxSpeed < 0 ? 0 : maxSpeed;
             }
         } else if (dirFromSource == Direction.UP) {
             //only push
             float pressureSource = source.GetPressure(amountSource);
             //Not enough pressure
-            if (pressureSource <= 1f + ACTIVE_PRESSURE_GAP * 3f) return 0;
+            if (pressureSource <= 1f) return 0;
             //normal dir
             float presureGap = pressureSource - pressureTarget;
             //not enoght pressure
-            if (presureGap < ACTIVE_PRESSURE_GAP * 3f) return 0;
+            if (presureGap < ACTIVE_GAP) return 0;
             float blancedPressure = Math.min(target.PressureCap - pressureTarget, presureGap * 0.5f);
             float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
             long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
-            return maxSpeed <= 0 ? 5 : maxSpeed;
-        }
-        else {
+            return maxSpeed < 0 ? 0 : maxSpeed;
+        } else {
             //normal dir
             float pressureSource = source.GetPressure(amountSource);
             float presureGap = pressureSource - pressureTarget;
             //not enoght pressure
-            if (presureGap < ACTIVE_PRESSURE_GAP) return 0;
+            if (presureGap < ACTIVE_GAP) return 0;
             float blancedPressure = Math.min(target.PressureCap - pressureTarget, presureGap * 0.5f);
             float moveAmount = Math.min(source.PressureLine, target.PressureLine) * blancedPressure;
             long maxSpeed = Math.min((int) moveAmount, Math.min(source.MaxSpeed, target.MaxSpeed));
-            return maxSpeed <= 0 ? 1 : maxSpeed;
+            return maxSpeed < 0 ? 0 : maxSpeed;
         }
     }
 }
