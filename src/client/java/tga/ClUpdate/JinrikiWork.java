@@ -2,9 +2,9 @@ package tga.ClUpdate;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
-import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.JinrikiGogo;
 import tga.TicksMng.IMMMTarget;
+import tga.TicksMng.ManMachineManager;
 import tga.TotalGreedyAgent;
 
 public class JinrikiWork<T extends BlockEntity> implements IMMMTarget {

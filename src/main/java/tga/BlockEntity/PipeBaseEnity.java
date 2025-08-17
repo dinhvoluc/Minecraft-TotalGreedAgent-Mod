@@ -15,13 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import tga.Mechanic.IPipeType;
-import tga.TicksMng.PipeManager;
 import tga.Str.Dir64;
-import tga.TicksMng.FMTarget;
 import tga.Str.PipeProperty;
 import tga.TGABlocks;
 import tga.TGAHelper;
 import tga.TGATileEnities;
+import tga.TicksMng.FMTarget;
+import tga.TicksMng.PipeManager;
 
 import java.util.HashMap;
 import java.util.Map;

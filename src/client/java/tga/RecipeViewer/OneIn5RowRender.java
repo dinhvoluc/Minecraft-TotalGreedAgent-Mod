@@ -9,14 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
-import tga.*;
 import tga.Items.CraftOutputPatch;
 import tga.Items.ItemFloat;
-import tga.WorkBook.WorkRecipes.OneInRecipe;
-import tga.WorkBook.OneSlotBook;
 import tga.Mechanic.IItemChecker;
-import tga.Screen.IMousePointerSetter;
 import tga.Screen.BasicGUISizeWithRecipe;
+import tga.Screen.IMousePointerSetter;
+import tga.*;
+import tga.WorkBook.OneSlotBook;
+import tga.WorkBook.WorkRecipes.OneInRecipe;
 
 import java.util.ArrayList;
 import java.util.List;

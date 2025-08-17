@@ -1,7 +1,6 @@
 package tga.ComDat;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.ComponentsAccess;

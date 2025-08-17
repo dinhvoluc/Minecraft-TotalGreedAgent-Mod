@@ -11,12 +11,15 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import tga.BlockEntity.*;
+import tga.BlockEntity.BoxStackTile;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
+import tga.BlockEntity.PipeBaseEnity;
+import tga.BlockEntity.PressurePipeTile;
+import tga.BlockEntity.TankTile;
+import tga.Str.PipeProperty;
 import tga.TicksMng.ManMachineManager;
 import tga.TicksMng.PipeManager;
-import tga.Str.PipeProperty;
 
 public class TGATileEnities {
     public static BlockEntityType<BoxStackTile> BOX_STACK_TILE;
@@ -63,9 +66,9 @@ public class TGATileEnities {
         FluidStorage.SIDED.registerForBlockEntity((a,b) -> a.InnerTank, PIPE_HOPPER);
         //Manager
         ManMachineManager.SERVER_INTANCE = new ManMachineManager();
+        PipeManager.INTANCE = new PipeManager();
         if (isClientSide) return;
         //Events
-        PipeManager.INTANCE = new PipeManager();
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK > 0x7f_ff_ff_ef) TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK = 1;
             else TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK++;

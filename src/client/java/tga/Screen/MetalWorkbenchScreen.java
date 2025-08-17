@@ -10,7 +10,6 @@ import net.minecraft.text.Text;
 import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
-import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.ClickedIDSync;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.RecipeViewer.OneOut5RowRender;
@@ -18,6 +17,7 @@ import tga.TGAClientHelper;
 import tga.TGAHelper;
 import tga.TGARecipes;
 import tga.TGAScreenHandlers;
+import tga.TicksMng.ManMachineManager;
 
 public class MetalWorkbenchScreen extends BasicGUISizeWithRecipe<MetalWorkbenchHandler> implements IItemChecker {
     public static OneOut5RowRender Viewer = new OneOut5RowRender();

@@ -19,12 +19,16 @@ public class PipeManager {
         return rt;
     }
 
+    public int TurnUpdated;
+
     public void ServerTick() {
+        TurnUpdated = 0;
         //Reset Queue
         Queue<FMTarget> tmp = NeedUpdate;
         NeedUpdate = SwapCache;
         SwapCache = tmp;
         while (!tmp.isEmpty()) {
+            TurnUpdated++;
             FMTarget target = tmp.poll();
             target.Entity.FluidManagerUpdate();
         }

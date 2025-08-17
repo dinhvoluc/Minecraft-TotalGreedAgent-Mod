@@ -6,13 +6,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import tga.*;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
-import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.RecipeViewer.OneIn5RowRender;
+import tga.TGAHelper;
+import tga.TGARecipes;
+import tga.TGAScreenHandlers;
+import tga.TicksMng.ManMachineManager;
 
 public class MachineCrackerScreen extends BasicGUISizeWithRecipe<MachineCrackerHandler> implements IItemChecker {
     public static OneIn5RowRender Viewer = new OneIn5RowRender();

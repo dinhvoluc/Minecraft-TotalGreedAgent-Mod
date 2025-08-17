@@ -3,8 +3,6 @@ package tga.Machines;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
@@ -13,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
-import tga.BlockEntity.MachineTiles.ManVbrSieveTile;
-import tga.TGATileEnities;
 
 public class ManVibratingSieve extends MachineBasic {
     public static MapCodec<ManVibratingSieve> CODEC;

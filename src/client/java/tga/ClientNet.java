@@ -1,8 +1,14 @@
 package tga;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import tga.NetEvents.*;
-import tga.Screen.*;
+import tga.NetEvents.BoxStackGuiSync;
+import tga.NetEvents.ManCrackerGuiSync;
+import tga.NetEvents.MetalWorkbenchGuiSync;
+import tga.NetEvents.TankGuiSync;
+import tga.Screen.BoxStackScreen;
+import tga.Screen.MachineCrackerScreen;
+import tga.Screen.MetalWorkbenchScreen;
+import tga.Screen.TankScreen;
 
 public class ClientNet {
     public static void Load() {

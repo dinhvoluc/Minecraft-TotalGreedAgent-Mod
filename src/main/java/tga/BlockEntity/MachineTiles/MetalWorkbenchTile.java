@@ -33,12 +33,12 @@ import org.jetbrains.annotations.Nullable;
 import tga.Mechanic.IClickedIDHandler;
 import tga.Mechanic.ICraftProvider;
 import tga.Mechanic.ITGAManpoweredBlock;
-import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.Screen.MetalWorkbenchHandler;
 import tga.*;
 import tga.TicksMng.IMMMTarget;
 import tga.TicksMng.MMMTargetBasic;
+import tga.TicksMng.ManMachineManager;
 import tga.WorkBook.WorkRecipes.MetalWorkRecipe;
 
 import java.util.function.Function;

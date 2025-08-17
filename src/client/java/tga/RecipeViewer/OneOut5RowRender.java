@@ -10,12 +10,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 import tga.Items.CraftOutputPatch;
-import tga.WorkBook.ICommonBook;
-import tga.WorkBook.ACommonRecipe;
 import tga.Mechanic.IItemChecker;
 import tga.Screen.BasicGUISizeWithRecipe;
 import tga.Screen.IMousePointerSetter;
 import tga.*;
+import tga.WorkBook.ACommonRecipe;
+import tga.WorkBook.ICommonBook;
 
 import java.util.ArrayList;
 import java.util.List;
