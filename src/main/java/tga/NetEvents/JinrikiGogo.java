@@ -48,9 +48,9 @@ public class JinrikiGogo implements CustomPayload {
         float speed = man.GetJinrikiMul();
         if (speed < 0.1f) return;
         //Man power code
-        int jinriki = 30 + player.getHungerManager().getFoodLevel() + player.experienceLevel * 3;
+        int jinriki = 100 + player.getHungerManager().getFoodLevel() + player.experienceLevel * 6;
         player.addExhaustion(speed);
-        if (TGAHelper.drainExperience(player, 1 + (int)(speed * 0.18f))) jinriki += 15;
+        if (TGAHelper.drainExperience(player, 1f + (int)(speed * 0.18f))) jinriki += 25 + (int)(5f * speed);
         man.JinrikiGo((int)(jinriki * 40f * speed) + 10, player, world);
     }
 
