@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
-import tga.Mechanic.ManMachineManager;
+import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.ClickedIDSync;
 import tga.NetEvents.MetalWorkbenchGuiSync;
 import tga.RecipeViewer.OneOut5RowRender;

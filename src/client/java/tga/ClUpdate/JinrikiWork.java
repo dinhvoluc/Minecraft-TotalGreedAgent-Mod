@@ -2,9 +2,9 @@ package tga.ClUpdate;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
-import tga.Mechanic.ManMachineManager;
+import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.JinrikiGogo;
-import tga.Str.IMMMTarget;
+import tga.TicksMng.IMMMTarget;
 import tga.TotalGreedyAgent;
 
 public class JinrikiWork<T extends BlockEntity> implements IMMMTarget {
@@ -12,7 +12,7 @@ public class JinrikiWork<T extends BlockEntity> implements IMMMTarget {
 
     public T TARGET;
     public int Updated = -1;
-    public int Queuered = -1;
+    public int Queuered = -2;
     public static int WorkTick;
 
     public JinrikiWork(T target){
@@ -38,8 +38,8 @@ public class JinrikiWork<T extends BlockEntity> implements IMMMTarget {
 
     @Override
     public void QueQueNext(ManMachineManager mng) {
-        if (Queuered == TotalGreedyAgent.TGA_CLIENT_UPDATE_GLOBAL_TICK) return;
-        Queuered = TotalGreedyAgent.TGA_CLIENT_UPDATE_GLOBAL_TICK;
+        if (Queuered == Updated) return;
+        Queuered = Updated;
         mng.NeedUpdate.add(this);
     }
 }

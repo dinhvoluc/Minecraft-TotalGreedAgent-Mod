@@ -14,10 +14,8 @@ import net.minecraft.registry.Registry;
 import tga.BlockEntity.*;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
-import tga.Mechanic.ManMachineManager;
-import tga.Mechanic.PipeManager;
-import tga.Str.IMMMTarget;
-import tga.Str.MMMTargetBasic;
+import tga.TicksMng.ManMachineManager;
+import tga.TicksMng.PipeManager;
 import tga.Str.PipeProperty;
 
 public class TGATileEnities {

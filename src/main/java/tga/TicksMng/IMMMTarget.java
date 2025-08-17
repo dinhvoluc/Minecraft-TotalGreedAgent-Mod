@@ -1,6 +1,4 @@
-package tga.Str;
-
-import tga.Mechanic.ManMachineManager;
+package tga.TicksMng;
 
 public interface IMMMTarget {
     void MachineUpdate(ManMachineManager mng);

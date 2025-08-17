@@ -10,7 +10,7 @@ import tga.*;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.ClUpdate.JinrikiWork;
 import tga.Mechanic.IItemChecker;
-import tga.Mechanic.ManMachineManager;
+import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.RecipeViewer.OneIn5RowRender;
 

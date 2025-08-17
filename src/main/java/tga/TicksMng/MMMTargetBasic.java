@@ -1,6 +1,5 @@
-package tga.Str;
+package tga.TicksMng;
 
-import tga.Mechanic.ManMachineManager;
 import tga.TotalGreedyAgent;
 
 public class MMMTargetBasic implements IMMMTarget {
@@ -10,7 +9,7 @@ public class MMMTargetBasic implements IMMMTarget {
 
     public ITarget TARGET;
     public int Updated = -1;
-    public int Queuered = -1;
+    public int Queuered = -2;
 
     public MMMTargetBasic(ITarget target){
         TARGET = target;
@@ -25,8 +24,8 @@ public class MMMTargetBasic implements IMMMTarget {
 
     @Override
     public void QueQueNext(ManMachineManager mng) {
-        if (Queuered == TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK) return;
-        Queuered = TotalGreedyAgent.TGA_SERVER_UPDATE_GLOBAL_TICK;
+        if (Queuered == Updated) return;
+        Queuered = Updated;
         mng.NeedUpdate.add(this);
     }
 }

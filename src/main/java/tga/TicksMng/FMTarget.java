@@ -1,7 +1,6 @@
-package tga.Str;
+package tga.TicksMng;
 
 import tga.Mechanic.IPipeType;
-import tga.Mechanic.PipeManager;
 import tga.TotalGreedyAgent;
 
 public class FMTarget {

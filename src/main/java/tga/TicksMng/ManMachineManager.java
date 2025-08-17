@@ -1,6 +1,5 @@
-package tga.Mechanic;
+package tga.TicksMng;
 
-import tga.Str.IMMMTarget;
 import tga.TotalGreedyAgent;
 
 import java.util.ArrayDeque;

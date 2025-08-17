@@ -1,8 +1,7 @@
-package tga.Mechanic;
+package tga.TicksMng;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import tga.Str.FMTarget;
-import tga.TotalGreedyAgent;
+import tga.Mechanic.IPipeType;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

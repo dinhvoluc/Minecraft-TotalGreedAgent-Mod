@@ -20,12 +20,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import tga.Mechanic.ITGAManpoweredBlock;
-import tga.Mechanic.ManMachineManager;
+import tga.TicksMng.ManMachineManager;
 import tga.NetEvents.ManCrackerGuiSync;
 import tga.Screen.MachineCrackerHandler;
 import tga.*;
-import tga.Str.IMMMTarget;
-import tga.Str.MMMTargetBasic;
+import tga.TicksMng.IMMMTarget;
+import tga.TicksMng.MMMTargetBasic;
 import tga.WorkBook.WorkRecipes.OneInRecipe;
 
 import java.util.Arrays;

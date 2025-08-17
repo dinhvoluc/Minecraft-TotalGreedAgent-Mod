@@ -11,9 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import tga.Mechanic.IPipeType;
-import tga.Mechanic.PipeManager;
+import tga.TicksMng.PipeManager;
 import tga.Str.FHopperProperty;
-import tga.Str.FMTarget;
+import tga.TicksMng.FMTarget;
 import tga.TGATileEnities;
 
 public class PressurePipeTile extends TankTile implements IPipeType {

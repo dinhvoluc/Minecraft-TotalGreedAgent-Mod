@@ -9,7 +9,7 @@ import net.minecraft.client.render.BlockRenderLayer;
 import tga.BlockEntity.MachineTiles.ManCrackerTile;
 import tga.BlockEntity.MachineTiles.MetalWorkbenchTile;
 import tga.ClUpdate.JinrikiWork;
-import tga.Mechanic.ManMachineManager;
+import tga.TicksMng.ManMachineManager;
 import tga.Screen.BoxStackScreen;
 import tga.Screen.MachineCrackerScreen;
 import tga.Screen.MetalWorkbenchScreen;
