@@ -220,7 +220,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
             float pressure = PROPERTY.GetPressure(Buffer.amount);
-            if (world.getBlockEntity(pos) instanceof IPipeType pipe) {
+            if (world.getBlockEntity(up) instanceof IPipeType pipe) {
                 if (pushUp && canPushUp > 0 && pressure > 1f) {
                     long move = pipe.PipeInsert(Buffer.variant, PROPERTY, Direction.UP, Buffer.amount);
                     if (move > 0) SetAmount(Buffer.amount - move);
@@ -228,7 +228,7 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
                         pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount) + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
                 } else
                     pipe.QueueFMIfMet(Buffer.variant, PROPERTY.GetPressure(Buffer.amount) + PipeManager.ACTIVE_PRESSURE_GAP, Direction.DOWN);
-            } else if (pressure > 1f) InsertToStorage(pos, Direction.DOWN);
+            } else if (pressure > 1f) InsertToStorage(up, Direction.DOWN);
         }
         if (Buffer.amount <= 0) NoStockLeft();
     }

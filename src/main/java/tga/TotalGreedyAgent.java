@@ -16,7 +16,7 @@ public class TotalGreedyAgent implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static boolean IsClientSize = false;
 	public static MinecraftServer SERVER;
-	public static int SHOW_DEBUG = 0;
+	public static int SHOW_DEBUG = 1;
 
     @Override
 	public void onInitialize() {
