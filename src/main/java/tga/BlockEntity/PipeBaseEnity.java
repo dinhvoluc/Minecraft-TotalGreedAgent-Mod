@@ -153,23 +153,23 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
     private void NoStockLeft(){
         if (FluidPlugDirect.HaveNorth()) {
             BlockPos north = pos.north();
-            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.SOUTH);
+            if (world.getBlockEntity(north) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_GAP, Direction.SOUTH);
         }
         if (FluidPlugDirect.HaveSouth()) {
             BlockPos south = pos.south();
-            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.NORTH);
+            if (world.getBlockEntity(south) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_GAP, Direction.NORTH);
         }
         if (FluidPlugDirect.HaveEast()) {
             BlockPos east = pos.east();
-            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.WEST);
+            if (world.getBlockEntity(east) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_GAP, Direction.WEST);
         }
         if (FluidPlugDirect.HaveWest()) {
             BlockPos west = pos.west();
-            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.EAST);
+            if (world.getBlockEntity(west) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), PipeManager.ACTIVE_GAP, Direction.EAST);
         }
         if (FluidPlugDirect.HaveUp()) {
             BlockPos up = pos.up();
-            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), 0, Direction.DOWN);
+            if (world.getBlockEntity(up) instanceof IPipeType pipe) pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.DOWN);
         }
     }
 
@@ -244,13 +244,8 @@ public class PipeBaseEnity extends BlockEntity implements IPipeType, FMTargetBas
         if (Buffer.amount <= 0) return;
         if (!variant.isBlank() && !variant.equals(Buffer.variant)) return;
         float localPressure = PROPERTY.GetPressure(Buffer.amount);
-        if (dir == Direction.UP) {
-            if (localPressure <= 1f) return;
-        }
-        else if (dir == Direction.DOWN) {
-            if (pipePressure <= 1f) return;
-        }
-        if (localPressure <= pipePressure) return;
+        if (dir == Direction.UP && localPressure < 1f) return;
+        if (localPressure < pipePressure) return;
         QueueNext();
     }
 

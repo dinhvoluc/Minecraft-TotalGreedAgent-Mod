@@ -87,27 +87,27 @@ public class PressurePipeTile extends TankTile implements IPipeType, FMTargetBas
         if (PushDirection != Direction.NORTH) {
             BlockPos north = pos.north();
             if (world.getBlockEntity(north) instanceof IPipeType pipe)
-                pipe.QueueFMIfMet(FluidVariant.blank(), 0f, Direction.SOUTH);
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.SOUTH);
         }
         if (PushDirection != Direction.SOUTH) {
             BlockPos south = pos.south();
             if (world.getBlockEntity(south) instanceof IPipeType pipe)
-                pipe.QueueFMIfMet(FluidVariant.blank(), 0f, Direction.NORTH);
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.NORTH);
         }
         if (PushDirection != Direction.EAST) {
             BlockPos east = pos.east();
             if (world.getBlockEntity(east) instanceof IPipeType pipe)
-                pipe.QueueFMIfMet(FluidVariant.blank(), 0f, Direction.WEST);
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.WEST);
         }
         if (PushDirection != Direction.WEST) {
             BlockPos west = pos.west();
             if (world.getBlockEntity(west) instanceof IPipeType pipe)
-                pipe.QueueFMIfMet(FluidVariant.blank(), 0f, Direction.EAST);
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.EAST);
         }
         if (PushDirection != Direction.UP) {
             BlockPos up = pos.up();
             if (world.getBlockEntity(up) instanceof IPipeType pipe)
-                pipe.QueueFMIfMet(FluidVariant.blank(), 0f, Direction.DOWN);
+                pipe.QueueFMIfMet(FluidVariant.blank(), -1f, Direction.DOWN);
         }
     }
 
